@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, August 20, 2024 @ 14:43:59 ET
- *  By: fernando
+ *  Date: Tuesday, March 18, 2025 @ 15:27:17 ET
+ *  By: bryancasler
  *  ENGrid styles: v0.19.1
  *  ENGrid scripts: v0.19.1
  *
@@ -21055,7 +21055,7 @@ const customScript = function () {
 };
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
-// import { Options, App } from "../../engrid-scripts/packages/common"; // Uses ENGrid via Visual Studio Workspace
+// import { Options, App } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
 
 
 
