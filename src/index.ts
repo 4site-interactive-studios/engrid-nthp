@@ -6,6 +6,7 @@ import {
 
 import "./sass/main.scss";
 import { customScript } from "./scripts/main";
+import { MembershipBenefitsModal } from "./scripts/membership-benefits-modal";
 
 const options: Options = {
   applePay: false,
@@ -18,8 +19,18 @@ const options: Options = {
   SkipToMainContentLink: true,
   SrcDefer: true,
   ProgressBar: true,
+  Placeholders: {
+    ".en__field--donationAmt.en__field--withOther .en__field__input--other": "Enter an amount",
+ },
   Debug: App.getUrlParameter("debug") == "true" ? true : false,
-  onLoad: () => customScript(),
+  MinAmount: 5,
+  MaxAmount: 25000,
+  MinAmountMessage: "Minimum gift amount is $5",
+  MaxAmountMessage: "Maximum gift amount is $25,000",
+  onLoad: () => {
+    new MembershipBenefitsModal();
+    customScript(App)
+  },
   onResize: () => console.log("Starter Theme Window Resized"),
 };
 new App(options);
