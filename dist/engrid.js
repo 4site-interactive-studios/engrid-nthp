@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, March 27, 2025 @ 18:44:15 ET
- *  By: michael
- *  ENGrid styles: v0.20.9
- *  ENGrid scripts: v0.20.10
+ *  Date: Friday, April 4, 2025 @ 24:17:43 ET
+ *  By: fernando
+ *  ENGrid styles: v0.21.0
+ *  ENGrid scripts: v0.21.0
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -10956,6 +10956,9 @@ class engrid_ENGrid {
             return window.pageJson.pageNumber;
         return null;
     }
+    static isThankYouPage() {
+        return this.getPageNumber() === this.getPageCount();
+    }
     // Return the current page ID
     static getPageID() {
         if ("pageJson" in window)
@@ -11912,6 +11915,7 @@ class App extends engrid_ENGrid {
         new ThankYouPageConditionalContent();
         new EmbeddedEcard();
         new CheckboxLabel();
+        new PostDonationEmbed();
         //Debug panel
         let showDebugPanel = this.options.Debug;
         try {
@@ -18435,6 +18439,9 @@ class EventTickets {
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/swap-amounts.js
 // This script allows you to override the default donation amounts in Engaging Networks
 // with a custom list of amounts.
+// If the URL contains a query parameter "engrid-amounts" with a comma separated values, the script will load the
+// amounts from the parameter and set them as the default amounts for the donation
+// form.
 /**
  * Example:
  * window.EngridAmounts = {
@@ -18468,6 +18475,7 @@ class SwapAmounts {
         this._frequency = DonationFrequency.getInstance();
         this.defaultChange = false;
         this.swapped = false;
+        this.loadAmountsFromUrl();
         if (!this.shouldRun())
             return;
         this._frequency.onFrequencyChange.subscribe(() => this.swapAmounts());
@@ -18483,6 +18491,25 @@ class SwapAmounts {
                 this.defaultChange = true;
             }
         });
+    }
+    loadAmountsFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const amounts = urlParams.get("engrid-amounts");
+        if (amounts) {
+            const amountArray = amounts.split(",").map((amt) => amt.trim());
+            const defaultAmount = parseFloat(engrid_ENGrid.getUrlParameter("transaction.donationAmt")) || parseFloat(amountArray[0]);
+            const amountsObj = {};
+            for (let i = 0; i < amountArray.length; i++) {
+                amountsObj[amountArray[i].toString()] = isNaN(parseFloat(amountArray[i]))
+                    ? amountArray[i]
+                    : parseFloat(amountArray[i]);
+            }
+            amountsObj["Other"] = "other";
+            window.EngridAmounts = {
+                onetime: { amounts: amountsObj, default: defaultAmount },
+                monthly: { amounts: amountsObj, default: defaultAmount },
+            };
+        }
     }
     swapAmounts() {
         if (this._frequency.frequency in window.EngridAmounts) {
@@ -21863,11 +21890,70 @@ class OptInLadder {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/post-donation-embed.js
+// This component only works on Thank You pages and the current page IS NOT embedded as an iframe.
+// It searches for a post-donation tag (engrid-post-donation)
+// and if it exists, it will replace it with an iframe of the current donation page, replacing the
+// "/donate/2" with "/donate/1" and adding a ?chain.
+// It has 2 parameters:
+// 1. params: the URL parameters to pass to the iframe
+// 2. amounts: comma separated list of amounts to pass to the iframe
+
+class PostDonationEmbed {
+    constructor() {
+        this.logger = new logger_EngridLogger("PostDonationEmbed", "red", "white", "🖼️");
+        if (!this.shouldRun())
+            return;
+        this.logger.log("Post Donation Tag found");
+        const postDonationTag = document.querySelector("engrid-post-donation");
+        // Get current page URL
+        let currentUrl = new URL(window.location.href);
+        // Modify the path: replace "/donate/2" with "/donate/1"
+        currentUrl.pathname = currentUrl.pathname.replace("/donate/2", "/donate/1");
+        // Extract parameters from the <engrid-post-donation> tag
+        let params = postDonationTag.getAttribute("params") || "";
+        let amounts = postDonationTag.getAttribute("amounts");
+        // Format parameters correctly
+        let searchParams = new URLSearchParams(params.replace(/&/g, "&"));
+        let paramString = searchParams
+            .toString()
+            .replace(/%5B/g, "[")
+            .replace(/%5D/g, "]");
+        // Construct new URL with "chain" parameter
+        let newUrl = `${currentUrl.origin}${currentUrl.pathname}?chain&${paramString}`;
+        if (amounts) {
+            newUrl += `&engrid-amounts=${amounts}`;
+        }
+        // Create the iframe element
+        let iframe = document.createElement("iframe");
+        iframe.setAttribute("loading", "lazy");
+        iframe.setAttribute("width", "100%");
+        iframe.setAttribute("scrolling", "no");
+        iframe.setAttribute("class", "engrid-iframe thank-you-page-donation");
+        iframe.setAttribute("src", newUrl);
+        iframe.setAttribute("frameborder", "0");
+        iframe.setAttribute("allowfullscreen", "");
+        iframe.setAttribute("allowpaymentrequest", "true");
+        iframe.setAttribute("allow", "payment");
+        // Replace <engrid-post-donation> with the iframe
+        postDonationTag.replaceWith(iframe);
+    }
+    shouldRun() {
+        return (engrid_ENGrid.isThankYouPage() &&
+            this.hasPostDonationTag() &&
+            engrid_ENGrid.getBodyData("embedded") === null);
+    }
+    hasPostDonationTag() {
+        return !!document.querySelector("engrid-post-donation");
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.20.10";
+const AppVersion = "0.21.0";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
 
 
 
@@ -21976,10 +22062,22 @@ const customScript = function (App) {
 
   // Show recurring text in receipt if recurring donation
   if (pageJson.recurring) {
-    const recurringTextSpan = document.getElementById('recurring-yes');
+    const recurringTextSpan = document.getElementById("recurring-yes");
     if (recurringTextSpan) {
-      recurringTextSpan.style.display = 'inline';
+      recurringTextSpan.style.display = "inline";
     }
+  }
+  const feeCoverCheck = App.getField("transaction.feeCover");
+  const otherAmount3 = App.getField("transaction.othamt3");
+  // If fee cover is checked, other amount 3 gets a Y
+  if (feeCoverCheck && otherAmount3) {
+    feeCoverCheck.addEventListener("change", function () {
+      if (feeCoverCheck.checked) {
+        otherAmount3.value = "Y";
+      } else {
+        otherAmount3.value = "";
+      }
+    });
   }
   App.setBodyData("client-js-loading", "finished");
 };
