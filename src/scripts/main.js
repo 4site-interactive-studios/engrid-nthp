@@ -18,6 +18,7 @@ export const customScript = function (App) {
       const donationAmt = parseFloat(pageJson.amount);
       const donationFrequency = pageJson.recurring ? "monthly" : "one-time";
       const transactionId = pageJson.transactionId || "";
+      const pageName = `Name: ${pageJson.pageName || ""}` || "";
 
       /**
        * Get the items array
@@ -35,7 +36,7 @@ export const customScript = function (App) {
             item_category: "Engaging Networks",
             item_category2: `Page Number: ${pageJson.pageNumber}`,
             item_category3: `Page Count: ${pageJson.pageCount}`,
-            item_category4: "Name: ${page~name}",
+            item_category4: pageName,
             item_variant: donationFrequency,
             price: donationAmt,
             quantity: 1,

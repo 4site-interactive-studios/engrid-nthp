@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, April 7, 2025 @ 21:51:37 ET
+ *  Date: Monday, April 7, 2025 @ 22:00:36 ET
  *  By: fernando
  *  ENGrid styles: v0.21.0
  *  ENGrid scripts: v0.21.0
@@ -22051,11 +22051,12 @@ const customScript = function (App) {
   if (pageJson && pageJson.pageNumber === pageJson.pageCount && pageJson.pageCount > 1) {
     App.setBodyData("thank-you", "true");
 
-    // Client Custon Code for Goole Analytics START
+    // Client Custom Code for Google Analytics START
     if (parseFloat(pageJson.amount) > 0) {
       const donationAmt = parseFloat(pageJson.amount);
       const donationFrequency = pageJson.recurring ? "monthly" : "one-time";
       const transactionId = pageJson.transactionId || "";
+      const pageName = `Name: ${pageJson.pageName || ""}` || "";
 
       /**
        * Get the items array
@@ -22072,7 +22073,7 @@ const customScript = function (App) {
           item_category: "Engaging Networks",
           item_category2: `Page Number: ${pageJson.pageNumber}`,
           item_category3: `Page Count: ${pageJson.pageCount}`,
-          item_category4: "Name: ${page~name}",
+          item_category4: pageName,
           item_variant: donationFrequency,
           price: donationAmt,
           quantity: 1
