@@ -403,9 +403,23 @@
       padding-top: 5px;
       padding-bottom: 5px;
     }
+    input:checked + label > img.paypal,
+    input:checked + label > img.google-pay-type,
+    input:checked + label > img.apple-pay-logo,
+    input:checked + label > img.paypal-venmo {
+      filter: brightness(0) invert(1);
+    }
 
-    input:checked + label > img {
-      background: white;
+    input:hover + label > img.paypal,
+    input:hover + label > img.google-pay-type,
+    input:hover + label > img.apple-pay-logo,
+    input:hover + label > img.paypal-venmo {
+      filter: brightness(1) invert(0.5);
+    }
+
+    input:checked + label > img.daf-logo,
+    input:hover + label > img.daf-logo {
+      filter: brightness(3) invert(0);
     }
   }
 
@@ -495,6 +509,32 @@
       margin-top: 8px;
     }
   }
+  .en__captcha {
+    padding: 0;
+    margin: 0 0 25px;
+  }
+  .en__mandatory:not(.en__field--recurrfreq):not([role="group"]) label {
+    justify-content: flex-start !important;
+    gap: 5px;
+    &::after {
+      content: " *";
+      font-size: 0.95rem;
+      font-weight: bold;
+    }
+  }
+  label {
+    &[for="en__field_transaction_ccnumber"],
+    &[for="en__field_transaction_ccexpire"],
+    &[for="en__field_transaction_ccvv"] {
+      justify-content: flex-start !important;
+      gap: 5px;
+      &::after {
+        content: " *";
+        font-size: 0.95rem;
+        font-weight: bold;
+      }
+    }
+  }
 
   &[data-engrid-thank-you="true"] {
     --h1_font-family: "Calendas Plus", Georgia, serif;
@@ -527,6 +567,15 @@
     #dd-container,
     .dtd-plugin {
       font-family: inherit;
+    }
+    #dd-container .dtd-search-input {
+      background-color: #fff !important;
+      padding-left: 2.5rem !important;
+    }
+    #dd-container .dtd-plugin a[class*="mg-"][class*="-button"],
+    #dd-container .dtd-plugin button {
+      box-sizing: border-box;
+      font-size: 0.9em;
     }
   }
 
