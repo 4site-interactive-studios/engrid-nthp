@@ -595,4 +595,47 @@
     font-size: 1rem;
     font-weight: bold;
   }
+  // Consent banner
+  .consent-banner__container {
+    p {
+      font-weight: normal;
+      font-family: Gibson, Helvetica, sans-serif;
+      letter-spacing: 0.03em;
+      text-align: left;
+      box-sizing: border-box;
+      margin: 0.2rem 0 0.7rem 0;
+      font-size: 1rem;
+      color: #fff;
+      line-height: 1.5;
+    }
+    .button {
+      border-radius: 3px;
+      cursor: pointer;
+      display: inline-block;
+      font-size: 0.8125rem;
+      font-weight: bold;
+      line-height: 1.2307692308em;
+      padding: 0.9230769231em 2em 0.7692307692em;
+      -webkit-font-smoothing: antialiased;
+      text-align: center;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+      vertical-align: middle;
+      white-space: nowrap;
+      letter-spacing: 0.03em;
+      &.-solid-white-blue {
+        border: 2px solid #41ade5;
+        background: #fff;
+        border-color: #fff;
+        color: #2084b8;
+      }
+      &.-solid-blue-white {
+        border: 2px solid #fff;
+        background: #2084b8;
+        border-color: #2084b8;
+        color: #fff;
+      }
+    }
+  }
 }

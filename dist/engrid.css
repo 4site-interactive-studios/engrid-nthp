@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, April 15, 2025 @ 16:38:25 ET
+ *  Date: Friday, April 25, 2025 @ 14:34:36 ET
  *  By: fernando
  *  ENGrid styles: v0.21.0
  *  ENGrid scripts: v0.21.0
@@ -8203,6 +8203,45 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=nthp] .en__field--feeCover label{
   font-size:1rem;
   font-weight:700;
+}
+[data-engrid-theme=nthp] .consent-banner__container p{
+  box-sizing:border-box;
+  color:#fff;
+  font-family:Gibson,Helvetica,sans-serif;
+  font-size:1rem;
+  font-weight:400;
+  letter-spacing:.03em;
+  line-height:1.5;
+  margin:.2rem 0 .7rem;
+  text-align:left;
+}
+[data-engrid-theme=nthp] .consent-banner__container .button{
+  -webkit-font-smoothing:antialiased;
+  border-radius:3px;
+  cursor:pointer;
+  display:inline-block;
+  font-size:.8125rem;
+  font-weight:700;
+  letter-spacing:.03em;
+  line-height:1.2307692308em;
+  padding:.9230769231em 2em .7692307692em;
+  text-align:center;
+  -webkit-text-decoration:none;
+  text-decoration:none;
+  text-transform:uppercase;
+  transition:background .2s,border-color .2s,color .2s;
+  vertical-align:middle;
+  white-space:nowrap;
+}
+[data-engrid-theme=nthp] .consent-banner__container .button.-solid-white-blue{
+  background:#fff;
+  border:2px solid #fff;
+  color:#2084b8;
+}
+[data-engrid-theme=nthp] .consent-banner__container .button.-solid-blue-white{
+  background:#2084b8;
+  border:2px solid #2084b8;
+  color:#fff;
 }
 body{
   opacity:1;
