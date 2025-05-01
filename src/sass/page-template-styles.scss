@@ -178,6 +178,15 @@
   --engrid__content-header_padding: 40px 40px 0;
   --engrid__body_padding: 0 40px;
 
+  &#en__pagebuilder[data-engrid-layout*="1col"]
+    div:not(.pboAdvancedRow__preview)
+    .en__component--advcolumn {
+    &.content-header,
+    &.content-footer {
+      box-shadow: var(--engrid__body_box-shadow);
+    }
+  }
+
   &#en__pagebuilder {
     --pagebuilder__background-color: var(--color_white);
 
