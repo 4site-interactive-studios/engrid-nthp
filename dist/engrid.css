@@ -19,8 +19,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, May 1, 2025 @ 13:30:04 ET
- *  By: bryancasler
+ *  Date: Thursday, May 1, 2025 @ 15:38:19 ET
+ *  By: 4Site
  *  ENGrid styles: v0.21.0
  *  ENGrid scripts: v0.21.0
  *
@@ -8118,7 +8118,7 @@ body[data-engrid-debug]:before{
     margin:0;
   }
 }
-[data-engrid-theme=nthp] .membership-benefits-modal-content{
+[data-engrid-theme=nthp]#en__pagebuilder .membership-benefits-modal-content{
   background-color:rgba(0,0,255,.102);
   border:5px dashed rgba(0,0,255,.502);
   height:300px;
