@@ -185,6 +185,7 @@
     .page-alert,
     .body-headerOutside,
     .body-header,
+    .body-banner,
     .body-bannerOverlay,
     .body-bottom,
     .body-footer,
@@ -194,6 +195,13 @@
     .page-backgroundImageOverlay {
       display: none;
     }
+  }
+
+  &#en__pagebuilder
+    .edit-lock.en__component.en__component--active.en__component--activeTarget
+    > .en__component__actions
+    > a.en__component__action.en__component__action--settings {
+    transform: translate(-9px, -31px);
   }
 
   .en__errorHeader,
@@ -480,6 +488,15 @@
         }
       }
     }
+  }
+
+  .membership-benefits-modal-content {
+    height: 300px;
+    overflow: hidden;
+    border: 5px dashed rgba(0, 0, 255, 0.502);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: rgba(0, 0, 255, 0.102) !important;
   }
 
   .engrid-modal__container:has(.membership-benefits-modal-content) {

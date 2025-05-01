@@ -19,8 +19,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, April 25, 2025 @ 14:34:36 ET
- *  By: fernando
+ *  Date: Thursday, May 1, 2025 @ 12:57:13 ET
+ *  By: bryancasler
  *  ENGrid styles: v0.21.0
  *  ENGrid scripts: v0.21.0
  *
@@ -7887,8 +7887,11 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=nthp]#en__pagebuilder{
   --pagebuilder__background-color:var(--color_white);
 }
-[data-engrid-theme=nthp]#en__pagebuilder .body-bannerOverlay,[data-engrid-theme=nthp]#en__pagebuilder .body-bottom,[data-engrid-theme=nthp]#en__pagebuilder .body-footer,[data-engrid-theme=nthp]#en__pagebuilder .body-footerOutside,[data-engrid-theme=nthp]#en__pagebuilder .body-header,[data-engrid-theme=nthp]#en__pagebuilder .body-headerOutside,[data-engrid-theme=nthp]#en__pagebuilder .content-footerSpacer,[data-engrid-theme=nthp]#en__pagebuilder .content-preFooter,[data-engrid-theme=nthp]#en__pagebuilder .page-alert,[data-engrid-theme=nthp]#en__pagebuilder .page-backgroundImageOverlay{
+[data-engrid-theme=nthp]#en__pagebuilder .body-banner,[data-engrid-theme=nthp]#en__pagebuilder .body-bannerOverlay,[data-engrid-theme=nthp]#en__pagebuilder .body-bottom,[data-engrid-theme=nthp]#en__pagebuilder .body-footer,[data-engrid-theme=nthp]#en__pagebuilder .body-footerOutside,[data-engrid-theme=nthp]#en__pagebuilder .body-header,[data-engrid-theme=nthp]#en__pagebuilder .body-headerOutside,[data-engrid-theme=nthp]#en__pagebuilder .content-footerSpacer,[data-engrid-theme=nthp]#en__pagebuilder .content-preFooter,[data-engrid-theme=nthp]#en__pagebuilder .page-alert,[data-engrid-theme=nthp]#en__pagebuilder .page-backgroundImageOverlay{
   display:none;
+}
+[data-engrid-theme=nthp]#en__pagebuilder .edit-lock.en__component.en__component--active.en__component--activeTarget>.en__component__actions>a.en__component__action.en__component__action--settings{
+  transform:translate(-9px, -31px);
 }
 [data-engrid-theme=nthp] .en__errorHeader,[data-engrid-theme=nthp] .en__errorList>.en__error{
   position:relative;
@@ -8108,6 +8111,14 @@ body[data-engrid-debug]:before{
     font-size:15px;
     margin:0;
   }
+}
+[data-engrid-theme=nthp] .membership-benefits-modal-content{
+  background-color:rgba(0,0,255,.102) !important;
+  border:5px dashed rgba(0,0,255,.502);
+  height:300px;
+  margin-bottom:1rem;
+  overflow:hidden;
+  padding:1rem;
 }
 [data-engrid-theme=nthp] .engrid-modal__container:has(.membership-benefits-modal-content){
   border-top:8px solid #00a3e2;
