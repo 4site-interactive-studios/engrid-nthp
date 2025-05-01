@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, May 1, 2025 @ 12:57:13 ET
+ *  Date: Thursday, May 1, 2025 @ 13:03:42 ET
  *  By: bryancasler
  *  ENGrid styles: v0.21.0
  *  ENGrid scripts: v0.21.0
@@ -8113,7 +8113,7 @@ body[data-engrid-debug]:before{
   }
 }
 [data-engrid-theme=nthp] .membership-benefits-modal-content{
-  background-color:rgba(0,0,255,.102) !important;
+  background-color:rgba(0,0,255,.102);
   border:5px dashed rgba(0,0,255,.502);
   height:300px;
   margin-bottom:1rem;
