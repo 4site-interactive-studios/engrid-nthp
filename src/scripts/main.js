@@ -1,6 +1,6 @@
 const tippy = require("tippy.js").default;
 
-export const customScript = function (App) {
+export const customScript = function (App, DonationFrequency) {
   console.log("ENGrid client scripts are executing");
 
   const dataLayer = window.dataLayer || [];
@@ -147,6 +147,51 @@ export const customScript = function (App) {
       }
     });
   }
+
+  // Add your client scripts here
+  const freq = DonationFrequency.getInstance();
+  freq.onFrequencyChange.subscribe((s) => {
+    const refCode = App.getFieldValue("transaction.othamt1");
+    if (refCode) {
+      const refValue = s === "onetime" ? "S" : "R";
+      const newRefCode =
+        refCode.substring(0, 6) + refValue + refCode.substring(7);
+      App.setFieldValue("transaction.othamt1", newRefCode);
+    }
+  });
+
+  function moveAttributionClass() {
+    const allowedClasses = [
+      "attribution-bottom",
+      "attribution-bottomcenter",
+      "attribution-bottomright",
+      "attribution-bottomleft",
+      "attribution-top",
+      "attribution-topcenter",
+      "attribution-topright",
+      "attribution-topleft",
+      "attribution-left",
+      "attribution-leftcenter",
+      "attribution-right",
+      "attribution-rightcenter",
+    ];
+
+    document.querySelectorAll("img").forEach((img) => {
+      const matchedClass = allowedClasses.find((cls) =>
+        img.classList.contains(cls)
+      );
+      if (matchedClass) {
+        const parentDiv = img.closest(".en__component--column");
+        if (parentDiv) {
+          img.classList.remove(matchedClass);
+          parentDiv.classList.add(matchedClass);
+        }
+      }
+    });
+  }
+
+  // Call it immediately
+  moveAttributionClass();
 
   App.setBodyData("client-js-loading", "finished");
 };

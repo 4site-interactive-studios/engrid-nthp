@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, May 1, 2025 @ 15:38:19 ET
- *  By: 4Site
+ *  Date: Monday, May 12, 2025 @ 23:30:05 ET
+ *  By: fernando
  *  ENGrid styles: v0.21.0
  *  ENGrid scripts: v0.21.0
  *
@@ -22043,7 +22043,7 @@ const AppVersion = "0.21.0";
 
 ;// CONCATENATED MODULE: ./src/scripts/main.js
 const main_tippy = (__webpack_require__(9244)/* ["default"] */ .Ay);
-const customScript = function (App) {
+const customScript = function (App, DonationFrequency) {
   console.log("ENGrid client scripts are executing");
   const dataLayer = window.dataLayer || [];
 
@@ -22177,6 +22177,33 @@ const customScript = function (App) {
       }
     });
   }
+
+  // Add your client scripts here
+  const freq = DonationFrequency.getInstance();
+  freq.onFrequencyChange.subscribe(s => {
+    const refCode = App.getFieldValue("transaction.othamt1");
+    if (refCode) {
+      const refValue = s === "onetime" ? "S" : "R";
+      const newRefCode = refCode.substring(0, 6) + refValue + refCode.substring(7);
+      App.setFieldValue("transaction.othamt1", newRefCode);
+    }
+  });
+  function moveAttributionClass() {
+    const allowedClasses = ["attribution-bottom", "attribution-bottomcenter", "attribution-bottomright", "attribution-bottomleft", "attribution-top", "attribution-topcenter", "attribution-topright", "attribution-topleft", "attribution-left", "attribution-leftcenter", "attribution-right", "attribution-rightcenter"];
+    document.querySelectorAll("img").forEach(img => {
+      const matchedClass = allowedClasses.find(cls => img.classList.contains(cls));
+      if (matchedClass) {
+        const parentDiv = img.closest(".en__component--column");
+        if (parentDiv) {
+          img.classList.remove(matchedClass);
+          parentDiv.classList.add(matchedClass);
+        }
+      }
+    });
+  }
+
+  // Call it immediately
+  moveAttributionClass();
   App.setBodyData("client-js-loading", "finished");
 };
 ;// CONCATENATED MODULE: ./src/scripts/membership-benefits-modal.ts
@@ -22225,7 +22252,7 @@ const options = {
   MaxAmountMessage: "Maximum gift amount is $25,000",
   onLoad: () => {
     new MembershipBenefitsModal();
-    customScript(App);
+    customScript(App, DonationFrequency);
   },
   onResize: () => console.log("Starter Theme Window Resized")
 };

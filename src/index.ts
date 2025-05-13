@@ -1,7 +1,4 @@
-import {
-  Options,
-  App
-} from "@4site/engrid-scripts"; // Uses ENGrid via NPM
+import { Options, App, DonationFrequency } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
 // import { Options, App } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
 
 import "./sass/main.scss";
@@ -20,8 +17,9 @@ const options: Options = {
   SrcDefer: true,
   ProgressBar: true,
   Placeholders: {
-    ".en__field--donationAmt.en__field--withOther .en__field__input--other": "Enter an amount",
- },
+    ".en__field--donationAmt.en__field--withOther .en__field__input--other":
+      "Enter an amount",
+  },
   Debug: App.getUrlParameter("debug") == "true" ? true : false,
   MinAmount: 5,
   MaxAmount: 25000,
@@ -29,7 +27,7 @@ const options: Options = {
   MaxAmountMessage: "Maximum gift amount is $25,000",
   onLoad: () => {
     new MembershipBenefitsModal();
-    customScript(App)
+    customScript(App, DonationFrequency);
   },
   onResize: () => console.log("Starter Theme Window Resized"),
 };

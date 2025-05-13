@@ -19,8 +19,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, May 1, 2025 @ 15:38:19 ET
- *  By: 4Site
+ *  Date: Monday, May 12, 2025 @ 23:30:05 ET
+ *  By: fernando
  *  ENGrid styles: v0.21.0
  *  ENGrid scripts: v0.21.0
  *
@@ -8259,6 +8259,30 @@ body[data-engrid-debug]:before{
   background:#2084b8;
   border:2px solid #2084b8;
   color:#fff;
+}
+[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-topleft figure.media-with-attribution,[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-topleft:before{
+  background-position:0 0 !important;
+}
+[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-topright figure.media-with-attribution,[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-topright:before{
+  background-position:100% 0 !important;
+}
+[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-bottomright figure.media-with-attribution,[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-bottomright:before{
+  background-position:100% 100% !important;
+}
+[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-bottomleft figure.media-with-attribution,[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-bottomleft:before{
+  background-position:0 100% !important;
+}
+[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-top figure.media-with-attribution,[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-top:before,[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-topcenter figure.media-with-attribution,[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-topcenter:before{
+  background-position:top !important;
+}
+[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-bottom figure.media-with-attribution,[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-bottom:before,[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-bottomcenter figure.media-with-attribution,[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-bottomcenter:before{
+  background-position:bottom !important;
+}
+[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-left figure.media-with-attribution,[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-left:before,[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-leftcenter figure.media-with-attribution,[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-leftcenter:before{
+  background-position:0 !important;
+}
+[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-right figure.media-with-attribution,[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-right:before,[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-rightcenter figure.media-with-attribution,[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-rightcenter:before{
+  background-position:100% !important;
 }
 body{
   opacity:1;
