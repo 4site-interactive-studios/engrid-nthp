@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, May 20, 2025 @ 16:47:23 ET
+ *  Date: Tuesday, May 20, 2025 @ 16:52:08 ET
  *  By: fernando
  *  ENGrid styles: v0.21.0
  *  ENGrid scripts: v0.21.0
@@ -22204,6 +22204,12 @@ const customScript = function (App, DonationFrequency) {
 
   // Call it immediately
   moveAttributionClass();
+  const middleName = App.getField("supporter.middleName");
+  if (middleName) {
+    middleName.setAttribute("autocomplete", "middle-name");
+    middleName.setAttribute("aria-label", "Middle Initial");
+    middleName.setAttribute("placeholder", "Middle Initial");
+  }
   App.setBodyData("client-js-loading", "finished");
 };
 ;// CONCATENATED MODULE: ./src/scripts/membership-benefits-modal.ts

@@ -193,5 +193,12 @@ export const customScript = function (App, DonationFrequency) {
   // Call it immediately
   moveAttributionClass();
 
+  const middleName = App.getField("supporter.middleName");
+  if (middleName) {
+    middleName.setAttribute("autocomplete", "middle-name");
+    middleName.setAttribute("aria-label", "Middle Initial");
+    middleName.setAttribute("placeholder", "Middle Initial");
+  }
+
   App.setBodyData("client-js-loading", "finished");
 };

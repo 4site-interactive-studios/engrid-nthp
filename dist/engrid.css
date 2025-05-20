@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, May 20, 2025 @ 16:47:23 ET
+ *  Date: Tuesday, May 20, 2025 @ 16:52:08 ET
  *  By: fernando
  *  ENGrid styles: v0.21.0
  *  ENGrid scripts: v0.21.0
@@ -8070,9 +8070,6 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=nthp] .give-by-select input:checked+label>img.daf-logo,[data-engrid-theme=nthp] .give-by-select input:hover+label>img.daf-logo{
   filter:brightness(3) invert(0);
-}
-[data-engrid-theme=nthp] input[name="supporter.middleName"]{
-  text-transform:uppercase;
 }
 [data-engrid-theme=nthp] .en__submit .live-variable-frequency{
   text-transform:capitalize;
