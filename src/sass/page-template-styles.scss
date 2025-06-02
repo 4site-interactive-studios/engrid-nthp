@@ -753,4 +753,33 @@
     figure.media-with-attribution {
     background-position: right !important; // Pinned to Right Center
   }
+
+  &:not(#en__pagebuilder):not([data-engrid-debug]) .en__component--dd360search {
+    display: block;
+  }
+
+  .engrid-blocked-country {
+    background-color: var(--color_light-blue);
+    color: var(--color_black);
+    padding: 20px;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  &:has(.engrid-blocked-country) {
+    .en__field--address1,
+    .en__field--address2,
+    .en__field--city,
+    .en__field--region,
+    .en__field--postcode,
+    #payment-info-heading,
+    .give-by-select,
+    .en__captcha,
+    .en__field--feeCover,
+    .en__submit,
+    #en__digitalWallet,
+    .en__component--dd360search,
+    [class*="giveBySelect-"] {
+      display: none !important;
+    }
+  }
 }

@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, May 20, 2025 @ 16:52:08 ET
+ *  Date: Monday, June 2, 2025 @ 15:18:37 ET
  *  By: fernando
  *  ENGrid styles: v0.21.0
  *  ENGrid scripts: v0.21.0
@@ -8279,6 +8279,19 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-right figure.media-with-attribution,[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-right:before,[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-rightcenter figure.media-with-attribution,[data-engrid-theme=nthp]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-rightcenter:before{
   background-position:100% !important;
+}
+[data-engrid-theme=nthp]:not(#en__pagebuilder):not([data-engrid-debug]) .en__component--dd360search{
+  display:block;
+}
+[data-engrid-theme=nthp] .engrid-blocked-country{
+  background-color:var(--color_light-blue);
+  color:var(--color_black);
+  font-size:1.2rem;
+  font-weight:600;
+  padding:20px;
+}
+[data-engrid-theme=nthp]:has(.engrid-blocked-country) #en__digitalWallet,[data-engrid-theme=nthp]:has(.engrid-blocked-country) #payment-info-heading,[data-engrid-theme=nthp]:has(.engrid-blocked-country) .en__captcha,[data-engrid-theme=nthp]:has(.engrid-blocked-country) .en__component--dd360search,[data-engrid-theme=nthp]:has(.engrid-blocked-country) .en__field--address1,[data-engrid-theme=nthp]:has(.engrid-blocked-country) .en__field--address2,[data-engrid-theme=nthp]:has(.engrid-blocked-country) .en__field--city,[data-engrid-theme=nthp]:has(.engrid-blocked-country) .en__field--feeCover,[data-engrid-theme=nthp]:has(.engrid-blocked-country) .en__field--postcode,[data-engrid-theme=nthp]:has(.engrid-blocked-country) .en__field--region,[data-engrid-theme=nthp]:has(.engrid-blocked-country) .en__submit,[data-engrid-theme=nthp]:has(.engrid-blocked-country) .give-by-select,[data-engrid-theme=nthp]:has(.engrid-blocked-country) [class*=giveBySelect-]{
+  display:none !important;
 }
 body{
   opacity:1;

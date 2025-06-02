@@ -199,6 +199,37 @@ export const customScript = function (App, DonationFrequency) {
     middleName.setAttribute("aria-label", "Middle Initial");
     middleName.setAttribute("placeholder", "Middle Initial");
   }
+  const country = App.getField("supporter.country");
+
+  // Add country notice
+  const addCountryNotice = () => {
+    if (!document.querySelector(".en__field--country .en__field__notice")) {
+      App.addHtml(
+        '<div class="en__field__notice engrid-blocked-country">We currently accept donations only from the United States, Canada, Australia, Spain, and Portugal. <br> If you have any questions or need assistance, please <a href="https://savingplaces.org/contact">contact us.</a> - we\'re here to help!</div>',
+        ".en__field--country .en__field__element",
+        "after"
+      );
+    }
+  };
+  const removeCountryNotice = () => {
+    App.removeHtml(".en__field--country .en__field__notice");
+  };
+
+  if (country) {
+    const allowedCountries = ["US", "CA", "AU", "ES", "PT"];
+    if (!allowedCountries.includes(country.value)) {
+      addCountryNotice();
+    } else {
+      removeCountryNotice();
+    }
+    country.addEventListener("change", function () {
+      if (!allowedCountries.includes(country.value)) {
+        addCountryNotice();
+      } else {
+        removeCountryNotice();
+      }
+    });
+  }
 
   App.setBodyData("client-js-loading", "finished");
 };
