@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, June 13, 2025 @ 11:51:09 ET
+ *  Date: Monday, June 23, 2025 @ 17:26:41 ET
  *  By: fernando
  *  ENGrid styles: v0.21.0
  *  ENGrid scripts: v0.21.0
@@ -22212,17 +22212,20 @@ const customScript = function (App, DonationFrequency) {
   }
   const country = App.getField("supporter.country");
 
+  // const allowedCountries = ["US", "CA", "AU", "ES", "PT"];
+  const allowedCountries = "allowedCountries" in window && Array.isArray(window.allowedCountries) ? window.allowedCountries : [];
+  const allowedCountriesMessage = "allowedCountriesMessage" in window && typeof window.allowedCountriesMessage === "string" ? window.allowedCountriesMessage : 'We currently accept donations only from the United States, Canada, Australia, Spain, and Portugal. <br> If you have any questions or need assistance, please <a href="https://savingplaces.org/contact">contact us</a> - we\'re here to help!';
+
   // Add country notice
   const addCountryNotice = () => {
     if (!document.querySelector(".en__field--country .en__field__notice")) {
-      App.addHtml('<div class="en__field__notice engrid-blocked-country">We currently accept donations only from the United States, Canada, Australia, Spain, and Portugal. <br> If you have any questions or need assistance, please <a href="https://savingplaces.org/contact">contact us</a> - we\'re here to help!</div>', ".en__field--country .en__field__element", "after");
+      App.addHtml(`<div class="en__field__notice engrid-blocked-country">${allowedCountriesMessage}</div>`, ".en__field--country .en__field__element", "after");
     }
   };
   const removeCountryNotice = () => {
     App.removeHtml(".en__field--country .en__field__notice");
   };
-  if (country) {
-    const allowedCountries = ["US", "CA", "AU", "ES", "PT"];
+  if (country && allowedCountries.length > 0) {
     if (!allowedCountries.includes(country.value)) {
       addCountryNotice();
     } else {

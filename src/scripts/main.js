@@ -201,11 +201,23 @@ export const customScript = function (App, DonationFrequency) {
   }
   const country = App.getField("supporter.country");
 
+  // const allowedCountries = ["US", "CA", "AU", "ES", "PT"];
+  const allowedCountries =
+    "allowedCountries" in window && Array.isArray(window.allowedCountries)
+      ? window.allowedCountries
+      : [];
+
+  const allowedCountriesMessage =
+    "allowedCountriesMessage" in window &&
+    typeof window.allowedCountriesMessage === "string"
+      ? window.allowedCountriesMessage
+      : 'We currently accept donations only from the United States, Canada, Australia, Spain, and Portugal. <br> If you have any questions or need assistance, please <a href="https://savingplaces.org/contact">contact us</a> - we\'re here to help!';
+
   // Add country notice
   const addCountryNotice = () => {
     if (!document.querySelector(".en__field--country .en__field__notice")) {
       App.addHtml(
-        '<div class="en__field__notice engrid-blocked-country">We currently accept donations only from the United States, Canada, Australia, Spain, and Portugal. <br> If you have any questions or need assistance, please <a href="https://savingplaces.org/contact">contact us</a> - we\'re here to help!</div>',
+        `<div class="en__field__notice engrid-blocked-country">${allowedCountriesMessage}</div>`,
         ".en__field--country .en__field__element",
         "after"
       );
@@ -215,8 +227,7 @@ export const customScript = function (App, DonationFrequency) {
     App.removeHtml(".en__field--country .en__field__notice");
   };
 
-  if (country) {
-    const allowedCountries = ["US", "CA", "AU", "ES", "PT"];
+  if (country && allowedCountries.length > 0) {
     if (!allowedCountries.includes(country.value)) {
       addCountryNotice();
     } else {
