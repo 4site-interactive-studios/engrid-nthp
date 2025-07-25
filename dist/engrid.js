@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, July 7, 2025 @ 16:20:00 ET
+ *  Date: Friday, July 25, 2025 @ 14:16:55 ET
  *  By: fernando
  *  ENGrid styles: v0.22.4
  *  ENGrid scripts: v0.22.7
@@ -22690,7 +22690,7 @@ class MembershipBenefitsModal extends Modal {
       addCloseButton: false,
       closeButtonLabel: ""
     });
-    document.querySelector(".modal-button button")?.addEventListener("click", () => {
+    document.querySelector(".modal-button button, .modal-button a")?.addEventListener("click", () => {
       this.open();
     });
   }

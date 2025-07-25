@@ -8,13 +8,17 @@ export class MembershipBenefitsModal extends Modal {
       closeButtonLabel: "",
     });
 
-    document.querySelector(".modal-button button")?.addEventListener("click", () => {
-      this.open();
-    });
+    document
+      .querySelector(".modal-button button, .modal-button a")
+      ?.addEventListener("click", () => {
+        this.open();
+      });
   }
 
   getModalContent() {
-    const modalContent = document.querySelector(".membership-benefits-modal-content") as HTMLElement;
+    const modalContent = document.querySelector(
+      ".membership-benefits-modal-content"
+    ) as HTMLElement;
     return modalContent || "";
   }
 }
