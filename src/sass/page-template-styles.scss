@@ -791,6 +791,7 @@
   }
   &[data-engrid-layout="centercenter2col"] {
     --engrid__content_padding: 0 20px;
+
     h4 {
       font-size: 1rem;
       margin: 0 0 0.3rem 0;
@@ -799,6 +800,10 @@
       grid-column: pc-start / pc-end;
       padding: 0;
       margin-top: 1rem;
+      text-align: center;
+      & > .en__component--copyblock {
+        padding: 10px;
+      }
     }
     form > .en__component--advrow .content-header {
       grid-column: pc-start / pc-end;
@@ -852,28 +857,30 @@
       }
     }
     form > .en__component--advrow .body-main {
+      padding-top: 40px;
       grid-row: body-main-start / body-main-end;
+      &::before {
+        content: "";
+        background: var(--color_blue);
+        top: 0;
+        display: block;
+        height: 4px;
+        left: 40px;
+        position: absolute;
+        width: 120px;
+      }
     }
     form > .en__component--advrow .body-title {
       grid-column: lbc-start / rbc-end;
       h1 {
         --h1_color: var(--color_blue);
-        --h1_font-size: 44px;
+        --h1_font-size: clamp(32px, 4.4vw, 44px);
         --h1_font-weight: 700;
         --h1_line-height: 1.2;
         margin: 40px auto;
         text-align: center;
         &::after {
-          content: "";
-          display: block;
-          width: 120px;
-          height: 4px;
-          background: var(--color_blue);
-          margin-top: 8px;
-          position: absolute;
-          left: 50%;
-          bottom: 0;
-          transform: translateX(-50%);
+          content: none;
         }
       }
     }

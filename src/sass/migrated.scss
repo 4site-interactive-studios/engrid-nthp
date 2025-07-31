@@ -50,6 +50,24 @@
   .benefits-promo {
     padding: 15px;
     background: #fafafa;
+    flex-wrap: wrap;
+
+    &-inner {
+      margin: 12px;
+      order: 3;
+    }
+
+    .emailImage--one {
+      width: 150px !important;
+      // order: 1;
+      align-self: center;
+      margin-right: 20px;
+    }
+
+    .emailImage--two {
+      order: 2;
+      width: 75px !important;
+    }
 
     p {
       margin: 0.2rem 0 0.7rem 0;
@@ -63,10 +81,6 @@
       &:last-of-type {
         margin-left: 40px;
       }
-    }
-
-    &-inner {
-      margin: 12px;
     }
 
     .popup-info-opener {
@@ -92,6 +106,26 @@
 
       &::after {
         transform: rotate(90deg) !important;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      & {
+        flex-wrap: nowrap;
+      }
+
+      .emailImage--one {
+        align-self: baseline;
+        margin-right: 10px;
+      }
+
+      .emailImage--two {
+        width: 99px !important;
+      }
+
+      .emailImage--two,
+      &-inner {
+        order: inherit;
       }
     }
   }
@@ -265,6 +299,85 @@
         -webkit-transform: translateY(-50%);
         transform: translateY(-50%);
         right: 0;
+      }
+    }
+  }
+  &.component-faq {
+    padding: 20px;
+    max-width: 1360px;
+    width: 100%;
+    margin: 0 auto 60px;
+    box-sizing: border-box;
+
+    h1 {
+      font-weight: bold;
+      line-height: 1.2;
+      color: #1f1f1f;
+      font-family: Gibson, Helvetica, sans-serif;
+    }
+    h3 {
+      font-size: 1.2rem;
+    }
+
+    p {
+      font-size: 1rem;
+      margin-top: 0;
+    }
+
+    .accordion-header,
+    .accordion-body {
+      padding: 18px 20px;
+      background: #fafafa;
+    }
+
+    .accordion-header {
+      position: relative;
+      padding-right: 60px;
+      border-top: 2px solid #fff;
+      cursor: pointer;
+
+      &::before,
+      &::after {
+        content: "";
+        width: 20px;
+        height: 4px;
+        position: absolute;
+        top: 50%;
+        right: 24px;
+        background: #00a3e2;
+        transition: 0.25s ease-in-out;
+      }
+
+      &::after {
+        transform: translateY(-50%) rotate(90deg);
+      }
+
+      &::before {
+        transform: translateY(-50%);
+      }
+
+      & * {
+        color: #00689e;
+        margin: 0;
+        transition: 0.25s ease-in-out;
+      }
+
+      &.-active::after {
+        display: none;
+      }
+
+      &:active,
+      &:focus,
+      &:hover,
+      &.-focused {
+        &::before,
+        &::after {
+          background: #00689e;
+        }
+
+        & * {
+          color: #00a3e2;
+        }
       }
     }
   }
