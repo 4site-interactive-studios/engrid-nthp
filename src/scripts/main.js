@@ -242,5 +242,131 @@ export const customScript = function (App, DonationFrequency) {
     });
   }
 
+  // FAQ Block Start
+  const faq = () => {
+    const faqElements = document.querySelectorAll(".component-faq");
+
+    if (!faqElements.length) {
+      return;
+    }
+
+    const headers = Array.from(
+      document.querySelectorAll(".component-faq > div")
+    ).filter((element, index) => index % 2 === 0);
+
+    const slideOptions = {
+      duration: 300,
+      easing: "linear",
+    };
+
+    headers.forEach((header) => {
+      header.classList.add("accordion-header");
+      makeAccessible(header);
+
+      const nextElement = header.nextElementSibling;
+      if (nextElement) {
+        nextElement.classList.add("accordion-body");
+        nextElement.style.display = "none";
+      }
+    });
+
+    document.addEventListener("click", (event) => {
+      const header = event.target.closest(".accordion-header");
+      if (header) {
+        header.classList.toggle("-active");
+
+        const body = header.nextElementSibling;
+        if (body && body.classList.contains("accordion-body")) {
+          if (body.style.display === "none") {
+            slideDown(body, slideOptions);
+          } else {
+            slideUp(body, slideOptions);
+          }
+        }
+      }
+    });
+
+    function makeAccessible(element) {
+      element.setAttribute("tabindex", "0");
+    }
+
+    function slideDown(element, options) {
+      element.style.display = "block";
+      element.style.overflow = "hidden";
+
+      const height = element.scrollHeight;
+      element.style.height = "0";
+
+      const start = performance.now();
+
+      function animate(currentTime) {
+        const elapsed = currentTime - start;
+        const progress = Math.min(elapsed / options.duration, 1);
+
+        element.style.height = `${height * progress}px`;
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          element.style.height = "";
+          element.style.overflow = "";
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    function slideUp(element, options) {
+      element.style.overflow = "hidden";
+
+      const height = element.scrollHeight;
+      element.style.height = `${height}px`;
+
+      const start = performance.now();
+
+      function animate(currentTime) {
+        const elapsed = currentTime - start;
+        const progress = Math.min(elapsed / options.duration, 1);
+
+        element.style.height = `${height * (1 - progress)}px`;
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          element.style.display = "none";
+          element.style.height = "";
+          element.style.overflow = "";
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+  };
+
+  const siteHeader = () => {
+    const component = document.querySelector(".site-header");
+
+    if (!component) {
+      return;
+    }
+
+    const target = component.querySelector(".site-header-bottom");
+    const mobileItems = document.querySelectorAll(".mobile-to-header");
+
+    if (mobileItems.length && target) {
+      mobileItems.forEach((item) => {
+        const clone = item.cloneNode(true);
+        clone.classList.remove("mobile-to-header");
+        clone.classList.add("mobile-only");
+        target.appendChild(clone);
+      });
+    }
+  };
+
+  // Initialize components
+  faq();
+  siteHeader();
+  // FAQ Block End
+
   App.setBodyData("client-js-loading", "finished");
 };
