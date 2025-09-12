@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, August 20, 2025 @ 01:01:32 ET
+ *  Date: Friday, September 12, 2025 @ 15:43:39 ET
  *  By: fernando
  *  ENGrid styles: v0.22.11
  *  ENGrid scripts: v0.22.17
@@ -8343,6 +8343,12 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=nthp][data-engrid-layout=centercenter2col] form>.en__component--advrow .content-footer>.en__component--copyblock{
   padding:10px;
 }
+[data-engrid-theme=nthp][data-engrid-layout=centercenter2col] .footer-copy{
+  font-size:14px;
+  line-height:22px;
+  margin:0 0 1.5rem;
+  text-align:center;
+}
 [data-engrid-theme=nthp][data-engrid-layout=centercenter2col] form>.en__component--advrow .content-header{
   background-color:#f2f3f1;
   grid-column:pc-start /  pc-end;
@@ -8423,6 +8429,16 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=nthp][data-engrid-layout=centercenter2col]:not(#en__pagebuilder) .page-backgroundImage:before{
   content:none;
+}
+[data-engrid-theme=nthp][data-engrid-layout=centercenter2col][data-engrid-thank-you=true] form>.en__component--advrow .body-main{
+  grid-row:body-header-end /  body-main-end;
+  padding-top:0;
+}
+[data-engrid-theme=nthp][data-engrid-layout=centercenter2col][data-engrid-thank-you=true] form>.en__component--advrow .body-main:before{
+  display:none;
+}
+[data-engrid-theme=nthp][data-engrid-layout=centercenter2col][data-engrid-thank-you=true] form>.en__component--advrow .body-top{
+  margin-top:32px;
 }
 [data-engrid-theme=nthp] .en__component--copyblock blockquote{
   margin:30px 0;

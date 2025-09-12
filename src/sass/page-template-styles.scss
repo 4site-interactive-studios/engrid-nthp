@@ -805,6 +805,12 @@
         padding: 10px;
       }
     }
+    .footer-copy {
+      font-size: 14px;
+      margin: 0 0 1.5rem 0;
+      line-height: 22px;
+      text-align: center;
+    }
     form > .en__component--advrow .content-header {
       grid-column: pc-start / pc-end;
       padding: 0;
@@ -888,6 +894,18 @@
       display: none;
       &:before {
         content: none;
+      }
+    }
+    &[data-engrid-thank-you="true"] {
+      form > .en__component--advrow .body-main {
+        grid-row: body-header-end / body-main-end;
+        padding-top: 0;
+        &::before {
+          display: none;
+        }
+      }
+      form > .en__component--advrow .body-top {
+        margin-top: 32px;
       }
     }
   }
