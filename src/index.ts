@@ -1,5 +1,5 @@
-import { Options, App, DonationFrequency } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
-// import { Options, App, DonationFrequency } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+// import { Options, App, DonationFrequency } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
+import { Options, App, DonationFrequency } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
 
 import "./sass/main.scss";
 import { customScript } from "./scripts/main";
@@ -25,6 +25,7 @@ const options: Options = {
   MaxAmount: 25000,
   MinAmountMessage: "Minimum gift amount is $5",
   MaxAmountMessage: "Maximum gift amount is $25,000",
+  StickyNSG: true,
   VGS: {
     "transaction.ccnumber": {
       css: {
