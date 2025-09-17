@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, September 17, 2025 @ 09:45:41 ET
+ *  Date: Wednesday, September 17, 2025 @ 10:32:00 ET
  *  By: michael
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
@@ -29866,6 +29866,11 @@ class StickyNSG {
       this.logger.log("No NSG active on page, not creating sticky NSG cookie");
       return;
     }
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("skipstickynsg") === "true") {
+      this.logger.log("'skipstickynsg' param present, not creating sticky NSG cookie");
+      return;
+    }
     const nsg = window.EngagingNetworks.suggestedGift;
     this.logger.log("Creating sticky NSG cookie", nsg);
     const cookieValue = JSON.stringify({
@@ -29873,7 +29878,9 @@ class StickyNSG {
         amounts: (_a = nsg.single) === null || _a === void 0 ? void 0 : _a.reduce((acc, curr) => {
           acc[curr.value] = curr.value;
           return acc;
-        }, {}),
+        }, {
+          "Other": "other"
+        }),
         default: (_b = nsg.single) === null || _b === void 0 ? void 0 : _b.find(gift => gift.nextSuggestedGift).value,
         stickyDefault: false
       },
@@ -29881,7 +29888,9 @@ class StickyNSG {
         amounts: (_c = nsg.recurring) === null || _c === void 0 ? void 0 : _c.reduce((acc, curr) => {
           acc[curr.value] = curr.value;
           return acc;
-        }, {}),
+        }, {
+          "Other": "other"
+        }),
         default: (_d = nsg.recurring) === null || _d === void 0 ? void 0 : _d.find(gift => gift.nextSuggestedGift).value,
         stickyDefault: false
       }
