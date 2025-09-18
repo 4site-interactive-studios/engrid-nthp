@@ -26,6 +26,20 @@ const options: Options = {
   MinAmountMessage: "Minimum gift amount is $5",
   MaxAmountMessage: "Maximum gift amount is $25,000",
   StickyNSG: true,
+  StickyPrepopulation: {
+    fields: [
+      "supporter.firstName",
+      "supporter.lastName",
+      "supporter.emailAddress",
+      "supporter.phoneNumber",
+      "supporter.address1",
+      "supporter.address2",
+      "supporter.city",
+      "supporter.region",
+      "supporter.postcode",
+      "supporter.country",
+    ],
+  },
   VGS: {
     "transaction.ccnumber": {
       css: {
