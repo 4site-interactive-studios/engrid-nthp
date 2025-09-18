@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, September 18, 2025 @ 12:08:23 ET
+ *  Date: Thursday, September 18, 2025 @ 13:17:20 ET
  *  By: michael
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
@@ -29978,7 +29978,14 @@ class StickyPrepopulation {
       return;
     }
     this.logger.log("StickyPrepopulation initialized");
-    this.deleteCookieIfGiftProcessComplete();
+    if (engrid_ENGrid.getGiftProcess()) {
+      this.deleteCookie();
+      return;
+    }
+    if (engrid_ENGrid.getPageNumber() !== 1 || !engrid_ENGrid.getField("supporter.emailAddress")) {
+      this.logger.log("Not on page 1 or email field not present, not creating cookie or applying pre-population.");
+      return;
+    }
     this.createCookie();
     this.applyPrepopulation();
   }
@@ -30002,11 +30009,9 @@ class StickyPrepopulation {
   /*
     * Delete the cookie if the gift process is complete
    */
-  deleteCookieIfGiftProcessComplete() {
-    if (engrid_ENGrid.getGiftProcess()) {
-      this.logger.log("Gift process complete, removing sticky prepopulation cookie if it exists");
-      remove(this.cookieName);
-    }
+  deleteCookie() {
+    this.logger.log("Gift process complete, removing sticky prepopulation cookie if it exists");
+    remove(this.cookieName);
   }
   /*
    * Create the cookie if we're coming from a campaign link and supporterId is present
