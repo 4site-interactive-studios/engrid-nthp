@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, September 18, 2025 @ 13:17:20 ET
+ *  Date: Wednesday, September 24, 2025 @ 08:28:16 ET
  *  By: michael
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
@@ -29992,14 +29992,16 @@ class StickyPrepopulation {
   /*
     * Determine if we should run the script
     * Do not run if RememberMe is active
+    * Do not run if on a chain link
     * Only run if StickyPrepopulation option is set with fields
    */
   shouldRun() {
     if (engrid_ENGrid.getOption("RememberMe")) {
       return false;
     }
+    const url = new URL(window.location.href);
     const options = engrid_ENGrid.getOption("StickyPrepopulation");
-    if (options && (options === null || options === void 0 ? void 0 : options.fields.length) > 0) {
+    if (options && (options === null || options === void 0 ? void 0 : options.fields.length) > 0 && !url.searchParams.has("chain")) {
       this.options = options;
       return true;
     } else {
@@ -30057,13 +30059,13 @@ class StickyPrepopulation {
         this.logger.log("SupporterId present, not applying sticky prepopulation");
         return;
       }
-      const encryptedSupporterDetails = JSON.parse(window.atob(cookieData));
-      if (!encryptedSupporterDetails || (encryptedSupporterDetails === null || encryptedSupporterDetails === void 0 ? void 0 : encryptedSupporterDetails.pageId) !== engrid_ENGrid.getPageID()) {
-        this.logger.log("No encrypted supporter details found in cookie, or page ID does not match");
-        return;
-      }
       let supporterDetails = {};
       try {
+        const encryptedSupporterDetails = JSON.parse(window.atob(cookieData));
+        if (!encryptedSupporterDetails || (encryptedSupporterDetails === null || encryptedSupporterDetails === void 0 ? void 0 : encryptedSupporterDetails.pageId) !== engrid_ENGrid.getPageID()) {
+          this.logger.log("No encrypted supporter details found in cookie, or page ID does not match");
+          return;
+        }
         supporterDetails = JSON.parse(yield this.decryptSupporterDetails(this.base64ToArrayBuffer(encryptedSupporterDetails.encryptedData), new Uint8Array(this.base64ToArrayBuffer(encryptedSupporterDetails.iv))));
       } catch (e) {
         this.logger.log("Error decrypting supporter details from cookie");
