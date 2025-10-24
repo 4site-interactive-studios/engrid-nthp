@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, October 22, 2025 @ 16:29:12 ET
- *  By: Cawe Coy
+ *  Date: Friday, October 24, 2025 @ 00:19:38 ET
+ *  By: fernando
  *  ENGrid styles: v0.22.11
  *  ENGrid scripts: v0.22.17
  *
@@ -24720,7 +24720,6 @@ const options = {
     new MembershipBenefitsModal();
     customScript(App, DonationFrequency);
     window.DonationLightboxForm = DonationLightboxForm;
-    customScript(App, DonationFrequency);
     if (App.getBodyData("subtheme") === "multistep") {
       new DonationLightboxForm(DonationAmount, DonationFrequency, App);
     }

@@ -64,7 +64,6 @@ const options: Options = {
     customScript(App, DonationFrequency);
 
     (<any>window).DonationLightboxForm = DonationLightboxForm;
-    customScript(App, DonationFrequency);
     if (App.getBodyData("subtheme") === "multistep") {
       new DonationLightboxForm(DonationAmount, DonationFrequency, App);
     }
