@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, October 27, 2025 @ 00:26:22 ET
- *  By: Cawe Coy
+ *  Date: Monday, October 27, 2025 @ 12:09:04 ET
+ *  By: fernando
  *  ENGrid styles: v0.22.11
  *  ENGrid scripts: v0.22.17
  *
@@ -24047,8 +24047,8 @@ class DonationLightboxForm {
           }
           return false;
         } else {
-          if (amount < 10) {
-            this.sendMessage("error", "Amount must be at least $10 - Contact us for assistance");
+          if (amount < 1) {
+            this.sendMessage("error", "Amount must be at least $1 - Contact us for assistance");
             if (amountBlock) {
               amountBlock.classList.add("has-error");
             }
@@ -24481,7 +24481,7 @@ class DonationLightboxForm {
         ptValue = "card";
         // Check Card transaction.giveBySelect
         const card = document.querySelector("[name='transaction.giveBySelect'][value='card']");
-        if (card) {
+        if (card && !card.checked) {
           card.checked = true;
           const event = new Event("change");
           card.dispatchEvent(event);
