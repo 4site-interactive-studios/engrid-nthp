@@ -3,6 +3,17 @@
   [name="transaction.donationAmt.other"] {
     font-size: 17px;
   }
+  .recurring-arrow {
+    p {
+      font-size: 20px;
+      margin-left: 0;
+    }
+    img {
+      height: 35px;
+      width: 33px;
+      margin-top: 5px;
+    }
+  }
   //   --give-by-select__button_count: 1;
   //   --recurring-frequency__button_text-transform: uppercase;
   //   --give-monthly-donation-amount-appended-label: "/mo";
