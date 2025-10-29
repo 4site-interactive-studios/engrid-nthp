@@ -1,5 +1,6 @@
 & {
   --donation-amount__button_border-color_checked: transparent;
+
   [name="transaction.donationAmt.other"] {
     font-size: 17px;
   }
@@ -364,6 +365,7 @@
         }
         &.section-navigation__previous {
           color: #fff;
+          background-color: var(--color_blue);
           // &::before {
           //   content: "";
           //   position: absolute;

@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, October 28, 2025 @ 00:47:38 ET
+ *  Date: Tuesday, October 28, 2025 @ 20:24:45 ET
  *  By: Cawe Coy
  *  ENGrid styles: v0.22.11
  *  ENGrid scripts: v0.22.17
@@ -8819,6 +8819,7 @@ body[data-engrid-debug]:before{
   font-weight:400;
 }
 [data-engrid-theme=nthp][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__previous{
+  background-color:var(--color_blue);
   color:#fff;
 }
 [data-engrid-theme=nthp][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__previous:hover:before{
