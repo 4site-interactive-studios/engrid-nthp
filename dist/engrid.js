@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, September 12, 2025 @ 15:43:39 ET
+ *  Date: Tuesday, November 4, 2025 @ 16:18:49 ET
  *  By: fernando
- *  ENGrid styles: v0.22.11
- *  ENGrid scripts: v0.22.17
+ *  ENGrid styles: v0.23.0
+ *  ENGrid scripts: v0.23.0
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -10294,6 +10294,7 @@ const OptionsDefaults = {
     NeverBounceDateField: null,
     NeverBounceStatusField: null,
     NeverBounceDateFormat: "MM/DD/YYYY",
+    NeverBounceTimeout: 10000,
     FreshAddress: false,
     ProgressBar: false,
     AutoYear: false,
@@ -10308,11 +10309,13 @@ const OptionsDefaults = {
     ENValidators: false,
     MobileCTA: false,
     CustomCurrency: false,
+    CustomPremium: false,
     VGS: false,
     PostalCodeValidator: false,
     CountryRedirect: false,
     WelcomeBack: false,
     OptInLadder: false,
+    PreferredPaymentMethod: false,
     PageLayouts: [
         "leftleft1col",
         "centerleft1col",
@@ -11911,11 +11914,14 @@ class App extends engrid_ENGrid {
         new CountryDisable();
         // Premium Gift Features
         new PremiumGift();
+        // Custom Premium filtering (frequency/amount-based visibility)
+        new CustomPremium();
         // Supporter Hub Features
         new SupporterHub();
         // Digital Wallets Features
         if (engrid_ENGrid.getPageType() === "DONATION") {
             new DigitalWallets();
+            new PreferredPaymentMethod();
         }
         // Mobile CTA
         new MobileCTA();
@@ -15325,6 +15331,8 @@ class NeverBounce {
         this.bypassEmails = [
             "noaddress.ea",
         ];
+        this.neverBounceTimeout = engrid_ENGrid.getOption("NeverBounceTimeout") || 10000;
+        this.neverBounceTimeoutFunc = null;
         const searchParams = new URLSearchParams(window.location.search);
         if (searchParams.has("bypassemailvalidation")) {
             this.logger.log("Bypass Email Validation Enabled - not running NeverBounce");
@@ -15340,6 +15348,8 @@ class NeverBounce {
             softRejectMessage: "Invalid email",
             acceptedMessage: "Email validated!",
             feedback: false,
+            // Set NB timeout 1 second than our timeout. Ensures NB response will always be before our timeout if there is not a server error.
+            timeout: Math.floor((this.neverBounceTimeout - 1000) / 1000),
         };
         engrid_ENGrid.loadJS("https://cdn.neverbounce.com/widget/dist/NeverBounce.js");
         if (this.emailField) {
@@ -15402,9 +15412,27 @@ class NeverBounce {
             const field = document.querySelector('[data-nb-id="' + event.detail.id + '"]');
             field.addEventListener("nb:loading", function (e) {
                 engrid_ENGrid.disableSubmit("Validating Your Email");
+                NBClass.setEmailStatus("loading");
+                NBClass.clearTimeout();
+                NBClass.neverBounceTimeoutFunc = setTimeout(() => {
+                    NBClass.setEmailStatus("unknown");
+                    if (NBClass.nbDate) {
+                        NBClass.nbDate.value = engrid_ENGrid.formatDate(new Date(), NBClass.dateFormat);
+                    }
+                    if (NBClass.nbStatus) {
+                        NBClass.nbStatus.value = "unknown";
+                    }
+                    engrid_ENGrid.enableSubmit();
+                    window._nb.fields.unregisterListener(NBClass.emailField);
+                    NBClass.nbLoaded = false;
+                    NBClass.logger.log("NeverBounce Timeout Reached. Bypassing validation, setting unknown status and removing NB.");
+                }, NBClass.neverBounceTimeout);
             });
             // Never Bounce: Do work when input changes or when API responds with an error
             field.addEventListener("nb:clear", function (e) {
+                if (!NBClass.nbLoaded)
+                    return;
+                NBClass.clearTimeout();
                 NBClass.setEmailStatus("clear");
                 engrid_ENGrid.enableSubmit();
                 if (NBClass.nbDate)
@@ -15414,6 +15442,9 @@ class NeverBounce {
             });
             // Never Bounce: Do work when results have an input that does not look like an email (i.e. missing @ or no .com/.net/etc...)
             field.addEventListener("nb:soft-result", function (e) {
+                if (!NBClass.nbLoaded)
+                    return;
+                NBClass.clearTimeout();
                 NBClass.setEmailStatus("soft-result");
                 if (NBClass.nbDate)
                     NBClass.nbDate.value = "";
@@ -15423,6 +15454,9 @@ class NeverBounce {
             });
             // Never Bounce: When results have been received
             field.addEventListener("nb:result", function (e) {
+                if (!NBClass.nbLoaded)
+                    return;
+                NBClass.clearTimeout();
                 if (e.detail.result.is(window._nb.settings.getAcceptedStatusCodes())) {
                     NBClass.setEmailStatus("valid");
                     if (NBClass.nbDate)
@@ -15569,6 +15603,16 @@ class NeverBounce {
             (_a = this.emailField) === null || _a === void 0 ? void 0 : _a.focus();
             this.logger.log("NB-Result:", engrid_ENGrid.getFieldValue("nb-result"));
             this.form.validate = false;
+        }
+    }
+    /**
+     * Clears the backup timeout function if it exists.
+     * @private
+     */
+    clearTimeout() {
+        if (this.neverBounceTimeoutFunc) {
+            clearTimeout(this.neverBounceTimeoutFunc);
+            this.neverBounceTimeoutFunc = null;
         }
     }
 }
@@ -19701,12 +19745,279 @@ class PremiumGift {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/custom-premium.js
+// ENgrid component: CustomPremium
+// Filters premium gifts based on window.EngridPageOptions.CustomPremium configuration
+// Rules:
+// - Config shape: window.EngridPageOptions.CustomPremium[frequency][productId] = minimumAmount
+// - On frequency or amount change, wait 500ms (allow EN to re-render), then:
+//   - Show only gifts whose minimumAmount <= current amount; hide others
+//   - If none visible, hide entire .en__component--premiumgiftblock
+//   - If current selection becomes invalid, select default; if default not visible, select "No Premium" and clear transaction.selprodvariantid
+// - Run once 500ms after page load
+// - Add EnForm onSubmit hook to clear transaction.selprodvariantid when no visible premium items
+
+class CustomPremium {
+    constructor() {
+        this.logger = new logger_EngridLogger("CustomPremium", "teal", "white", "🧩");
+        this._amount = DonationAmount.getInstance();
+        this._frequency = DonationFrequency.getInstance();
+        this._enForm = en_form_EnForm.getInstance();
+        this.stylesInjected = false;
+        this.pendingFrequencyChange = false;
+        if (!this.shouldRun())
+            return;
+        this.injectStyles();
+        // Initial run: execute once after 500ms
+        window.setTimeout(() => this.run(), 500);
+        // On changes, schedule processing and fade out immediately
+        this._amount.onAmountChange.subscribe(() => this.scheduleRun());
+        this._frequency.onFrequencyChange.subscribe(() => {
+            this.pendingFrequencyChange = true;
+            this.scheduleRun();
+        });
+        // Clear hidden variant field on submit if there are no visible premium items
+        this._enForm.onSubmit.subscribe(() => {
+            if (!this.hasVisiblePremiumItems()) {
+                this.clearVariantField();
+            }
+        });
+    }
+    shouldRun() {
+        const isPremiumPage = "pageJson" in window &&
+            "pageType" in window.pageJson &&
+            window.pageJson.pageType === "premiumgift";
+        const hasConfig = !!engrid_ENGrid.getOption("CustomPremium");
+        return isPremiumPage && hasConfig;
+    }
+    get config() {
+        const cfg = engrid_ENGrid.getOption("CustomPremium");
+        return cfg || null;
+    }
+    get premiumContainer() {
+        return document.querySelector(".en__component--premiumgiftblock");
+    }
+    get giftItems() {
+        return Array.from(document.querySelectorAll(".en__pg"));
+    }
+    getFrequencyConfig(frequency) {
+        const customPremiumConfig = this.config;
+        if (!customPremiumConfig)
+            return null;
+        const frequencyConfig = customPremiumConfig[frequency];
+        if (frequencyConfig && typeof frequencyConfig === "object")
+            return frequencyConfig;
+        return null;
+    }
+    getProductsMap(frequency) {
+        const frequencyConfig = this.getFrequencyConfig(frequency);
+        const productsMap = {};
+        if (!frequencyConfig)
+            return productsMap;
+        // If explicit products object exists, use it
+        if (frequencyConfig.products &&
+            typeof frequencyConfig.products === "object") {
+            Object.entries(frequencyConfig.products).forEach(([productId, min]) => {
+                const id = String(productId);
+                const minAmount = Number(min);
+                if (!isNaN(minAmount))
+                    productsMap[id] = minAmount;
+            });
+            return productsMap;
+        }
+        // Otherwise, treat own numeric-value keys as products, ignore 'default'
+        Object.entries(frequencyConfig).forEach(([key, value]) => {
+            if (key === "default")
+                return;
+            const minAmount = Number(value);
+            if (!isNaN(minAmount))
+                productsMap[String(key)] = minAmount;
+        });
+        return productsMap;
+    }
+    getConfiguredDefaultPid(frequency) {
+        const frequencyConfig = this.getFrequencyConfig(frequency);
+        if (!frequencyConfig)
+            return null;
+        const defaultValue = frequencyConfig.default;
+        if (defaultValue === undefined || defaultValue === null)
+            return "0"; // not set => No Premium by spec
+        const id = String(defaultValue);
+        return id;
+    }
+    injectStyles() {
+        if (this.stylesInjected)
+            return;
+        const id = "engrid-custom-premium-style";
+        if (document.getElementById(id)) {
+            this.stylesInjected = true;
+            return;
+        }
+        const style = document.createElement("style");
+        style.id = id;
+        style.innerHTML = `
+      .en__component--premiumgiftblock { transition: opacity 200ms ease-in-out; }
+      .en__component--premiumgiftblock.engrid-premium-processing { opacity: 0; pointer-events: none; }
+      .en__component--premiumgiftblock.engrid-premium-hidden { display: none !important; }
+      .en__component--premiumgiftblock.engrid-premium-ready { opacity: 1; }
+    `;
+        document.head.appendChild(style);
+        this.stylesInjected = true;
+    }
+    startProcessingVisual() {
+        const container = this.premiumContainer;
+        if (container) {
+            container.classList.add("engrid-premium-processing");
+            container.classList.remove("engrid-premium-ready");
+        }
+    }
+    endProcessingVisual(hasVisible) {
+        const container = this.premiumContainer;
+        if (!container)
+            return;
+        container.classList.remove("engrid-premium-processing");
+        if (hasVisible) {
+            container.classList.remove("engrid-premium-hidden");
+            container.classList.add("engrid-premium-ready");
+        }
+        else {
+            container.classList.add("engrid-premium-hidden");
+            container.classList.remove("engrid-premium-ready");
+        }
+    }
+    scheduleRun() {
+        // Immediately fade out while we wait for EN to re-render
+        this.startProcessingVisual();
+        if (this.debounceTimer)
+            window.clearTimeout(this.debounceTimer);
+        this.debounceTimer = window.setTimeout(() => this.run(), 500);
+    }
+    getCurrentFreq() {
+        return (this._frequency.frequency || "onetime").toLowerCase();
+    }
+    getCurrentAmount() {
+        return this._amount.amount || 0;
+    }
+    getAllowedProductIds(freq, amount) {
+        const cfg = this.config;
+        const allowed = new Set();
+        if (!cfg)
+            return allowed;
+        const products = this.getProductsMap(freq);
+        Object.keys(products).forEach((pid) => {
+            const min = Number(products[pid]);
+            if (!isNaN(min) && amount >= min)
+                allowed.add(String(pid));
+        });
+        return allowed;
+    }
+    getProductId(item) {
+        const input = item.querySelector('input[name="en__pg"]');
+        return input ? input.value : null;
+    }
+    showItem(item, show) {
+        item.style.display = show ? "" : "none";
+    }
+    selectByProductId(productId) {
+        const radio = document.querySelector('input[name="en__pg"][value="' + productId + '"]');
+        if (radio) {
+            radio.checked = true;
+            radio.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
+            // Update EN's selected class if necessary
+            const prev = document.querySelector(".en__pg--selected");
+            const pg = radio.closest(".en__pg");
+            if (prev && prev !== pg)
+                prev.classList.remove("en__pg--selected");
+            if (pg)
+                pg.classList.add("en__pg--selected");
+        }
+    }
+    clearVariantField() {
+        engrid_ENGrid.setFieldValue("transaction.selprodvariantid", "");
+    }
+    hasVisiblePremiumItems() {
+        // Exclude the "No Premium" (value 0) from count
+        return this.giftItems.some((item) => {
+            const pid = this.getProductId(item);
+            const visible = engrid_ENGrid.isVisible(item);
+            return visible && pid !== "0";
+        });
+    }
+    run() {
+        const container = this.premiumContainer;
+        if (!container)
+            return this.logger.log("No premium container found.");
+        const frequency = this.getCurrentFreq();
+        const amount = this.getCurrentAmount();
+        const allowedProductIds = this.getAllowedProductIds(frequency, amount);
+        // Iterate items and toggle visibility
+        let anyVisible = false;
+        const items = this.giftItems;
+        const noPremiumItems = [];
+        items.forEach((item) => {
+            const productId = this.getProductId(item);
+            if (!productId)
+                return;
+            if (productId === "0") {
+                // track no-premium items but don't decide visibility here — it's always available
+                noPremiumItems.push(item);
+                this.showItem(item, true);
+                return;
+            }
+            const visible = allowedProductIds.has(productId);
+            this.showItem(item, visible);
+            if (visible)
+                anyVisible = true;
+        });
+        // If nothing visible (besides no-premium), hide whole container
+        const hasVisibleGifts = anyVisible;
+        this.endProcessingVisual(hasVisibleGifts);
+        // Selection handling
+        const current = document.querySelector('input[name="en__pg"]:checked');
+        const currentProductId = (current === null || current === void 0 ? void 0 : current.value) || null;
+        const defaultProductId = this.getConfiguredDefaultPid(frequency); // may be "0"
+        // If current selection is invalid after filtering, apply default logic
+        const currentIsValid = currentProductId === "0" ||
+            (currentProductId ? allowedProductIds.has(currentProductId) : false);
+        if (!currentIsValid) {
+            if (defaultProductId &&
+                defaultProductId !== "0" &&
+                allowedProductIds.has(defaultProductId)) {
+                this.selectByProductId(defaultProductId);
+            }
+            else {
+                this.selectByProductId("0");
+                this.clearVariantField();
+            }
+        }
+        else {
+            // Current selection is valid; only force No Premium if frequency changed and default is 0/missing
+            if (this.pendingFrequencyChange &&
+                (!defaultProductId || defaultProductId === "0")) {
+                if (currentProductId !== "0") {
+                    this.selectByProductId("0");
+                    this.clearVariantField();
+                }
+            }
+        }
+        // If container hidden (no visible gifts), select No Premium and clear hidden
+        if (!hasVisibleGifts) {
+            this.selectByProductId("0");
+            this.clearVariantField();
+        }
+        this.logger.log(`Processed gifts for freq=${frequency}, amount=${amount}. Visible gifts: ${hasVisibleGifts ? "yes" : "no"}`);
+        // Reset frequency-change flag after processing
+        this.pendingFrequencyChange = false;
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/digital-wallets.js
 
 class DigitalWallets {
     constructor() {
         //digital wallets not enabled.
         if (!document.getElementById("en__digitalWallet")) {
+            engrid_ENGrid.setBodyData("payment-type-option-stripedigitalwallet", "false");
             engrid_ENGrid.setBodyData("payment-type-option-apple-pay", "false");
             engrid_ENGrid.setBodyData("payment-type-option-google-pay", "false");
             engrid_ENGrid.setBodyData("payment-type-option-paypal-one-touch", "false");
@@ -19745,6 +20056,7 @@ class DigitalWallets {
         else {
             engrid_ENGrid.setBodyData("payment-type-option-apple-pay", "false");
             engrid_ENGrid.setBodyData("payment-type-option-google-pay", "false");
+            engrid_ENGrid.setBodyData("payment-type-option-stripedigitalwallet", "false");
             const stripeContainer = document.getElementById("en__digitalWallet__stripeButtons__container");
             if (stripeContainer) {
                 this.checkForWalletsBeingAdded(stripeContainer, "stripe");
@@ -19789,8 +20101,9 @@ class DigitalWallets {
     }
     addStripeDigitalWallets() {
         this.addOptionToPaymentTypeField("stripedigitalwallet", "GooglePay / ApplePay");
-        engrid_ENGrid.setBodyData("payment-type-option-apple-pay", "true");
-        engrid_ENGrid.setBodyData("payment-type-option-google-pay", "true");
+        engrid_ENGrid.setBodyData("payment-type-option-apple-pay", DigitalWallets.isApplePayAvailable.toString());
+        engrid_ENGrid.setBodyData("payment-type-option-google-pay", !DigitalWallets.isApplePayAvailable.toString());
+        engrid_ENGrid.setBodyData("payment-type-option-stripedigitalwallet", "true");
     }
     addPaypalTouchDigitalWallets() {
         this.addOptionToPaymentTypeField("paypaltouch", "Paypal / Venmo");
@@ -19845,6 +20158,7 @@ class DigitalWallets {
         observer.observe(node, { childList: true, subtree: true });
     }
 }
+DigitalWallets.isApplePayAvailable = !!window.hasOwnProperty("ApplePaySession");
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/mobile-cta.js
 // This component adds a floating CTA button to the page, which can be used to scroll to the top of the form
@@ -21679,6 +21993,7 @@ class EmbeddedEcard {
             this.options = Object.assign(Object.assign({}, EmbeddedEcardOptionsDefaults), window.EngridEmbeddedEcard);
             const pageUrl = new URL(this.options.pageUrl);
             pageUrl.searchParams.append("data-engrid-embedded-ecard", "true");
+            pageUrl.searchParams.append("chain", "");
             this.options.pageUrl = pageUrl.href;
             this.logger.log("Running Embedded Ecard component", this.options);
             this.embedEcard();
@@ -21702,7 +22017,7 @@ class EmbeddedEcard {
             window.EngridEmbeddedEcard.pageUrl !== "");
     }
     onEmbeddedEcardPage() {
-        return engrid_ENGrid.getPageType() === "ECARD" && engrid_ENGrid.hasBodyData("embedded");
+        return engrid_ENGrid.getPageType() === "ECARD" && engrid_ENGrid.hasBodyData("embedded") && engrid_ENGrid.getPageNumber() === 1;
     }
     onPostActionPage() {
         return (sessionStorage.getItem("engrid-embedded-ecard") !== null &&
@@ -22081,15 +22396,15 @@ class CheckboxLabel {
     }
     run() {
         this.checkBoxesLabels.forEach((checkboxLabel) => {
-            var _a;
-            const labelText = (_a = checkboxLabel.textContent) === null || _a === void 0 ? void 0 : _a.trim();
+            const labelHTML = checkboxLabel.innerHTML.trim();
             const checkboxContainer = checkboxLabel.nextElementSibling;
             const checkboxLabelElement = checkboxContainer.querySelector("label:last-child");
-            if (!checkboxLabelElement || !labelText)
+            if (!checkboxLabelElement || !labelHTML)
                 return;
-            checkboxLabelElement.textContent = labelText;
+            checkboxLabelElement.innerHTML = `<div class="engrid-custom-checkbox-label">${labelHTML}</div>`;
+            // Remove the original label element
             checkboxLabel.remove();
-            this.logger.log(`Set checkbox label to "${labelText}"`);
+            this.logger.log(`Set checkbox label to "${labelHTML}"`);
         });
     }
 }
@@ -22652,11 +22967,303 @@ class FrequencyUpsell {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/preferred-payment-method.js
+
+class PreferredPaymentMethod {
+    constructor() {
+        var _a;
+        this.logger = new logger_EngridLogger("PreferredPaymentMethod", "#ffffff", "#1f2933", "⭐️");
+        this.availabilityTimeoutMs = 4000;
+        this.cleanupHandlers = [];
+        this.selectionFinalized = false;
+        this.listenersAttached = false;
+        this.config = this.resolveConfig();
+        this.preferredFieldName = ((_a = this.config.preferredPaymentMethodField) === null || _a === void 0 ? void 0 : _a.trim()) || "";
+        if (!this.shouldRun()) {
+            return;
+        }
+        this.attachGiveBySelectListeners();
+        const candidates = this.buildCandidateList();
+        if (candidates.length === 0) {
+            this.logger.log("No payment methods to evaluate. Skipping.");
+            return;
+        }
+        this.logger.log(`Evaluating preferred payment methods in order: ${candidates.join(", ")}`);
+        this.tryCandidateAtIndex(0, candidates);
+    }
+    shouldRun() {
+        if (engrid_ENGrid.getPageType() !== "DONATION") {
+            this.logger.log("Not a donation page. Skipping preferred payment selection.");
+            return false;
+        }
+        if (!this.getGiveBySelectInputs().length) {
+            this.logger.log("No give-by-select inputs found. Skipping.");
+            return false;
+        }
+        const config = engrid_ENGrid.getOption("PreferredPaymentMethod");
+        if (config === false) {
+            this.logger.log("PreferredPaymentMethod option disabled.");
+            return false;
+        }
+        return true;
+    }
+    resolveConfig() {
+        const option = engrid_ENGrid.getOption("PreferredPaymentMethod");
+        if (option && typeof option === "object") {
+            const preferredPaymentMethodField = option.preferredPaymentMethodField || "";
+            const defaultPaymentMethod = Array.isArray(option.defaultPaymentMethod)
+                ? option.defaultPaymentMethod.filter((item) => !!item)
+                : [];
+            return {
+                preferredPaymentMethodField,
+                defaultPaymentMethod: defaultPaymentMethod.length > 0 ? defaultPaymentMethod : ["card"],
+            };
+        }
+        return {
+            preferredPaymentMethodField: "",
+            defaultPaymentMethod: ["card"],
+        };
+    }
+    buildCandidateList() {
+        const candidates = [];
+        const seen = new Set();
+        const pushCandidate = (value) => {
+            if (!value)
+                return;
+            const normalized = this.normalizePaymentValue(value);
+            if (!normalized || seen.has(normalized))
+                return;
+            seen.add(normalized);
+            candidates.push(normalized);
+        };
+        pushCandidate(this.getFieldPreference());
+        pushCandidate(this.getUrlPreference());
+        this.config.defaultPaymentMethod.forEach(pushCandidate);
+        return candidates;
+    }
+    hasPreferredField() {
+        if (!this.preferredFieldName)
+            return false;
+        const field = engrid_ENGrid.getField(this.preferredFieldName);
+        return !!field;
+    }
+    attachGiveBySelectListeners() {
+        if (this.listenersAttached)
+            return;
+        if (!this.preferredFieldName)
+            return;
+        if (!this.hasPreferredField()) {
+            this.logger.log(`Preferred payment field "${this.preferredFieldName}" not found. Field sync disabled.`);
+            return;
+        }
+        const inputs = this.getGiveBySelectInputs();
+        inputs.forEach((input) => {
+            input.addEventListener("change", () => {
+                if (input.checked) {
+                    this.syncPreferredField(input.value);
+                }
+            });
+        });
+        this.listenersAttached = true;
+    }
+    syncPreferredField(value) {
+        if (!this.preferredFieldName)
+            return;
+        if (!this.hasPreferredField())
+            return;
+        engrid_ENGrid.setFieldValue(this.preferredFieldName, value, false, true);
+    }
+    getFieldPreference() {
+        if (!this.preferredFieldName) {
+            return null;
+        }
+        const fieldValue = engrid_ENGrid.getFieldValue(this.preferredFieldName);
+        if (!fieldValue) {
+            this.logger.log(`Preferred payment field "${this.preferredFieldName}" is empty. Moving on.`);
+            return null;
+        }
+        this.logger.log(`Preferred payment from field "${this.preferredFieldName}" resolved to "${fieldValue}".`);
+        return fieldValue;
+    }
+    getUrlPreference() {
+        const urlValue = engrid_ENGrid.getUrlParameter("payment");
+        if (typeof urlValue === "string" && urlValue.trim() !== "") {
+            this.logger.log(`Preferred payment from URL parameter: "${urlValue}".`);
+            return urlValue;
+        }
+        return null;
+    }
+    tryCandidateAtIndex(index, candidates) {
+        if (this.selectionFinalized) {
+            return;
+        }
+        if (index >= candidates.length) {
+            this.logger.log("No preferred payment method was applied.");
+            return;
+        }
+        const method = candidates[index];
+        if (!this.paymentMethodExists(method)) {
+            this.logger.log(`Payment method "${method}" not found. Skipping.`);
+            this.tryCandidateAtIndex(index + 1, candidates);
+            return;
+        }
+        if (this.isPaymentMethodAvailable(method)) {
+            this.logger.success(`Selecting available payment method "${method}".`);
+            this.applySelection(method);
+            return;
+        }
+        this.logger.log(`Payment method "${method}" exists but is not available yet. Waiting up to ${this.availabilityTimeoutMs}ms.`);
+        this.waitForAvailability(method, () => {
+            if (this.selectionFinalized)
+                return;
+            if (this.isPaymentMethodAvailable(method)) {
+                this.logger.success(`Selecting payment method "${method}" once it became available.`);
+                this.applySelection(method);
+            }
+        }, () => {
+            if (this.selectionFinalized)
+                return;
+            this.logger.log(`Payment method "${method}" still unavailable after waiting. Trying next option.`);
+            this.tryCandidateAtIndex(index + 1, candidates);
+        });
+    }
+    waitForAvailability(method, onAvailable, onTimeout) {
+        const observers = [];
+        const cleanup = () => {
+            observers.forEach((observer) => observer.disconnect());
+            observers.length = 0;
+            this.cleanupHandlers = this.cleanupHandlers.filter((fn) => fn !== cleanup);
+            window.clearTimeout(timeoutId);
+        };
+        this.cleanupHandlers.push(cleanup);
+        const checkAvailability = () => {
+            if (this.selectionFinalized) {
+                cleanup();
+                return;
+            }
+            if (this.isPaymentMethodAvailable(method)) {
+                cleanup();
+                onAvailable();
+            }
+        };
+        const fieldContainer = this.getGiveBySelectContainer() || document.body;
+        const domObserver = new MutationObserver(() => checkAvailability());
+        domObserver.observe(fieldContainer, {
+            attributes: true,
+            attributeFilter: ["class", "style"],
+            childList: true,
+            subtree: true,
+        });
+        observers.push(domObserver);
+        const attributeFilters = this.getAvailabilityAttributeFilters(method);
+        if (attributeFilters.length > 0) {
+            const attrObserver = new MutationObserver(() => checkAvailability());
+            attrObserver.observe(document.body, {
+                attributes: true,
+                attributeFilter: attributeFilters,
+            });
+            observers.push(attrObserver);
+        }
+        const timeoutId = window.setTimeout(() => {
+            cleanup();
+            onTimeout();
+        }, this.availabilityTimeoutMs);
+    }
+    applySelection(method) {
+        if (this.selectionFinalized) {
+            return;
+        }
+        const input = this.findPaymentInput(method);
+        if (!input) {
+            this.logger.log(`Unable to locate give-by-select input for "${method}" during selection.`);
+            return;
+        }
+        if (!this.isPaymentMethodAvailable(method)) {
+            this.logger.log(`Payment method "${method}" is not available to select.`);
+            return;
+        }
+        const label = this.findLabelForInput(input);
+        if (label) {
+            label.click();
+        }
+        else {
+            input.checked = true;
+            input.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
+        }
+        engrid_ENGrid.setPaymentType(method);
+        this.syncPreferredField(input.value);
+        this.selectionFinalized = true;
+        this.cleanupAllObservers();
+    }
+    paymentMethodExists(method) {
+        return !!this.findPaymentInput(method);
+    }
+    isPaymentMethodAvailable(method) {
+        const input = this.findPaymentInput(method);
+        if (!input || input.disabled) {
+            return false;
+        }
+        const container = this.getInputContainer(input);
+        return container ? engrid_ENGrid.isVisible(container) : engrid_ENGrid.isVisible(input);
+    }
+    findPaymentInput(method) {
+        const normalized = this.normalizePaymentValue(method);
+        if (!normalized) {
+            return null;
+        }
+        const inputs = this.getGiveBySelectInputs();
+        return (Array.from(inputs).find((input) => input.value && this.normalizePaymentValue(input.value) === normalized) || null);
+    }
+    getGiveBySelectInputs() {
+        return document.getElementsByName("transaction.giveBySelect");
+    }
+    getGiveBySelectContainer() {
+        return document.querySelector(".en__field--give-by-select, .give-by-select");
+    }
+    getInputContainer(input) {
+        return (input.closest(".en__field__item") ||
+            input.closest(".en__field__element") ||
+            input.parentElement);
+    }
+    findLabelForInput(input) {
+        if (input.id) {
+            const externalLabel = document.querySelector(`label[for="${input.id}"]`);
+            if (externalLabel) {
+                return externalLabel;
+            }
+        }
+        return input.closest("label");
+    }
+    normalizePaymentValue(value) {
+        return value.trim().toLowerCase();
+    }
+    getAvailabilityAttributeFilters(method) {
+        const map = {
+            stripedigitalwallet: [
+                "data-engrid-payment-type-option-apple-pay",
+                "data-engrid-payment-type-option-google-pay",
+            ],
+            paypaltouch: [
+                "data-engrid-payment-type-option-paypal-one-touch",
+                "data-engrid-payment-type-option-venmo",
+            ],
+            daf: ["data-engrid-payment-type-option-daf"],
+        };
+        return map[method] || [];
+    }
+    cleanupAllObservers() {
+        this.cleanupHandlers.forEach((cleanup) => cleanup());
+        this.cleanupHandlers = [];
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.22.17";
+const AppVersion = "0.23.0";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
+
 
 
 
