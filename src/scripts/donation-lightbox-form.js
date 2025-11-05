@@ -646,10 +646,10 @@ export default class DonationLightboxForm {
           }
           return false;
         } else {
-          if (amount < 1) {
+          if (amount < 5) {
             this.sendMessage(
               "error",
-              "Amount must be at least $1 - Contact us for assistance"
+              "Amount must be at least $5 - Contact us for assistance"
             );
             if (amountBlock) {
               amountBlock.classList.add("has-error");

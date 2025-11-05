@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, November 4, 2025 @ 12:44:11 ET
+ *  Date: Tuesday, November 4, 2025 @ 19:36:09 ET
  *  By: Cawe Coy
  *  ENGrid styles: v0.22.11
  *  ENGrid scripts: v0.22.17
@@ -24047,8 +24047,8 @@ class DonationLightboxForm {
           }
           return false;
         } else {
-          if (amount < 1) {
-            this.sendMessage("error", "Amount must be at least $1 - Contact us for assistance");
+          if (amount < 5) {
+            this.sendMessage("error", "Amount must be at least $5 - Contact us for assistance");
             if (amountBlock) {
               amountBlock.classList.add("has-error");
             }
