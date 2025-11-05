@@ -387,7 +387,7 @@
 
         &.section-navigation__submit,
         &.section-navigation__next {
-          background-color: var(--color_primary);
+          background-color: var(--color_orange);
           opacity: 1;
           width: 190px;
           svg {
@@ -395,7 +395,7 @@
             transform: translateX(15px);
           }
           &:hover {
-            background-color: var(--color_primary);
+            background-color: var(--color_orange);
             svg {
               transform: translateX(30px);
             }
@@ -1182,9 +1182,9 @@
     font-size: 1.4rem;
   }
   .upsell-primary {
-    background-color: var(--color_primary);
+    background-color: var(--color_orange);
     color: #fff;
-    border: 1px solid var(--color_primary);
+    border: 1px solid var(--color_orange);
     font-size: 1.4rem;
 
     // padding: 10px;

@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, October 28, 2025 @ 20:24:45 ET
+ *  Date: Tuesday, November 4, 2025 @ 12:44:11 ET
  *  By: Cawe Coy
  *  ENGrid styles: v0.22.11
  *  ENGrid scripts: v0.22.17
@@ -8826,7 +8826,7 @@ body[data-engrid-debug]:before{
   opacity:.5;
 }
 [data-engrid-theme=nthp][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__next,[data-engrid-theme=nthp][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__submit{
-  background-color:var(--color_primary);
+  background-color:var(--color_orange);
   opacity:1;
   width:190px;
 }
@@ -8835,7 +8835,7 @@ body[data-engrid-debug]:before{
   transition:transform .3s ease-in-out;
 }
 [data-engrid-theme=nthp][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__next:hover,[data-engrid-theme=nthp][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__submit:hover{
-  background-color:var(--color_primary);
+  background-color:var(--color_orange);
 }
 [data-engrid-theme=nthp][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__next:hover svg,[data-engrid-theme=nthp][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__submit:hover svg{
   transform:translateX(30px);
@@ -8953,8 +8953,8 @@ body[data-engrid-debug]:before{
   font-size:1.4rem;
 }
 [data-engrid-theme=nthp][data-engrid-subtheme=multistep] .upsell-primary{
-  background-color:var(--color_primary);
-  border:1px solid var(--color_primary);
+  background-color:var(--color_orange);
+  border:1px solid var(--color_orange);
   color:#fff;
   font-size:1.4rem;
 }
