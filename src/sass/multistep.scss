@@ -1223,6 +1223,17 @@
       display: none;
     }
   }
+  [data-section-id="1"][data-upsell-section="true"] {
+    h1,
+    h2 {
+      font-size: 28px;
+      color: var(--color_blue);
+    }
+    .en__component--column {
+      gap: 20px;
+      justify-content: unset;
+    }
+  }
   //   .rememberme-wrapper {
   //     padding-bottom: 0;
   //   }
