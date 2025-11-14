@@ -1223,6 +1223,16 @@
       display: none;
     }
   }
+  .sms-disclaimer {
+    margin-top: -8px;
+    & > p {
+      font-size: 0.75rem;
+      font-style: italic;
+      line-height: 1rem;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+  }
   [data-section-id="1"][data-upsell-section="true"] {
     h1,
     h2 {
