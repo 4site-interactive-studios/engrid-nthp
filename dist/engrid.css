@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, November 23, 2025 @ 23:23:13 ET
+ *  Date: Sunday, November 23, 2025 @ 23:49:58 ET
  *  By: cawe
  *  ENGrid styles: v0.22.11
  *  ENGrid scripts: v0.22.17
@@ -9003,6 +9003,11 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=nthp][data-engrid-subtheme=multistep] [data-section-id="1"][data-upsell-section=true] .en__component--column{
   gap:20px;
   justify-content:unset;
+}
+[data-engrid-theme=nthp][data-engrid-subtheme=multistep] .donation-callout{
+  font-size:16px;
+  margin-top:-5px;
+  text-align:center;
 }
 body{
   opacity:1;
