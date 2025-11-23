@@ -360,8 +360,7 @@
         transform: translateZ(0);
         backface-visibility: hidden;
         small {
-          font-size: 10px;
-          font-weight: 400;
+          font-size: 100%;
         }
         &.section-navigation__previous {
           color: #fff;
