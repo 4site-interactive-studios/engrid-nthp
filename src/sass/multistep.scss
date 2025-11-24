@@ -1243,10 +1243,15 @@
       justify-content: unset;
     }
   }
-  .donation-callout {
-    text-align: center;
-    margin-top: -5px;
-    font-size: 16px;
+  .donation-ask {
+    p {
+      text-align: center;
+      margin-top: -5px;
+      font-size: 16px;
+      &::after {
+        display: none;
+      }
+    }
   }
   //   .rememberme-wrapper {
   //     padding-bottom: 0;
