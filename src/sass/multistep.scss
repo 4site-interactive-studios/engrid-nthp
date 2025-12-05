@@ -388,8 +388,7 @@
         &.section-navigation__next {
           background-color: var(--color_orange);
           opacity: 1;
-          min-width: 190px;
-          max-width: 230px;
+          width: 190px;
           svg {
             transition: 0.3s transform ease-in-out;
             transform: translateX(15px);
@@ -400,6 +399,11 @@
               transform: translateX(30px);
             }
           }
+        }
+        &.section-navigation__submit {
+          min-width: 190px;
+          max-width: 230px;
+          width: auto;
         }
         &[data-section-id="0"] {
           width: 100%;

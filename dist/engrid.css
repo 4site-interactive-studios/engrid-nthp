@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, December 5, 2025 @ 00:53:29 ET
+ *  Date: Friday, December 5, 2025 @ 01:07:53 ET
  *  By: cawe
  *  ENGrid styles: v0.22.11
  *  ENGrid scripts: v0.22.17
@@ -8826,9 +8826,8 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=nthp][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__next,[data-engrid-theme=nthp][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__submit{
   background-color:var(--color_orange);
-  max-width:230px;
-  min-width:190px;
   opacity:1;
+  width:190px;
 }
 [data-engrid-theme=nthp][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__next svg,[data-engrid-theme=nthp][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__submit svg{
   transform:translateX(15px);
@@ -8839,6 +8838,11 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=nthp][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__next:hover svg,[data-engrid-theme=nthp][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__submit:hover svg{
   transform:translateX(30px);
+}
+[data-engrid-theme=nthp][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button.section-navigation__submit{
+  max-width:230px;
+  min-width:190px;
+  width:auto;
 }
 [data-engrid-theme=nthp][data-engrid-subtheme=multistep] form.en__component>.en__component .section-navigation button[data-section-id="0"]{
   width:100%;
