@@ -369,6 +369,12 @@ export default class DonationLightboxForm {
         this.upsellSection = section;
         this.upsellSectionId = key;
         section.dataset.upsellSection = true;
+        // Force the Upsell Section to hide if the frequency is recurring
+        const isRecurring =
+          this.app.getFieldValue("transaction.recurrfreq") !== "ONETIME";
+        if (isRecurring) {
+          section.style.display = "none";
+        }
         this.replaceUpsellMergeTags();
       }
       const sectionNavigation = document.createElement("div");
