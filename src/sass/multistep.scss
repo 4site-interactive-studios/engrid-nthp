@@ -388,7 +388,8 @@
         &.section-navigation__next {
           background-color: var(--color_orange);
           opacity: 1;
-          width: 190px;
+          min-width: 190px;
+          max-width: 230px;
           svg {
             transition: 0.3s transform ease-in-out;
             transform: translateX(15px);
