@@ -511,7 +511,17 @@
     // #onetrust-consent-sdk {
     //   display: none !important;
     // }
+
     height: 100vh;
+
+    &[data-thank-you] {
+      form.en__component {
+        & > .en__component {
+          width: auto;
+        }
+      }
+    }
+
     form.en__component {
       // scroll-snap-type: x mandatory;
       margin: 0 auto;
