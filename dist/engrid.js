@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, December 5, 2025 @ 16:45:56 ET
+ *  Date: Monday, December 8, 2025 @ 14:40:46 ET
  *  By: cawe
  *  ENGrid styles: v0.22.11
  *  ENGrid scripts: v0.22.17
@@ -23896,12 +23896,12 @@ class DonationLightboxForm {
         if (this.validateForm(false, this.isDonation)) {
           if (this.isDonation) {
             // If the phone number field doesn't exists or it is empty, set Mobile Opt In to "N" and ensure the checkbox is unchecked
-            const supporterPhoneNumber = document.querySelector('[name="supporter.phoneNumber"]');
-            if (!supporterPhoneNumber || supporterPhoneNumber.value.trim() === "") {
-              const mobileOptIn = document.querySelector('[name="supporter.questions.179541"]');
+            const supporterPhoneNumber = this.app.getField("supporter.phoneNumber");
+            if (!supporterPhoneNumber || supporterPhoneNumber.value.trim().length == 0) {
+              const mobileOptIn = this.app.getField("supporter.questions.179541");
               if (mobileOptIn) {
-                mobileOptIn.checked = false;
-                mobileOptIn.value = "N";
+                console.log("Removing Mobile Opt In name attribute to avoid submission");
+                mobileOptIn.removeAttribute("name");
               }
             }
             // Send Basic User Data to Parent

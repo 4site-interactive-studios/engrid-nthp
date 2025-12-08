@@ -470,19 +470,18 @@ export default class DonationLightboxForm {
           if (this.validateForm(false, this.isDonation)) {
             if (this.isDonation) {
               // If the phone number field doesn't exists or it is empty, set Mobile Opt In to "N" and ensure the checkbox is unchecked
-              const supporterPhoneNumber = document.querySelector(
-                '[name="supporter.phoneNumber"]'
+              const supporterPhoneNumber = this.app.getField(
+                "supporter.phoneNumber"
               );
               if (
                 !supporterPhoneNumber ||
-                supporterPhoneNumber.value.trim() === ""
+                supporterPhoneNumber.value.trim().length == 0
               ) {
-                const mobileOptIn = document.querySelector(
-                  '[name="supporter.questions.179541"]'
+                const mobileOptIn = this.app.getField(
+                  "supporter.questions.179541"
                 );
                 if (mobileOptIn) {
-                  mobileOptIn.checked = false;
-                  mobileOptIn.value = "N";
+                  mobileOptIn.removeAttribute("name");
                 }
               }
               // Send Basic User Data to Parent
