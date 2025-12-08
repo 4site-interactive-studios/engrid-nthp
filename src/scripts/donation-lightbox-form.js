@@ -481,7 +481,7 @@ export default class DonationLightboxForm {
                   "supporter.questions.179541"
                 );
                 if (mobileOptIn) {
-                  mobileOptIn.removeAttribute("name");
+                  mobileOptIn.checked = false;
                 }
               }
               // Send Basic User Data to Parent

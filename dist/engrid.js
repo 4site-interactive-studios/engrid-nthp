@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, December 8, 2025 @ 14:40:46 ET
+ *  Date: Monday, December 8, 2025 @ 18:29:27 ET
  *  By: cawe
  *  ENGrid styles: v0.22.11
  *  ENGrid scripts: v0.22.17
@@ -23900,8 +23900,7 @@ class DonationLightboxForm {
             if (!supporterPhoneNumber || supporterPhoneNumber.value.trim().length == 0) {
               const mobileOptIn = this.app.getField("supporter.questions.179541");
               if (mobileOptIn) {
-                console.log("Removing Mobile Opt In name attribute to avoid submission");
-                mobileOptIn.removeAttribute("name");
+                mobileOptIn.checked = false;
               }
             }
             // Send Basic User Data to Parent
