@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, December 8, 2025 @ 10:48:55 ET
- *  By: michael
- *  ENGrid styles: v0.20.9
- *  ENGrid scripts: v0.20.10
+ *  Date: Friday, December 12, 2025 @ 14:37:11 ET
+ *  By: fernando
+ *  ENGrid styles: v0.22.11
+ *  ENGrid scripts: v0.22.17
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -26235,7 +26235,11 @@ class SwapAmounts {
     }));
   }
   shouldRun() {
-    return !!window.EngridAmounts;
+    const hasNSG = window.EngagingNetworks.suggestedGift !== undefined && Object.keys(window.EngagingNetworks.suggestedGift).length > 0;
+    if (!!window.EngridAmounts && hasNSG) {
+      this.logger.log("Not swapping amounts because Next Suggested Gifts are present");
+    }
+    return !!window.EngridAmounts && !hasNSG;
   }
   ignoreCurrentValue() {
     const urlParam = engrid_ENGrid.getUrlParameter("transaction.donationAmt");
@@ -31080,6 +31084,7 @@ const options_OptionsDefaults = {
     MaxAmount: 100000,
     MinAmountMessage: "Amount must be at least $1",
     MaxAmountMessage: "Amount must be less than $100,000",
+    UseAmountValidatorFromEN: false,
     SkipToMainContentLink: true,
     SrcDefer: true,
     NeverBounceAPI: null,
@@ -31209,6 +31214,21 @@ const exit_intent_options_ExitIntentOptionsDefaults = {
         visibilityState: true,
         mousePosition: true,
     },
+};
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/interfaces/frequency-upsell-options.js
+const frequency_upsell_options_FrequencyUpsellOptionsDefaults = {
+    title: "Before we process your donation...",
+    paragraph: "Would you like to make it an annual gift?",
+    yesButton: "YES! Process my gift as an annual gift of ${upsell_amount}",
+    noButton: "NO! Process my gift as a one-time gift of ${current_amount}",
+    upsellFrequency: "annual",
+    upsellFromFrequency: ["onetime"],
+    customClass: "",
+    upsellAmount: (currentAmount) => currentAmount,
+    onOpen: () => { },
+    onAccept: () => { },
+    onDecline: () => { },
 };
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/loader.js
@@ -31480,6 +31500,8 @@ class donation_amount_DonationAmount {
                 this.amount = dist_engrid_ENGrid.cleanAmount(otherField.value);
             });
         }
+        // Load the current amount
+        this.load();
     }
     static getInstance(radios = "transaction.donationAmt", other = "transaction.donationAmt.other") {
         if (!donation_amount_DonationAmount.instance) {
@@ -31749,6 +31771,9 @@ class dist_engrid_ENGrid {
             return window.pageJson.pageNumber;
         return null;
     }
+    static isThankYouPage() {
+        return this.getPageNumber() === this.getPageCount();
+    }
     // Return the current page ID
     static getPageID() {
         if ("pageJson" in window)
@@ -31769,6 +31794,8 @@ class dist_engrid_ENGrid {
     static getPageType() {
         if ("pageJson" in window && "pageType" in window.pageJson) {
             switch (window.pageJson.pageType) {
+                case "p2pcheckout":
+                case "p2pdonation":
                 case "donation":
                 case "premiumgift":
                     return "DONATION";
@@ -31788,6 +31815,9 @@ class dist_engrid_ENGrid {
                     break;
                 case "emailsubscribeform":
                     return "SUBSCRIBEFORM";
+                    break;
+                case "event":
+                    return "EVENT";
                     break;
                 case "supporterhub":
                     return "SUPPORTERHUB";
@@ -31906,10 +31936,12 @@ class dist_engrid_ENGrid {
         const submit = document.querySelector(".en__submit button");
         if (!submit)
             return false;
+        let submitButtonProcessingHTML = `<span class='loader-wrapper'><span class='loader loader-quart'></span><span class='submit-button-text-wrapper'>${label}</span></span>`;
+        if (submit.innerHTML.includes("loader-wrapper")) {
+            // If we are already processing, don't override the originalText again
+            return false;
+        }
         submit.dataset.originalText = submit.innerHTML;
-        let submitButtonProcessingHTML = "<span class='loader-wrapper'><span class='loader loader-quart'></span><span class='submit-button-text-wrapper'>" +
-            label +
-            "</span></span>";
         submit.disabled = true;
         submit.innerHTML = submitButtonProcessingHTML;
         return true;
@@ -32705,6 +32737,8 @@ class app_App extends dist_engrid_ENGrid {
         new thank_you_page_conditional_content_ThankYouPageConditionalContent();
         new embedded_ecard_EmbeddedEcard();
         new checkbox_label_CheckboxLabel();
+        new post_donation_embed_PostDonationEmbed();
+        new frequency_upsell_FrequencyUpsell();
         //Debug panel
         let showDebugPanel = this.options.Debug;
         try {
@@ -32983,6 +33017,10 @@ class a11y_A11y {
         this.addRequired();
         this.addLabel();
         this.addGroupRole();
+        this.updateFrequencyLabel();
+        const ecardImages = document.querySelectorAll('.en__ecarditems__list img');
+        this.setAutoGeneratedAltTags(ecardImages);
+        this.manageErrorListAlertRole();
     }
     addGroupRole() {
         // Add role="group" to all EN Radio fields
@@ -33020,6 +33058,78 @@ class a11y_A11y {
                 select.setAttribute("aria-label", firstOption.textContent || "");
             }
         });
+    }
+    // Update the label for the frequency field based on the selected radio button
+    updateFrequencyLabel() {
+        const frequencyLabels = document.querySelectorAll('div.en__field__item input[id^="en__field_transaction_recurrfreq"]');
+        const frequencyMainLabel = document.querySelector('label[for="en__field_transaction_recurrfreq"]');
+        frequencyLabels.forEach((item) => {
+            if (item) {
+                // Set the label for the checked item on load
+                if (item.checked) {
+                    frequencyMainLabel === null || frequencyMainLabel === void 0 ? void 0 : frequencyMainLabel.setAttribute('for', item.id);
+                }
+                // Then, detect if it changes with the click event
+                item.addEventListener('click', () => {
+                    let frequencyId = item.id;
+                    frequencyMainLabel === null || frequencyMainLabel === void 0 ? void 0 : frequencyMainLabel.setAttribute('for', frequencyId);
+                });
+            }
+        });
+    }
+    setAutoGeneratedAltTags(images) {
+        images.forEach((img) => {
+            var _a;
+            // Skip if the alt tag is already set
+            if (img.alt)
+                return;
+            try {
+                // Extract the filename from the `src` attribute
+                const src = img.src;
+                if (!src)
+                    throw new Error("Image src is null or undefined");
+                const url = new URL(src);
+                const fileNameWithExtension = url.pathname.split('/').pop();
+                if (!fileNameWithExtension)
+                    throw new Error("No filename found in src");
+                // Remove the file extension and replace `-` and `_` with spaces
+                let altText = ((_a = fileNameWithExtension.split('.').shift()) === null || _a === void 0 ? void 0 : _a.replace(/[-_]/g, ' ')) || '';
+                // Remove dimensions (#x#) and anything that follows
+                altText = altText.replace(/\d+x\d+.*$/, '').trim();
+                // Wrap in the disclaimer
+                altText = `This is an auto-generated alt tag from the filename: ${altText}`;
+                // Set the generated alt text on the image
+                img.alt = altText;
+            }
+            catch (error) {
+                console.error(`Error processing image: ${img.src}`, error);
+            }
+        });
+    }
+    manageErrorListAlertRole() {
+        const errorList = document.querySelector('ul.en__errorList');
+        if (!errorList)
+            return;
+        const hasErrorItems = () => Boolean(errorList.querySelector('li'));
+        const enableAlert = () => {
+            if (!errorList.hasAttribute('role')) {
+                errorList.setAttribute('role', 'alert');
+            }
+        };
+        const disableAlert = () => {
+            if (errorList.hasAttribute('role')) {
+                errorList.removeAttribute('role');
+            }
+        };
+        hasErrorItems() ? enableAlert() : disableAlert();
+        new MutationObserver(records => {
+            for (const record of records) {
+                if (record.type === 'childList') {
+                    hasErrorItems() ? enableAlert() : disableAlert();
+                    break;
+                }
+            }
+        }).observe(errorList, { childList: true });
     }
 }
 
@@ -34746,6 +34856,11 @@ class show_hide_radio_checkboxes_ShowHideRadioCheckboxes {
                 this.toggleValue(el, "hide");
                 el.style.display = "none";
                 this.logger.log("Hiding", el);
+                const input = el.querySelector("input");
+                if (input instanceof HTMLInputElement) {
+                    input.setAttribute("aria-required", "false");
+                    this.logger.log("aria-required set to FALSE", input);
+                }
             }
         });
     }
@@ -34758,6 +34873,11 @@ class show_hide_radio_checkboxes_ShowHideRadioCheckboxes {
                 this.toggleValue(el, "show");
                 el.style.display = "";
                 this.logger.log("Showing", el);
+                const input = el.querySelector("input");
+                if (input instanceof HTMLInputElement) {
+                    input.setAttribute("aria-required", "true");
+                    this.logger.log("aria-required set to TRUE", input);
+                }
             }
         });
         if (item.type == "checkbox" && !item.checked) {
@@ -34968,7 +35088,7 @@ class translate_fields_TranslateFields {
         }
         //Storing these values on load so we can set them back after the translation/swap.
         let countryAndStateValuesOnLoad = {};
-        if (this.countriesSelect) {
+        if (this.countriesSelect && this.countriesSelect.length > 0) {
             this.countriesSelect.forEach((select) => {
                 select.addEventListener("change", this.translateFields.bind(this, select.name));
                 if (select.value) {
@@ -35569,19 +35689,19 @@ class skip_link_SkipToMainContentLink {
         const firstTitle = document.querySelector("title");
         const firstH1 = document.querySelector("h1");
         if (firstTitleInEngridBody && firstTitleInEngridBody.parentElement) {
-            firstTitleInEngridBody.parentElement.insertAdjacentHTML("beforebegin", '<span id="skip-link"></span>');
+            firstTitleInEngridBody.parentElement.id = "skip-link";
             this.insertSkipLinkSpan();
         }
         else if (firstH1InEngridBody && firstH1InEngridBody.parentElement) {
-            firstH1InEngridBody.parentElement.insertAdjacentHTML("beforebegin", '<span id="skip-link"></span>');
+            firstH1InEngridBody.parentElement.id = "skip-link";
             this.insertSkipLinkSpan();
         }
         else if (firstTitle && firstTitle.parentElement) {
-            firstTitle.parentElement.insertAdjacentHTML("beforebegin", '<span id="skip-link"></span>');
+            firstTitle.parentElement.id = "skip-link";
             this.insertSkipLinkSpan();
         }
         else if (firstH1 && firstH1.parentElement) {
-            firstH1.parentElement.insertAdjacentHTML("beforebegin", '<span id="skip-link"></span>');
+            firstH1.parentElement.id = "skip-link";
             this.insertSkipLinkSpan();
         }
         else {
@@ -35744,54 +35864,241 @@ class page_background_PageBackground {
     constructor() {
         // @TODO: Change page-backgroundImage to page-background
         this.pageBackground = document.querySelector(".page-backgroundImage");
-        // Finds any <img> added to the "backgroundImage" ENGRid section and sets it as the "--engrid__page-backgroundImage_url" CSS Custom Property
-        if (this.pageBackground) {
-            const pageBackgroundImg = this.pageBackground.querySelector("img");
-            let pageBackgroundImgDataSrc = pageBackgroundImg === null || pageBackgroundImg === void 0 ? void 0 : pageBackgroundImg.getAttribute("data-src");
-            let pageBackgroundImgSrc = pageBackgroundImg === null || pageBackgroundImg === void 0 ? void 0 : pageBackgroundImg.src;
-            if (this.pageBackground && pageBackgroundImgDataSrc) {
-                if (dist_engrid_ENGrid.debug)
-                    console.log("A background image set in the page was found with a data-src value, setting it as --engrid__page-backgroundImage_url", pageBackgroundImgDataSrc);
-                pageBackgroundImgDataSrc = "url('" + pageBackgroundImgDataSrc + "')";
-                this.pageBackground.style.setProperty("--engrid__page-backgroundImage_url", pageBackgroundImgDataSrc);
-            }
-            else if (this.pageBackground && pageBackgroundImgSrc) {
-                if (dist_engrid_ENGrid.debug)
-                    console.log("A background image set in the page was found with a src value, setting it as --engrid__page-backgroundImage_url", pageBackgroundImgSrc);
-                pageBackgroundImgSrc = "url('" + pageBackgroundImgSrc + "')";
-                this.pageBackground.style.setProperty("--engrid__page-backgroundImage_url", pageBackgroundImgSrc);
-            }
-            else if (pageBackgroundImg) {
-                if (dist_engrid_ENGrid.debug)
-                    console.log("A background image set in the page was found but without a data-src or src value, no action taken", pageBackgroundImg);
-            }
-            else {
-                if (dist_engrid_ENGrid.debug)
-                    console.log("A background image set in the page was not found, any default image set in the theme on --engrid__page-backgroundImage_url will be used");
-            }
+        this.mutationObserver = null;
+        this.logger = new dist_logger_EngridLogger("PageBackground", "lightblue", "darkblue", "🖼️");
+        if (!this.pageBackground) {
+            this.logger.log("A background image set in the page was not found, any default image set in the theme on --engrid__page-backgroundImage_url will be used");
+            return;
+        }
+        this.initializeBackgroundImage();
+        this.setDataAttributes();
+        this.processAttributionPositioning();
+        this.setupMutationObserver();
+    }
+    /**
+     * Initialize background image by finding and setting CSS custom property
+     */
+    initializeBackgroundImage() {
+        if (!this.pageBackground)
+            return;
+        const pageBackgroundImg = this.pageBackground.querySelector("img");
+        if (!pageBackgroundImg) {
+            this.logger.log("A background image set in the page was not found, any default image set in the theme on --engrid__page-backgroundImage_url will be used");
+            return;
+        }
+        const dataSrc = pageBackgroundImg.getAttribute("data-src");
+        const src = pageBackgroundImg.src;
+        if (dataSrc) {
+            this.setBackgroundImageUrl(dataSrc, "data-src");
+        }
+        else if (src) {
+            this.setBackgroundImageUrl(src, "src");
         }
         else {
-            if (dist_engrid_ENGrid.debug)
-                console.log("A background image set in the page was not found, any default image set in the theme on --engrid__page-backgroundImage_url will be used");
+            this.logger.log("A background image set in the page was found but without a data-src or src value, no action taken", pageBackgroundImg);
         }
-        this.setDataAttributes();
+    }
+    /**
+     * Set the background image URL as a CSS custom property
+     */
+    setBackgroundImageUrl(imageUrl, sourceType) {
+        if (!this.pageBackground || !imageUrl)
+            return;
+        try {
+            const cssUrl = `url('${imageUrl}')`;
+            this.pageBackground.style.setProperty("--engrid__page-backgroundImage_url", cssUrl);
+            this.logger.log(`A background image set in the page was found with a ${sourceType} value, setting it as --engrid__page-backgroundImage_url`, imageUrl);
+        }
+        catch (error) {
+            this.logger.error("Error setting background image URL:", error);
+        }
+    }
+    /**
+     * Processes attribution positioning for background images by moving positioning classes
+     * and data attributes from images to their parent column containers.
+     *
+     * This function handles two attribution patterns:
+     * 1. Class-based: <img class="attribution-bottomright" src="...">
+     * 2. Data attribute-based: <img data-background-position="bottomright" src="...">
+     *
+     * Examples:
+     *
+     * Class-based attribution:
+     * <img class="attribution-bottomright" src="background.jpg">
+     * → Moves "attribution-bottomright" class to parent .en__component--column
+     *
+     * Data attribute-based attribution:
+     * <img data-background-position="top" src="background.jpg">
+     * → Converts to "attribution-top" class and moves to parent .en__component--column
+     *
+     * Supported positioning values:
+     * - center
+     * - top, topcenter (these result in the same positioning)
+     * - right, rightcenter (these result in the same positioning)
+     * - bottom, bottomcenter (these result in the same positioning)
+     * - left, leftcenter (these result in the same positioning)
+     * - topright
+     * - bottomright
+     * - bottomleft
+     * - topleft
+     */
+    processAttributionPositioning() {
+        if (!this.pageBackground) {
+            this.logger.log("No background section found for attribution positioning processing");
+            return;
+        }
+        this.logger.log("Processing attribution positioning for background section:", this.pageBackground);
+        // Define all supported attribution positioning classes
+        const allowedClasses = [
+            "attribution-center",
+            "attribution-bottom",
+            "attribution-bottomcenter",
+            "attribution-bottomright",
+            "attribution-bottomleft",
+            "attribution-top",
+            "attribution-topcenter",
+            "attribution-topright",
+            "attribution-topleft",
+            "attribution-left",
+            "attribution-leftcenter",
+            "attribution-right",
+            "attribution-rightcenter",
+        ];
+        try {
+            // Find all images in the background section (after any DOM transformations)
+            const images = this.pageBackground.querySelectorAll("img");
+            this.logger.log("Found images in background section:", images.length);
+            images.forEach((img) => {
+                this.processImageAttribution(img, allowedClasses);
+            });
+        }
+        catch (error) {
+            this.logger.error("Error processing attribution positioning:", error);
+        }
+    }
+    /**
+     * Process attribution for a single image
+     */
+    processImageAttribution(img, allowedClasses) {
+        // Pattern 1: Check for class-based attribution positioning
+        // Example: <img class="attribution-bottomright" src="...">
+        const matchedClass = allowedClasses.find((cls) => img.classList.contains(cls));
+        // Pattern 2: Check for data attribute-based attribution positioning
+        // Example: <img data-background-position="bottomright" src="...">
+        const dataPosition = img.getAttribute("data-background-position");
+        if (matchedClass) {
+            this.handleClassBasedAttribution(img, matchedClass);
+        }
+        else if (dataPosition) {
+            this.handleDataAttributeAttribution(img, dataPosition);
+        }
+    }
+    /**
+     * Handle class-based attribution positioning
+     */
+    handleClassBasedAttribution(img, matchedClass) {
+        this.logger.log("Found attribution class on image:", matchedClass, img);
+        const parentDiv = img.closest(".en__component--column");
+        if (parentDiv) {
+            // Move the class from image to parent column
+            img.classList.remove(matchedClass);
+            parentDiv.classList.add(matchedClass);
+            this.logger.log("Moved attribution class from image to parent column:", matchedClass, parentDiv);
+        }
+        else {
+            this.logger.log("No parent .en__component--column found for image:", img);
+        }
+    }
+    /**
+     * Handle data attribute-based attribution positioning
+     */
+    handleDataAttributeAttribution(img, dataPosition) {
+        // Convert data attribute value to attribution class format
+        const attributionClass = `attribution-${dataPosition}`;
+        this.logger.log("Found data-background-position on image:", dataPosition, "->", attributionClass, img);
+        const parentDiv = img.closest(".en__component--column");
+        if (parentDiv) {
+            // Remove data attribute from image and add class to parent column
+            img.removeAttribute("data-background-position");
+            parentDiv.classList.add(attributionClass);
+            this.logger.log("Moved data-background-position from image to parent column as class:", attributionClass, parentDiv);
+        }
+        else {
+            this.logger.log("No parent .en__component--column found for image:", img);
+        }
+    }
+    setupMutationObserver() {
+        if (!this.pageBackground || !window.MutationObserver) {
+            if (!window.MutationObserver) {
+                this.logger.log("MutationObserver not supported in this browser");
+            }
+            return;
+        }
+        try {
+            this.mutationObserver = new MutationObserver((mutations) => {
+                let shouldReprocess = false;
+                mutations.forEach((mutation) => {
+                    // Check if nodes were added or attributes changed
+                    if (mutation.type === "childList" || mutation.type === "attributes") {
+                        shouldReprocess = true;
+                    }
+                });
+                if (shouldReprocess) {
+                    this.logger.log("DOM changes detected in background section, reprocessing attribution classes");
+                    // Use a small delay to ensure all changes are complete
+                    setTimeout(() => {
+                        this.processAttributionPositioning();
+                    }, 100);
+                }
+            });
+            // Start observing the background section
+            this.mutationObserver.observe(this.pageBackground, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ["class"],
+            });
+            this.logger.log("MutationObserver set up for background section");
+        }
+        catch (error) {
+            this.logger.error("Error setting up MutationObserver:", error);
+        }
+    }
+    // Public method to manually trigger reprocessing
+    reprocessAttributionPositioning() {
+        this.logger.log("Manually reprocessing attribution positioning");
+        this.processAttributionPositioning();
+    }
+    /**
+     * Clean up resources and observers
+     */
+    destroy() {
+        if (this.mutationObserver) {
+            this.mutationObserver.disconnect();
+            this.mutationObserver = null;
+            this.logger.log("MutationObserver disconnected");
+        }
     }
     setDataAttributes() {
-        if (this.hasVideoBackground())
+        if (this.hasVideoBackground()) {
             return dist_engrid_ENGrid.setBodyData("page-background", "video");
-        if (this.hasImageBackground())
+        }
+        if (this.hasImageBackground()) {
             return dist_engrid_ENGrid.setBodyData("page-background", "image");
+        }
         return dist_engrid_ENGrid.setBodyData("page-background", "empty");
     }
     hasVideoBackground() {
-        if (this.pageBackground) {
-            return !!this.pageBackground.querySelector("video");
+        if (!this.pageBackground) {
+            return false;
         }
+        return !!this.pageBackground.querySelector("video");
     }
     hasImageBackground() {
-        if (this.pageBackground) {
-            return (!this.hasVideoBackground() && !!this.pageBackground.querySelector("img"));
+        if (!this.pageBackground) {
+            return false;
         }
+        return (!this.hasVideoBackground() && !!this.pageBackground.querySelector("img"));
     }
 }
 
@@ -35812,6 +36119,14 @@ class neverbounce_NeverBounce {
         this.logger = new dist_logger_EngridLogger("NeverBounce", "#039bc4", "#dfdfdf", "📧");
         this.shouldRun = true;
         this.nbLoaded = false;
+        this.bypassEmails = [
+            "noaddress.ea",
+        ];
+        const searchParams = new URLSearchParams(window.location.search);
+        if (searchParams.has("bypassemailvalidation")) {
+            this.logger.log("Bypass Email Validation Enabled - not running NeverBounce");
+            return;
+        }
         this.emailField = document.getElementById("en__field_supporter_emailAddress");
         window._NBSettings = {
             apiKey: this.apiKey,
@@ -35952,6 +36267,10 @@ class neverbounce_NeverBounce {
             this.logger.log("E-mail Field Not Found");
             return;
         }
+        if (this.isBypassEmail()) {
+            this.logger.log("Bypass email detected. Skipping status update.");
+            return;
+        }
         // Search page for the NB Wrapper div and set as variable
         const nb_email_field_wrapper = (document.getElementById("nb-wrapper"));
         // Search page for the NB Feedback div and set as variable
@@ -36020,6 +36339,12 @@ class neverbounce_NeverBounce {
         (_a = el.parentNode) === null || _a === void 0 ? void 0 : _a.insertBefore(wrapper, el);
         wrapper.appendChild(el);
     }
+    isBypassEmail() {
+        if (!this.emailField || !this.emailField.value)
+            return false;
+        const email = this.emailField.value.toLowerCase();
+        return this.bypassEmails.some((bypassEmail) => email.includes(bypassEmail.toLowerCase()));
+    }
     validate() {
         var _a;
         if (!this.form.validate)
@@ -36027,6 +36352,10 @@ class neverbounce_NeverBounce {
         const nbResult = dist_engrid_ENGrid.getFieldValue("nb-result");
         if (!this.emailField || !this.shouldRun || !this.nbLoaded || !nbResult) {
             this.logger.log("validate(): Should Not Run. Returning true.");
+            return;
+        }
+        if (this.isBypassEmail()) {
+            this.logger.log("Bypass email detected. Skipping validation.");
             return;
         }
         if (this.nbStatus) {
@@ -36518,6 +36847,7 @@ class remember_me_RememberMe {
                 "position:absolute;width:1px;height:1px;left:-9999px;";
             iframe.src = this.remoteUrl;
             iframe.setAttribute("sandbox", "allow-same-origin allow-scripts");
+            iframe.setAttribute("title", "Remember Me iframe");
             this.iframe = iframe;
             document.body.appendChild(this.iframe);
             this.iframe.addEventListener("load", () => iframeLoaded(), false);
@@ -36934,15 +37264,18 @@ class min_max_amount_MinMaxAmount {
         var _a, _b;
         this._form = events_en_form_EnForm.getInstance();
         this._amount = donation_amount_DonationAmount.getInstance();
+        this._frequency = donation_frequency_DonationFrequency.getInstance();
         this.minAmount = (_a = dist_engrid_ENGrid.getOption("MinAmount")) !== null && _a !== void 0 ? _a : 1;
         this.maxAmount = (_b = dist_engrid_ENGrid.getOption("MaxAmount")) !== null && _b !== void 0 ? _b : 100000;
         this.minAmountMessage = dist_engrid_ENGrid.getOption("MinAmountMessage");
         this.maxAmountMessage = dist_engrid_ENGrid.getOption("MaxAmountMessage");
+        this.enAmountValidator = null;
         this.logger = new dist_logger_EngridLogger("MinMaxAmount", "white", "purple", "🔢");
         if (!this.shouldRun()) {
             // If we're not on a Donation Page, get out
             return;
         }
+        this.setValidationConfigFromEN();
         this._amount.onAmountChange.subscribe((s) => window.setTimeout(this.liveValidate.bind(this), 1000) // Wait 1 second for the amount to be updated
         );
         this._form.onValidate.subscribe(this.enOnValidate.bind(this));
@@ -36995,6 +37328,58 @@ class min_max_amount_MinMaxAmount {
         }
         else {
             dist_engrid_ENGrid.removeError(".en__field--withOther");
+        }
+    }
+    setValidationConfigFromEN() {
+        if (!dist_engrid_ENGrid.getOption("UseAmountValidatorFromEN") ||
+            !window.EngagingNetworks.validators) {
+            this.logger.log("Not setting validation config from EN.");
+            return;
+        }
+        // Find the amount validator for the donation amount field
+        // It should be of type "AMNT" or "FAMNT" and have
+        // a componentId that matches the donation amount field.
+        this.enAmountValidator = window.EngagingNetworks.validators.find((validator) => {
+            var _a;
+            return ((validator.type === "FAMNT" || validator.type === "AMNT") &&
+                ((_a = document
+                    .querySelector(".en__field--" + validator.componentId)) === null || _a === void 0 ? void 0 : _a.classList.contains("en__field--donationAmt")));
+        });
+        if (!this.enAmountValidator || !this.enAmountValidator.format) {
+            return;
+        }
+        this.logger.log(`Detected an amount validator for donation amount on the page:`, this.enAmountValidator);
+        // Static amount validator
+        if (this.enAmountValidator.type === "AMNT") {
+            this.minAmount = Number(this.enAmountValidator.format.split("~")[0]);
+            this.maxAmount = Number(this.enAmountValidator.format.split("~")[1]);
+            this.minAmountMessage = this.enAmountValidator.errorMessage;
+            this.maxAmountMessage = this.enAmountValidator.errorMessage;
+            this.logger.log(`Setting new values - Min Amount: ${this.minAmount}, Max Amount: ${this.maxAmount}, Error Message: ${this.minAmountMessage}`);
+        }
+        // Frequency-based amount validator
+        if (this.enAmountValidator.type === "FAMNT") {
+            this._frequency.onFrequencyChange.subscribe((freq) => {
+                if (!this.enAmountValidator || !this.enAmountValidator.format)
+                    return;
+                // In the validator, "onetime" is written as "SINGLE"
+                // Validator format for FAMNT is like SINGLE:10~100000|MONTHLY:5~100000|QUARTERLY:25~100000|ANNUAL:25~100000
+                const frequency = freq === "onetime" ? "SINGLE" : freq.toUpperCase();
+                const validationRange = this.enAmountValidator.format
+                    .split("|")
+                    .find((range) => range.startsWith(frequency));
+                if (!validationRange) {
+                    this.logger.log(`No validation range found for frequency: ${frequency}`);
+                    return;
+                }
+                const amounts = validationRange.split(":")[1].split("~");
+                this.minAmount = Number(amounts[0]);
+                this.maxAmount = Number(amounts[1]);
+                this.minAmountMessage = this.enAmountValidator.errorMessage;
+                this.maxAmountMessage = this.enAmountValidator.errorMessage;
+                this.logger.log(`Frequency changed to ${frequency}, updating min and max amounts`, validationRange);
+                this.logger.log(`Setting new values - Min Amount: ${this.minAmount}, Max Amount: ${this.maxAmount}, Error Message: ${this.minAmountMessage}`);
+            });
         }
     }
 }
@@ -37068,27 +37453,15 @@ class ticker_Ticker {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/data-layer.js
-// The DataLayer class is a singleton class that is responsible for managing the data layer events.
-// It listens to the EnForm onSubmit event and the RememberMe onLoad event.
-// It also listens to the blur, change, and submit events of the form fields.
-// It adds the following events to the data layer:
-// - EN_PAGE_VIEW
-// - EN_SUCCESSFUL_DONATION
-// - EN_PAGEJSON_{property}
-// - EN_SUBMISSION_SUCCESS_{pageType}
-// - EN_URLPARAM_{key}-{value}
-// - EN_RECURRING_FREQUENCIES
-// - EN_FASTFORMFILL_PERSONALINFO_SUCCESS
-// - EN_FASTFORMFILL_PERSONALINFO_PARTIALSUCCESS
-// - EN_FASTFORMFILL_PERSONALINFO_FAILURE
-// - EN_FASTFORMFILL_ADDRESS_SUCCESS
-// - EN_FASTFORMFILL_ADDRESS_PARTIALSUCCESS
-// - EN_FASTFORMFILL_ADDRESS_FAILURE
-// - EN_FASTFORMFILL_ALL_SUCCESS
-// - EN_FASTFORMFILL_ALL_FAILURE
-// - EN_SUBMISSION_WITH_EMAIL_OPTIN
-// - EN_SUBMISSION_WITHOUT_EMAIL_OPTIN
-// - EN_FORM_VALUE_UPDATED
+// DataLayer: singleton helper for pushing structured analytics events/vars to window.dataLayer.
+// On load it emits one aggregated event `pageJsonVariablesReady` with:
+//   EN_PAGEJSON_* (normalized pageJson), EN_URLPARAM_*, EN_RECURRING_FREQUENCIES (donation pages),
+//   and EN_SUBMISSION_SUCCESS_{PAGETYPE} when on the final page.
+// User actions emit: EN_FORM_VALUE_UPDATED (field changes) and submission opt‑in/out events.
+// Queued end‑of‑gift events/variables (via addEndOfGiftProcessEvent / addEndOfGiftProcessVariable)
+// are replayed after a successful gift process load.
+// Sensitive payment/bank fields are excluded; selected PII fields are Base64 “hashed” (btoa — not cryptographic).
+// Replace with a real hash (e.g., SHA‑256) if required.
 
 class data_layer_DataLayer {
     constructor() {
@@ -37147,132 +37520,52 @@ class data_layer_DataLayer {
     }
     transformJSON(value) {
         if (typeof value === "string") {
-            return value.toUpperCase().split(" ").join("-").replace(":-", "-");
+            return value
+                .toUpperCase()
+                .trim()
+                .replace(/\s+/g, "-")
+                .replace(/:-/g, "-");
         }
-        else if (typeof value === "boolean") {
-            value = value ? "TRUE" : "FALSE";
-            return value;
+        if (typeof value === "boolean") {
+            return value ? "TRUE" : "FALSE";
+        }
+        if (typeof value === "number") {
+            return value; // Preserve numeric type for analytics platforms that infer number vs string
         }
         return "";
     }
     onLoad() {
+        // Collect all data layer variables to push at once
+        const dataLayerData = {};
         if (dist_engrid_ENGrid.getGiftProcess()) {
             this.logger.log("EN_SUCCESSFUL_DONATION");
-            this.dataLayer.push({
-                event: "EN_SUCCESSFUL_DONATION",
-            });
             this.addEndOfGiftProcessEventsToDataLayer();
-        }
-        else {
-            this.logger.log("EN_PAGE_VIEW");
-            this.dataLayer.push({
-                event: "EN_PAGE_VIEW",
-            });
         }
         if (window.pageJson) {
             const pageJson = window.pageJson;
             for (const property in pageJson) {
-                if (!Number.isNaN(pageJson[property])) {
-                    this.dataLayer.push({
-                        event: `EN_PAGEJSON_${property.toUpperCase()}-${pageJson[property]}`,
-                    });
-                    this.dataLayer.push({
-                        [`'EN_PAGEJSON_${property.toUpperCase()}'`]: pageJson[property],
-                    });
-                }
-                else {
-                    this.dataLayer.push({
-                        event: `EN_PAGEJSON_${property.toUpperCase()}-${this.transformJSON(pageJson[property])}`,
-                    });
-                    this.dataLayer.push({
-                        [`'EN_PAGEJSON_${property.toUpperCase()}'`]: this.transformJSON(pageJson[property]),
-                    });
-                }
-                this.dataLayer.push({
-                    event: "EN_PAGEJSON_" + property.toUpperCase(),
-                    eventValue: pageJson[property],
-                });
+                const key = `EN_PAGEJSON_${property.toUpperCase()}`;
+                const value = pageJson[property];
+                dataLayerData[key] = this.transformJSON(value);
             }
             if (dist_engrid_ENGrid.getPageCount() === dist_engrid_ENGrid.getPageNumber()) {
-                this.dataLayer.push({
-                    event: "EN_SUBMISSION_SUCCESS_" + pageJson.pageType.toUpperCase(),
-                });
-                this.dataLayer.push({
-                    [`'EN_SUBMISSION_SUCCESS_${pageJson.pageType.toUpperCase()}'`]: "TRUE",
-                });
+                dataLayerData[`EN_SUBMISSION_SUCCESS_${pageJson.pageType.toUpperCase()}`] = "TRUE";
             }
         }
         const urlParams = new URLSearchParams(window.location.search);
         urlParams.forEach((value, key) => {
-            this.dataLayer.push({
-                event: `EN_URLPARAM_${key.toUpperCase()}-${this.transformJSON(value)}`,
-            });
-            this.dataLayer.push({
-                [`'EN_URLPARAM_${key.toUpperCase()}'`]: this.transformJSON(value),
-            });
+            dataLayerData[`EN_URLPARAM_${key.toUpperCase()}`] =
+                this.transformJSON(value);
         });
         if (dist_engrid_ENGrid.getPageType() === "DONATION") {
             const recurrFreqEls = document.querySelectorAll('[name="transaction.recurrfreq"]');
             const recurrValues = [...recurrFreqEls].map((el) => el.value);
-            this.dataLayer.push({
-                event: "EN_RECURRING_FREQUENCIES",
-                [`'EN_RECURRING_FREQEUENCIES'`]: recurrValues,
-            });
+            dataLayerData[`EN_RECURRING_FREQUENCIES`] = recurrValues;
         }
-        let fastFormFill = false;
-        // Fast Form Fill - Personal Details
-        const fastPersonalDetailsFormBlock = document.querySelector(".en__component--formblock.fast-personal-details");
-        if (fastPersonalDetailsFormBlock) {
-            const allPersonalMandatoryInputsAreFilled = fast_form_fill_FastFormFill.allMandatoryInputsAreFilled(fastPersonalDetailsFormBlock);
-            const somePersonalMandatoryInputsAreFilled = fast_form_fill_FastFormFill.someMandatoryInputsAreFilled(fastPersonalDetailsFormBlock);
-            if (allPersonalMandatoryInputsAreFilled) {
-                this.dataLayer.push({
-                    event: "EN_FASTFORMFILL_PERSONALINFO_SUCCESS",
-                });
-                fastFormFill = true;
-            }
-            else if (somePersonalMandatoryInputsAreFilled) {
-                this.dataLayer.push({
-                    event: "EN_FASTFORMFILL_PERSONALINFO_PARTIALSUCCESS",
-                });
-            }
-            else {
-                this.dataLayer.push({
-                    event: "EN_FASTFORMFILL_PERSONALINFO_FAILURE",
-                });
-            }
-        }
-        // Fast Form Fill - Address Details
-        const fastAddressDetailsFormBlock = document.querySelector(".en__component--formblock.fast-address-details");
-        if (fastAddressDetailsFormBlock) {
-            const allAddressMandatoryInputsAreFilled = fast_form_fill_FastFormFill.allMandatoryInputsAreFilled(fastAddressDetailsFormBlock);
-            const someAddressMandatoryInputsAreFilled = fast_form_fill_FastFormFill.someMandatoryInputsAreFilled(fastAddressDetailsFormBlock);
-            if (allAddressMandatoryInputsAreFilled) {
-                this.dataLayer.push({
-                    event: "EN_FASTFORMFILL_ADDRESS_SUCCESS",
-                });
-                fastFormFill = fastFormFill ? true : false; // Only set to true if it was true before
-            }
-            else if (someAddressMandatoryInputsAreFilled) {
-                this.dataLayer.push({
-                    event: "EN_FASTFORMFILL_ADDRESS_PARTIALSUCCESS",
-                });
-            }
-            else {
-                this.dataLayer.push({
-                    event: "EN_FASTFORMFILL_ADDRESS_FAILURE",
-                });
-            }
-        }
-        if (fastFormFill) {
-            this.dataLayer.push({
-                event: "EN_FASTFORMFILL_ALL_SUCCESS",
-            });
-        }
-        else {
-            this.dataLayer.push({
-                event: "EN_FASTFORMFILL_ALL_FAILURE",
-            });
+        // Push all collected variables at once
+        if (Object.keys(dataLayerData).length > 0) {
+            dataLayerData.event = "pageJsonVariablesReady";
+            this.dataLayer.push(dataLayerData);
         }
         this.attachEventListeners();
     }
@@ -37361,7 +37654,7 @@ class data_layer_DataLayer {
     }
     addEndOfGiftProcessVariable(variableName, variableValue = "") {
         this.storeEndOfGiftProcessData({
-            [`'${variableName.toUpperCase()}'`]: variableValue,
+            [variableName.toUpperCase()]: variableValue,
         });
     }
     storeEndOfGiftProcessData(data) {
@@ -37640,7 +37933,12 @@ class url_to_form_UrlToForm {
         this.urlParams.forEach((value, key) => {
             const field = document.getElementsByName(key)[0];
             if (field) {
-                if (!["text", "textarea", "email"].includes(field.type) ||
+                if (field.type === "checkbox") {
+                    field.checked = value === "true" || value === "Y" || value === "1";
+                    dist_engrid_ENGrid.setFieldValue(key, field.checked);
+                    this.logger.log(`Set: ${key} to ${field.checked}`);
+                }
+                else if (!["text", "textarea", "email"].includes(field.type) ||
                     !field.value) {
                     dist_engrid_ENGrid.setFieldValue(key, value);
                     this.logger.log(`Set: ${key} to ${value}`);
@@ -39228,6 +39526,9 @@ class event_tickets_EventTickets {
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/swap-amounts.js
 // This script allows you to override the default donation amounts in Engaging Networks
 // with a custom list of amounts.
+// If the URL contains a query parameter "engrid-amounts" with a comma separated values, the script will load the
+// amounts from the parameter and set them as the default amounts for the donation
+// form.
 /**
  * Example:
  * window.EngridAmounts = {
@@ -39240,6 +39541,7 @@ class event_tickets_EventTickets {
  *       "Other": "other",
  *     },
  *     default: 30,
+ *     stickyDefault: false, // Optional. When true, every swap forces the default amount to be (re)selected
  *   },
  *   "monthly": {
  *     amounts: {
@@ -39250,6 +39552,7 @@ class event_tickets_EventTickets {
  *       "Other": "other",
  *     },
  *     default: 15,
+ *     stickyDefault: true, // Example forcing default on each frequency swap
  *   },
  * };
  */
@@ -39259,52 +39562,98 @@ class swap_amounts_SwapAmounts {
         this.logger = new dist_logger_EngridLogger("SwapAmounts", "purple", "white", "💰");
         this._amount = donation_amount_DonationAmount.getInstance();
         this._frequency = donation_frequency_DonationFrequency.getInstance();
-        this.defaultChange = false;
-        this.swapped = false;
+        this.defaultChange = false; // Tracks if user changed away from default after swap
+        this.swapped = false; // Tracks if we've already executed at least one swap
+        this.loadAmountsFromUrl();
         if (!this.shouldRun())
             return;
+        // Respond when frequency changes
         this._frequency.onFrequencyChange.subscribe(() => this.swapAmounts());
+        // Track if donor moves away from the swapped default amount
         this._amount.onAmountChange.subscribe(() => {
-            if (this._frequency.frequency in window.EngridAmounts === false)
+            const configs = window.EngridAmounts;
+            if (!configs)
                 return;
-            this.defaultChange = false;
+            const freq = this._frequency.frequency;
+            if (!(freq in configs))
+                return;
             if (!this.swapped)
-                return;
-            // Check if the amount is not default amount for the frequency
-            if (this._amount.amount !=
-                window.EngridAmounts[this._frequency.frequency].default) {
-                this.defaultChange = true;
-            }
+                return; // ignore early changes before initial swap
+            const currentConfig = configs[freq];
+            this.defaultChange = this._amount.amount !== currentConfig.default;
         });
     }
-    swapAmounts() {
-        if (this._frequency.frequency in window.EngridAmounts) {
-            window.EngagingNetworks.require._defined.enjs.swapList("donationAmt", this.loadEnAmounts(window.EngridAmounts[this._frequency.frequency]), {
-                ignoreCurrentValue: this.ignoreCurrentValue(),
+    loadAmountsFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const amounts = urlParams.get("engrid-amounts");
+        if (amounts) {
+            this.defaultChange = true; // if amounts come from URL, treat as user-set
+            const amountArray = amounts
+                .split(",")
+                .map((amt) => amt.trim())
+                .filter(Boolean);
+            if (!amountArray.length)
+                return;
+            const urlDefaultParam = dist_engrid_ENGrid.getUrlParameter("transaction.donationAmt");
+            const parsedFirst = parseFloat(amountArray[0]);
+            const defaultAmount = (urlDefaultParam && parseFloat(urlDefaultParam)) ||
+                parsedFirst;
+            const amountsObj = {};
+            amountArray.forEach((raw) => {
+                const numeric = parseFloat(raw);
+                amountsObj[raw] = isNaN(numeric) ? raw : numeric;
             });
-            this._amount.load();
-            this.logger.log("Amounts Swapped To", window.EngridAmounts[this._frequency.frequency]);
-            this.swapped = true;
+            // Ensure Other choice always present at the end
+            amountsObj["Other"] = "other";
+            const config = {
+                amounts: amountsObj,
+                default: defaultAmount,
+                // stickyDefault omitted so it defaults to false behavior
+            };
+            window.EngridAmounts = {
+                onetime: config,
+                monthly: config,
+            };
         }
     }
-    loadEnAmounts(amountArray) {
-        let ret = [];
-        for (let amount in amountArray.amounts) {
-            ret.push({
-                selected: amountArray.amounts[amount] === amountArray.default,
-                label: amount,
-                value: amountArray.amounts[amount].toString(),
-            });
-        }
-        return ret;
+    swapAmounts() {
+        const configs = window.EngridAmounts;
+        if (!configs)
+            return;
+        const freq = this._frequency.frequency;
+        const config = configs[freq];
+        if (!config)
+            return;
+        const stickyDefault = !!config.stickyDefault;
+        // If stickyDefault, always ignore current value so selected flag in list enforces default
+        const ignoreCurrentValue = stickyDefault ? true : this.ignoreCurrentValue();
+        window.EngagingNetworks.require._defined.enjs.swapList("donationAmt", this.toEnAmountList(config), { ignoreCurrentValue });
+        this._amount.load();
+        this.logger.log("Amounts Swapped To", config, { ignoreCurrentValue });
+        this.swapped = true;
+    }
+    /**
+     * Convert the internal config object into the structure Engaging Networks expects
+     */
+    toEnAmountList(config) {
+        return Object.entries(config.amounts).map(([label, value]) => ({
+            selected: value === config.default,
+            label,
+            value: value.toString(),
+        }));
     }
     shouldRun() {
-        return "EngridAmounts" in window;
+        return !!window.EngridAmounts;
     }
     ignoreCurrentValue() {
-        return !(window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed() ||
-            dist_engrid_ENGrid.getUrlParameter("transaction.donationAmt") !== null ||
-            this.defaultChange);
+        const urlParam = dist_engrid_ENGrid.getUrlParameter("transaction.donationAmt");
+        if (urlParam !== null) {
+            const urlAmount = parseFloat(urlParam);
+            return this._amount.amount !== urlAmount;
+        }
+        // If submission failed or donor manually changed away from default, respect current value
+        const submissionFailed = window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed();
+        return !(submissionFailed || this.defaultChange);
     }
 }
 
@@ -39824,6 +40173,7 @@ debug_panel_DebugPanel.debugSessionStorageKey = "engrid_debug_panel";
 class debug_hidden_fields_DebugHiddenFields {
     constructor() {
         this.logger = new dist_logger_EngridLogger("Debug hidden fields", "#f0f0f0", "#ff0000", "🫣");
+        this.ignoreFields = ["transaction.paycurrency"];
         // Query all hidden input elements within the specified selectors
         const fields = document.querySelectorAll(".en__component--row [type='hidden'][class*='en_'], .engrid-added-input[type='hidden']");
         // Check if there are any hidden fields
@@ -39836,6 +40186,11 @@ class debug_hidden_fields_DebugHiddenFields {
                 .join(", ")}`);
             // Iterate through each hidden input element
             fields.forEach((el) => {
+                // Check if the field name is in the ignore list
+                if (this.ignoreFields.includes(el.name)) {
+                    this.logger.log(`Ignoring field: ${el.name} because it is in the ignore list`);
+                    return;
+                }
                 // Change the input type to 'text' and add the required classes
                 el.type = "text";
                 el.classList.add("en__field__input", "en__field__input--text");
@@ -39964,16 +40319,23 @@ class country_disable_CountryDisable {
 // 2 - Add a class to body to indicate if the "maximize my impact" is selected (data-engrid-premium-gift-maximize="true|false")
 // 3 - Check the premium gift when click on the title or description
 // 4 - Create new {$PREMIUMTITLE} merge tag that's replaced with the premium gift name
+// 5 - Add aria-label to the radio inputs and alt tags to the images
 
 class premium_gift_PremiumGift {
     constructor() {
         this.logger = new dist_logger_EngridLogger("PremiumGift", "#232323", "#f7b500", "🎁");
         this.enElements = new Array();
+        this._frequency = donation_frequency_DonationFrequency.getInstance();
+        this._amount = donation_amount_DonationAmount.getInstance();
         if (!this.shoudRun())
             return;
         this.searchElements();
         this.addEventListeners();
         this.checkPremiumGift();
+        window.setTimeout(() => {
+            this.altsAndArias();
+            this.maxDonationAria();
+        }, 1000);
     }
     shoudRun() {
         return ("pageJson" in window &&
@@ -40022,6 +40384,16 @@ class premium_gift_PremiumGift {
             });
             observer.observe(premiumGiftsBlock, { attributes: true });
         }
+        this._frequency.onFrequencyChange.subscribe(() => {
+            window.setTimeout(() => {
+                this.altsAndArias();
+            }, 1000);
+        });
+        this._amount.onAmountChange.subscribe(() => {
+            window.setTimeout(() => {
+                this.altsAndArias();
+            }, 1000);
+        });
     }
     checkPremiumGift() {
         const premiumGift = document.querySelector('[name="en__pg"]:checked');
@@ -40070,6 +40442,57 @@ class premium_gift_PremiumGift {
             const premiumTitle = item.querySelector(".engrid_premium_title");
             if (premiumTitle) {
                 premiumTitle.innerHTML = title;
+            }
+        });
+    }
+    // Sets alt tags for premium gift images and aria tags for premium gift radio inputs
+    altsAndArias() {
+        const premiumTitle = document.querySelectorAll(".en__pg__detail h2.en__pg__name");
+        const multistepBackButton = document.querySelectorAll(".multistep-button-container button.btn-back");
+        premiumTitle.forEach((item) => {
+            if (item) {
+                const titleText = item.innerHTML;
+                const parent = item.parentElement;
+                const prevSibling = parent === null || parent === void 0 ? void 0 : parent.previousElementSibling;
+                const radioInputSibling = prevSibling === null || prevSibling === void 0 ? void 0 : prevSibling.previousElementSibling;
+                if (prevSibling) {
+                    const imageDiv = prevSibling.querySelector(".en__pg__images");
+                    if (imageDiv) {
+                        const img = imageDiv.querySelector("img");
+                        if (img) {
+                            img.setAttribute("alt", titleText);
+                            img.style.width = "125px";
+                            img.style.height = "100px";
+                        }
+                    }
+                }
+                if (radioInputSibling) {
+                    const radioInput = radioInputSibling.querySelector('input[type="radio"]');
+                    if (radioInput) {
+                        radioInput.setAttribute("aria-label", titleText);
+                    }
+                }
+            }
+            multistepBackButton.forEach((item) => {
+                item.setAttribute("aria-label", "Back");
+            });
+        });
+    }
+    // This is for the Maximize My Donation aria-label - the tree structure for it is slightly different.
+    maxDonationAria() {
+        const maxDonationTitle = Array.from(document.querySelectorAll(".en__pg__detail")).filter((el) => !el.querySelector("h2"));
+        maxDonationTitle.forEach((item) => {
+            var _a;
+            if (item) {
+                const titleText = ((_a = item.querySelector(".en__pg__description")) === null || _a === void 0 ? void 0 : _a.innerHTML) || "";
+                const prevSibling = item.previousElementSibling;
+                const radioInputSibling = prevSibling === null || prevSibling === void 0 ? void 0 : prevSibling.previousElementSibling;
+                if (radioInputSibling) {
+                    const radioInput = radioInputSibling.querySelector('input[type="radio"]');
+                    if (radioInput) {
+                        radioInput.setAttribute("aria-label", titleText);
+                    }
+                }
             }
         });
     }
@@ -41166,6 +41589,8 @@ class modal_Modal {
             onClickOutside: "close",
             addCloseButton: false,
             closeButtonLabel: "Okay!",
+            customClass: "",
+            showCloseX: true,
         };
         this.focusTrapHandler = (e) => {
             const modalElement = this.modal;
@@ -41199,6 +41624,16 @@ class modal_Modal {
         var _a;
         this.modal = document.createElement("div");
         this.modal.classList.add("engrid-modal", "modal--hidden");
+        if (this.options.customClass && this.options.customClass !== "") {
+            this.options.customClass.split(" ").forEach((customClass) => {
+                if (!customClass)
+                    return;
+                this.modal.classList.add(customClass);
+            });
+        }
+        if (this.options.showCloseX) {
+            this.modal.classList.add("engrid-modal--close-x");
+        }
         this.modal.setAttribute("aria-hidden", "true");
         this.modal.setAttribute("role", "dialog");
         this.modal.setAttribute("aria-modal", "true");
@@ -41206,7 +41641,7 @@ class modal_Modal {
         this.modal.innerHTML = `
       <div class="engrid-modal__overlay" tabindex="-1">
         <div class="engrid-modal__container" tabindex="0">
-          <div class="engrid-modal__close" role="button" tabindex="0" aria-label="Close">
+          <div class="engrid-modal__close engrid-modal__close-x" role="button" tabindex="0" aria-label="Close">
             X
           </div>
           <div class="engrid-modal__body"></div>
@@ -41567,7 +42002,6 @@ class vgs_VGS {
                 autoComplete: "cc-exp",
                 validations: ["required", "validCardExpirationDate"],
                 css: styles,
-                yearLength: 2,
             },
         };
         // Deep merge the default options with the options set in the theme
@@ -41636,9 +42070,9 @@ class vgs_VGS {
             this.paymentTypeField.value.toLowerCase() === "visa" ||
             this.paymentTypeField.value.toLowerCase() === "vi") {
             const cardContainer = document.querySelector(".en__field--vgs.en__field--ccnumber");
-            const cardEmpty = cardContainer.querySelector(".vgs-collect-container__empty");
+            const cardEmpty = cardContainer === null || cardContainer === void 0 ? void 0 : cardContainer.querySelector(".vgs-collect-container__empty");
             const cvvContainer = document.querySelector(".en__field--vgs.en__field--ccvv");
-            const cvvEmpty = cvvContainer.querySelector(".vgs-collect-container__empty");
+            const cvvEmpty = cvvContainer === null || cvvContainer === void 0 ? void 0 : cvvContainer.querySelector(".vgs-collect-container__empty");
             if (cardContainer && cardEmpty) {
                 window.setTimeout(() => {
                     dist_engrid_ENGrid.setError(cardContainer, "Please enter a valid card number");
@@ -41738,6 +42172,7 @@ class country_redirect_CountryRedirect {
 class welcome_back_WelcomeBack {
     constructor() {
         var _a;
+        this._form = events_en_form_EnForm.getInstance();
         this.supporterDetails = {};
         this.options = (_a = dist_engrid_ENGrid.getOption("WelcomeBack")) !== null && _a !== void 0 ? _a : false;
         this.rememberMeEvents = remember_me_events_RememberMeEvents.getInstance();
@@ -41853,6 +42288,45 @@ class welcome_back_WelcomeBack {
                 this.resetWelcomeBack();
             });
         });
+        this._form.onValidate.subscribe(this.enOnValidate.bind(this));
+        this._form.onValidate.subscribe(() => {
+            window.setTimeout(this.doubleCheckValidation.bind(this), 150);
+        });
+    }
+    enOnValidate() {
+        if (!this._form.validate) {
+            // Disable the fast personal details if the form is invalidated by other components running before
+            dist_engrid_ENGrid.setBodyData("hide-fast-personal-details", false);
+            return;
+        }
+        const regionField = dist_engrid_ENGrid.getField("supporter.region");
+        const regionFieldValue = regionField ? regionField.value : "";
+        const regionFieldType = regionField === null || regionField === void 0 ? void 0 : regionField.tagName.toLowerCase();
+        const regionFieldLabel = document.querySelector(".en__field--region label");
+        if (regionFieldType === "select" &&
+            regionFieldLabel &&
+            regionFieldValue === "") {
+            dist_engrid_ENGrid.setError(".en__field--region", `${regionFieldLabel.innerText} is required`);
+            dist_engrid_ENGrid.setBodyData("hide-fast-personal-details", false);
+            this._form.validate = false;
+        }
+        else {
+            // Remove the error message if the region field is filled
+            dist_engrid_ENGrid.removeError(".en__field--region");
+        }
+    }
+    doubleCheckValidation() {
+        // Disable the fast personal details if the form is invalidated by other components running AFTER
+        // the fast personal details component
+        const validationError = document.querySelector(".fast-personal-details .en__field--validationFailed");
+        if (validationError) {
+            dist_engrid_ENGrid.setBodyData("hide-fast-personal-details", false);
+            validationError.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+            });
+        }
+        return;
     }
 }
 
@@ -41864,6 +42338,7 @@ const ecard_to_target_options_EcardToTargetOptionsDefaults = {
     hideTarget: true,
     hideMessage: true,
     addSupporterNameToMessage: false,
+    targets: [],
 };
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/ecard-to-target.js
@@ -41892,8 +42367,10 @@ class ecard_to_target_EcardToTarget {
     shouldRun() {
         return (window.hasOwnProperty("EngridEcardToTarget") &&
             typeof window.EngridEcardToTarget === "object" &&
-            window.EngridEcardToTarget.hasOwnProperty("targetName") &&
-            window.EngridEcardToTarget.hasOwnProperty("targetEmail"));
+            ((window.EngridEcardToTarget.hasOwnProperty("targetName") &&
+                window.EngridEcardToTarget.hasOwnProperty("targetEmail")) ||
+                (window.EngridEcardToTarget.hasOwnProperty("targets") &&
+                    window.EngridEcardToTarget.targets.length > 0)));
     }
     setTarget() {
         const targetNameField = document.querySelector(".en__ecardrecipients__name input");
@@ -41903,10 +42380,30 @@ class ecard_to_target_EcardToTarget {
             this.logger.error("Could not add recipient. Required elements not found.");
             return;
         }
-        targetNameField.value = this.options.targetName;
-        targetEmailField.value = this.options.targetEmail;
-        addRecipientButton === null || addRecipientButton === void 0 ? void 0 : addRecipientButton.click();
-        this.logger.log("Added recipient", this.options.targetName, this.options.targetEmail);
+        let targets = this.options.targets;
+        // BC support for targetName and targetEmail
+        if (this.options.targetName && this.options.targetEmail) {
+            targets.push({
+                targetName: this.options.targetName,
+                targetEmail: this.options.targetEmail,
+            });
+        }
+        // Remove duplicates from targets array
+        targets = targets.filter((target, index, self) => index ===
+            self.findIndex((t) => t.targetName === target.targetName &&
+                t.targetEmail === target.targetEmail));
+        targets.forEach((target) => {
+            const targetName = target.targetName;
+            const targetEmail = target.targetEmail;
+            if (!targetName || !targetEmail) {
+                this.logger.error("Could not add recipient. Target name or email is empty.");
+                return;
+            }
+            targetNameField.value = targetName;
+            targetEmailField.value = targetEmail;
+            addRecipientButton === null || addRecipientButton === void 0 ? void 0 : addRecipientButton.click();
+            this.logger.log("Added recipient", targetName, targetEmail);
+        });
     }
     hideElements() {
         const messageBlock = document.querySelector(".en__ecardmessage");
@@ -42040,6 +42537,7 @@ class embedded_ecard_EmbeddedEcard {
         iframe.setAttribute("width", "100%");
         iframe.setAttribute("scrolling", "no");
         iframe.setAttribute("frameborder", "0");
+        iframe.setAttribute("title", "Ecard iframe");
         iframe.classList.add("engrid-iframe", "engrid-iframe--embedded-ecard");
         iframe.style.display = "none";
         return iframe;
@@ -42383,7 +42881,7 @@ class checkbox_label_CheckboxLabel {
             var _a;
             const labelText = (_a = checkboxLabel.textContent) === null || _a === void 0 ? void 0 : _a.trim();
             const checkboxContainer = checkboxLabel.nextElementSibling;
-            const checkboxLabelElement = checkboxContainer.querySelector("label");
+            const checkboxLabelElement = checkboxContainer.querySelector("label:last-child");
             if (!checkboxLabelElement || !labelText)
                 return;
             checkboxLabelElement.textContent = labelText;
@@ -42436,6 +42934,7 @@ class optin_ladder_OptInLadder {
             iframe.allow = "payment";
             iframe.classList.add("opt-in-ladder-iframe");
             iframe.classList.add("engrid-iframe");
+            iframe.setAttribute("title", "Optin Ladder iframe");
             // If the page already has an iFrame with the same class, we don't need to add another one
             const existingIframe = document.querySelector(".opt-in-ladder-iframe");
             if (existingIframe) {
@@ -42656,11 +43155,309 @@ class optin_ladder_OptInLadder {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/post-donation-embed.js
+// This component only works on Thank You pages and the current page IS NOT embedded as an iframe.
+// It searches for a post-donation tag (engrid-post-donation)
+// and if it exists, it will replace it with an iframe of the chained `src` attribute (or the current donation page, replacing the
+// "/donate/2" with "/donate/1").
+// The engrid-post-donation tag has 3 attributes:
+// 1. src: the URL of the iframe to load (optional)
+// 2. params: the URL parameters to pass to the iframe
+// 3. amounts: comma separated list of amounts to pass to the iframe
+
+class post_donation_embed_PostDonationEmbed {
+    constructor() {
+        this.logger = new dist_logger_EngridLogger("PostDonationEmbed", "red", "white", "🖼️");
+        if (!this.shouldRun())
+            return;
+        this.logger.log("Post Donation Tag found");
+        const postDonationTag = document.querySelector("engrid-post-donation");
+        // Get `src` attribute from the <engrid-post-donation> tag if it exists
+        // If not, use the current page URL as the base URL
+        let iFrameSRC;
+        if (!postDonationTag.getAttribute("src")) {
+            iFrameSRC = new URL(window.location.href);
+            // Modify the path: replace "/donate/2" with "/donate/1"
+            iFrameSRC.pathname = iFrameSRC.pathname.replace("/donate/2", "/donate/1");
+        }
+        else {
+            iFrameSRC = new URL(postDonationTag.getAttribute("src") || "");
+        }
+        // Extract parameters from the <engrid-post-donation> tag
+        let params = postDonationTag.getAttribute("params") || "";
+        let amounts = postDonationTag.getAttribute("amounts");
+        // Format parameters correctly
+        let searchParams = new URLSearchParams(params.replace(/&/g, "&"));
+        let paramString = searchParams
+            .toString()
+            .replace(/%5B/g, "[")
+            .replace(/%5D/g, "]");
+        // Construct new URL with "chain" parameter
+        let newUrl = `${iFrameSRC.origin}${iFrameSRC.pathname}?chain&${paramString}`;
+        if (amounts) {
+            newUrl += `&engrid-amounts=${amounts}`;
+        }
+        // Create the iframe element
+        let iframe = document.createElement("iframe");
+        iframe.setAttribute("loading", "lazy");
+        iframe.setAttribute("width", "100%");
+        iframe.setAttribute("scrolling", "no");
+        iframe.setAttribute("class", "engrid-iframe thank-you-page-donation");
+        iframe.setAttribute("src", newUrl);
+        iframe.setAttribute("frameborder", "0");
+        iframe.setAttribute("allowfullscreen", "");
+        iframe.setAttribute("allowpaymentrequest", "true");
+        iframe.setAttribute("allow", "payment");
+        iframe.setAttribute("title", "Post Donation iframe");
+        // Replace <engrid-post-donation> with the iframe
+        postDonationTag.replaceWith(iframe);
+    }
+    shouldRun() {
+        return (dist_engrid_ENGrid.isThankYouPage() &&
+            this.hasPostDonationTag() &&
+            dist_engrid_ENGrid.getBodyData("embedded") === null);
+    }
+    hasPostDonationTag() {
+        return !!document.querySelector("engrid-post-donation");
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/frequency-upsell-modal.js
+/*
+ * FrequencyUpsellModal - this is class that creates the modal for the frequency upsell.
+ * This component is intentionally "dumb" and only creates the modal renders its content.
+ * Logic for showing the modal and handling the upsell is in the FrequencyUpsell class.
+ */
+
+class frequency_upsell_modal_FrequencyUpsellModal extends modal_Modal {
+    constructor(upsellOptions) {
+        super({
+            onClickOutside: "bounce",
+            customClass: `engrid--frequency-upsell-modal ${upsellOptions.customClass}`,
+            showCloseX: false,
+        });
+        this._amountWithFees = 0;
+        this._upsellAmountWithFees = 0;
+        this.upsellOptions = upsellOptions;
+        this.updateModalContent();
+    }
+    set amountWithFees(value) {
+        this._amountWithFees = value;
+    }
+    set upsellAmountWithFees(value) {
+        this._upsellAmountWithFees = value;
+    }
+    updateModalContent() {
+        var _a;
+        this.modalContent = this.getModalContent();
+        const modalBody = (_a = this.modal) === null || _a === void 0 ? void 0 : _a.querySelector(".engrid-modal__body");
+        if (modalBody) {
+            modalBody.innerHTML = "";
+            modalBody.insertAdjacentHTML("beforeend", this.modalContent);
+        }
+    }
+    getModalContent() {
+        if (!this.upsellOptions)
+            return "";
+        return `
+    <div class="frequency-upsell-modal__secondary-content"></div>
+    <div class="frequency-upsell-modal__content">
+      <div class="frequency-upsell-modal__text">
+        <h2 class="frequency-upsell-modal__title">${this.replaceAmountTokens(this.upsellOptions.title)}</h2>
+        <p class="frequency-upsell-modal__para">${this.replaceAmountTokens(this.upsellOptions.paragraph)}</p>
+      </div>
+      <div class="frequency-upsell-modal__buttons">
+        <button class="primary frequency-upsell-modal__button" id="frequency-upsell-yes">
+          ${this.replaceAmountTokens(this.upsellOptions.yesButton)}
+        </button>
+        <button class="primary frequency-upsell-modal__button" id="frequency-upsell-no">
+           ${this.replaceAmountTokens(this.upsellOptions.noButton)}
+        </button>
+      </div>
+    </div>
+    `;
+    }
+    replaceAmountTokens(string) {
+        const amount = dist_engrid_ENGrid.formatNumber(this._amountWithFees, this._amountWithFees % 1 == 0 ? 0 : 2, ".", "");
+        const upsellAmount = dist_engrid_ENGrid.formatNumber(this._upsellAmountWithFees, this._upsellAmountWithFees % 1 == 0 ? 0 : 2, ".", "");
+        return string
+            .replace(/{current_amount}/g, amount)
+            .replace(/{upsell_amount}/g, upsellAmount);
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/frequency-upsell.js
+/*
+ * FrequencyUpsell component which creates a modal to upsell the frequency of the donation
+ * This is typically used to upsell a single donation into an annual donation, but the component
+ * options can be configured to upsell any frequency to any other frequency. The upsell amount can also be configured
+ * See FrequencyUpsellOptions for more details.
+ */
+
+
+class frequency_upsell_FrequencyUpsell {
+    constructor() {
+        this.logger = new dist_logger_EngridLogger("FrequencyUpsell", "lightgray", "darkblue", "🏦");
+        this.upsellModal = null;
+        this.options = null;
+        this._frequency = donation_frequency_DonationFrequency.getInstance();
+        this._amount = donation_amount_DonationAmount.getInstance();
+        this._fee = processing_fees_ProcessingFees.getInstance();
+        this._form = events_en_form_EnForm.getInstance();
+        this.modalSeen = false;
+        if (!this.shouldRun()) {
+            this.logger.log("FrequencyUpsell not running");
+            return;
+        }
+        this.options = this.selectOptions(window.EngridFrequencyUpsell);
+        this.logger.log("FrequencyUpsell initialized", this.options);
+        this.upsellModal = new frequency_upsell_modal_FrequencyUpsellModal(this.options);
+        this.createFrequencyField();
+        this.addEventListeners();
+    }
+    /**
+     * Select the proper options (single config or A/B variant) and return a concrete FrequencyUpsellOptions object.
+     * If an A/B test config is provided (abTest: true, options: [...]) a random variant is chosen and stored
+     * in a 1-day cookie so subsequent visits get the same variant.
+     */
+    selectOptions(config) {
+        // Simple (non AB) case
+        if (!config.abTest) {
+            return Object.assign(Object.assign({}, frequency_upsell_options_FrequencyUpsellOptionsDefaults), config);
+        }
+        const abConfig = config;
+        const cookieName = abConfig.cookieName || "engrid_frequency_upsell_variant";
+        const existing = cookie_get(cookieName);
+        let index;
+        if (existing !== undefined) {
+            const parsed = parseInt(existing, 10);
+            if (!isNaN(parsed) && parsed >= 0 && parsed < abConfig.options.length) {
+                index = parsed;
+            }
+            else {
+                index = this.randomIndex(abConfig.options.length);
+            }
+        }
+        else {
+            index = this.randomIndex(abConfig.options.length);
+        }
+        // Persist for configured duration
+        const duration = abConfig.cookieDurationDays || 1;
+        cookie_set(cookieName, index.toString(), { expires: duration });
+        const chosen = abConfig.options[index];
+        // Push variant info to dataLayer if available
+        if (window.dataLayer) {
+            window.dataLayer.push({
+                event: "frequency_upsell_ab_variant",
+                frequencyUpsellVariantIndex: index,
+                frequencyUpsellVariantTitle: chosen.title,
+            });
+        }
+        return Object.assign(Object.assign({}, frequency_upsell_options_FrequencyUpsellOptionsDefaults), chosen);
+    }
+    randomIndex(length) {
+        return Math.floor(Math.random() * length);
+    }
+    /**
+     * Check if the FrequencyUpsell should run:
+     * - Check if the FrequencyUpsell is enabled in the window object
+     * - Check that we don't have an EngridUpsell active on this page
+     * - Check that we don't have an EngagingNetworks upsell active on this page
+     * @returns {boolean} - true if the FrequencyUpsell should run, false otherwise
+     */
+    shouldRun() {
+        return (window.EngridFrequencyUpsell &&
+            !window.EngridUpsell &&
+            (!window.EngagingNetworks.upsell ||
+                window.EngagingNetworks.upsell.length === 0));
+    }
+    /**
+     * Get the upsell amount with/without fees
+     * We want to display to the user the amount with fees, but we need to set the donation amount to the value without fees
+     * @param {boolean} withFee - true if we want to include the fees in the upsell amount
+     * @returns {number} - The upsell amount with fees
+     */
+    getUpsellAmount(withFee) {
+        if (withFee) {
+            const upsellAmount = this.options.upsellAmount(this._amount.amount);
+            return upsellAmount + this._fee.calculateFees(upsellAmount);
+        }
+        return this.options.upsellAmount(this._amount.amount);
+    }
+    addEventListeners() {
+        var _a, _b;
+        // When the Modal buttons are clicked
+        (_b = (_a = this.upsellModal) === null || _a === void 0 ? void 0 : _a.modal) === null || _b === void 0 ? void 0 : _b.addEventListener("click", (e) => {
+            const target = e.target;
+            // Upsell is accepted
+            if (target.id === "frequency-upsell-yes") {
+                this.logger.log("Frequency upsell accepted");
+                this._frequency.setFrequency(this.options.upsellFrequency);
+                this._amount.setAmount(this.getUpsellAmount(false));
+                this.options.onAccept();
+                this._form.submitForm();
+                this.upsellModal.close();
+                return;
+            }
+            // Upsell is declined
+            if (target.id === "frequency-upsell-no") {
+                this.logger.log("Frequency upsell declined");
+                this.options.onDecline();
+                this._form.submitForm();
+                this.upsellModal.close();
+                return;
+            }
+        });
+        // When the form is submitted
+        this._form.onSubmit.subscribe(() => {
+            var _a;
+            // If we have a frequency we want to upsell on & the modal isn't already open
+            // Since frequency in the event class doesn't have a specific type, I need to cast our options array to a general string array
+            if (this.options.upsellFromFrequency.includes(this._frequency.frequency) &&
+                !this.modalSeen) {
+                // Open the modal and prevent form submission
+                this.upsellModal.amountWithFees =
+                    this._amount.amount + this._fee.calculateFees(this._amount.amount);
+                this.upsellModal.upsellAmountWithFees = this.getUpsellAmount(true);
+                this.upsellModal.updateModalContent();
+                this.logger.log("Frequency upsell modal opened");
+                (_a = this.upsellModal) === null || _a === void 0 ? void 0 : _a.open();
+                this.options.onOpen();
+                this.modalSeen = true;
+                this._form.submit = false;
+                return false;
+            }
+            // If not opening, continue with the form submission
+            this._form.submit = true;
+            return true;
+        });
+    }
+    /**
+     * Create the frequency field for the upsell, if it does not exist on the page already
+     * This is required by DonationFrequency to set the frequency
+     */
+    createFrequencyField() {
+        const frequencyField = document.querySelector(`input[name="transaction.recurrfreq"][value="${this.options.upsellFrequency.toUpperCase()}"]`);
+        if (frequencyField)
+            return;
+        const frequencyFieldContainer = document.querySelector(".en__field--recurrfreq .en__field__element");
+        frequencyFieldContainer === null || frequencyFieldContainer === void 0 ? void 0 : frequencyFieldContainer.insertAdjacentHTML("beforeend", `
+      <div class="en__field__item hide">
+        <input type="radio" name="transaction.recurrfreq" value="${this.options.upsellFrequency.toUpperCase()}" class="en__field__input en__field__input--radio">
+      </div>
+    `);
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const version_AppVersion = "0.20.10";
+const version_AppVersion = "0.22.17";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
+
+
+
 
 
 
