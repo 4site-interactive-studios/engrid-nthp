@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, December 8, 2025 @ 18:29:27 ET
- *  By: cawe
+ *  Date: Friday, December 12, 2025 @ 13:29:14 ET
+ *  By: fernando
  *  ENGrid styles: v0.22.11
  *  ENGrid scripts: v0.22.17
  *
@@ -23895,14 +23895,6 @@ class DonationLightboxForm {
         // Validate the entire form again
         if (this.validateForm(false, this.isDonation)) {
           if (this.isDonation) {
-            // If the phone number field doesn't exists or it is empty, set Mobile Opt In to "N" and ensure the checkbox is unchecked
-            const supporterPhoneNumber = this.app.getField("supporter.phoneNumber");
-            if (!supporterPhoneNumber || supporterPhoneNumber.value.trim().length == 0) {
-              const mobileOptIn = this.app.getField("supporter.questions.179541");
-              if (mobileOptIn) {
-                mobileOptIn.checked = false;
-              }
-            }
             // Send Basic User Data to Parent
             this.sendMessage("donationinfo", JSON.stringify({
               name: document.querySelector("#en__field_supporter_firstName").value,

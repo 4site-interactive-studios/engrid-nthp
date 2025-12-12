@@ -469,21 +469,6 @@ export default class DonationLightboxForm {
           // Validate the entire form again
           if (this.validateForm(false, this.isDonation)) {
             if (this.isDonation) {
-              // If the phone number field doesn't exists or it is empty, set Mobile Opt In to "N" and ensure the checkbox is unchecked
-              const supporterPhoneNumber = this.app.getField(
-                "supporter.phoneNumber"
-              );
-              if (
-                !supporterPhoneNumber ||
-                supporterPhoneNumber.value.trim().length == 0
-              ) {
-                const mobileOptIn = this.app.getField(
-                  "supporter.questions.179541"
-                );
-                if (mobileOptIn) {
-                  mobileOptIn.checked = false;
-                }
-              }
               // Send Basic User Data to Parent
               this.sendMessage(
                 "donationinfo",
