@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, September 12, 2025 @ 15:43:39 ET
+ *  Date: Wednesday, February 4, 2026 @ 13:02:46 ET
  *  By: fernando
  *  ENGrid styles: v0.22.11
  *  ENGrid scripts: v0.22.17
@@ -22888,11 +22888,11 @@ const customScript = function (App, DonationFrequency) {
   // Add your client scripts here
   const freq = DonationFrequency.getInstance();
   freq.onFrequencyChange.subscribe(s => {
-    const refCode = App.getFieldValue("transaction.othamt1");
-    if (refCode) {
+    const refCodeField = App.getField("transaction.othamt1");
+    if (refCodeField && refCodeField.type === "hidden" && refCodeField.value) {
       const refValue = s === "onetime" ? "S" : "R";
-      const newRefCode = refCode.substring(0, 6) + refValue + refCode.substring(7);
-      App.setFieldValue("transaction.othamt1", newRefCode);
+      const newRefCode = refCodeField.value.substring(0, 6) + refValue + refCodeField.value.substring(7);
+      refCodeField.value = newRefCode;
     }
   });
   function moveAttributionClass() {
