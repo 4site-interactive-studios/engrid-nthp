@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Saturday, February 7, 2026 @ 16:17:21 ET
+ *  Date: Saturday, February 7, 2026 @ 16:19:04 ET
  *  By: fernando
  *  ENGrid styles: v0.23.4
  *  ENGrid scripts: v0.23.11
@@ -23830,6 +23830,10 @@ const options = {
   MediaAttribution: true,
   SkipToMainContentLink: true,
   SrcDefer: true,
+  PreferredPaymentMethod: {
+    preferredPaymentMethodField: "supporter.NOT_TAGGED_128",
+    defaultPaymentMethod: ["card"]
+  },
   ProgressBar: true,
   Placeholders: {
     ".en__field--donationAmt.en__field--withOther .en__field__input--other": "Enter an amount"
