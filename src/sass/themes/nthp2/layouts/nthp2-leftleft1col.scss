@@ -1,0 +1,45 @@
+// NTHP2 Theme - LeftLeft1Col layout specific styles
+
+//noinspection SassScssResolvedByNameOnly
+&[data-engrid-layout="leftleft1col"] {
+  // Background Image and attribution positioning
+  @media screen and (min-width: $one_col_body-column_max-width) {
+    &:not(#en__pagebuilder) {
+      .page-backgroundImage {
+        z-index: 5;
+        grid-column: rpc/pc;
+
+        figure.media-with-attribution,
+        &:before {
+          left: $one_col_body-column_max-width;
+          right: 0;
+          width: calc(100% - $one_col_body-column_max-width);
+          background-position: center !important;
+        }
+      }
+    }
+  }
+
+  // Replace banner with background image on mobile
+  @media screen and (max-width: $one_col_body-column_max-width) {
+    @include engrid_replace-banner-with-background("leftleft1col");
+
+    &[data-replace-banner-with-background="if-banner-empty"][data-engrid-body-banner="empty"][data-engrid-page-background="image"] {
+      [class*="page-backgroundImage"] {
+        grid-row: body-banner !important;
+        min-height: var(--banner-image-height);
+        margin: 15px 0 30px;
+        z-index: auto !important;
+
+        figure {
+          // Change from absolute positioning so that it will have height
+          position: relative !important;
+          max-height: var(--banner-image-height, 250px);
+          display: flex;
+          align-items: center;
+          aspect-ratio: initial;
+        }
+      }
+    }
+  }
+}
