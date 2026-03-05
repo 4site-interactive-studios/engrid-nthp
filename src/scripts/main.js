@@ -370,5 +370,26 @@ export const customScript = function (App, DonationFrequency) {
   siteHeader();
   // FAQ Block End
 
+  function nthp2Scripts() {
+    //adjust tippy props
+    const figAttributions = document.querySelectorAll(
+      ".media-with-attribution figattribution"
+    );
+
+    figAttributions.forEach((figAttribution) => {
+      const tippyInstance = figAttribution._tippy;
+      if (tippyInstance) {
+        tippyInstance.setProps({
+          arrow: false,
+          allowHTML: true,
+        });
+      }
+    });
+  }
+
+  if (document.body.dataset.engridTheme === "nthp2") {
+    nthp2Scripts();
+  }
+
   App.setBodyData("client-js-loading", "finished");
 };

@@ -14,13 +14,13 @@
   --color_magenta: #853275;
 
   //Layout
-  --engrid__body_background-color: #f4f4f4;
-  --engrid__page_background-color: #f4f4f4;
-  --engrid__content-header_background-color: #f4f4f4;
+  --engrid__body_background-color: #ffffff;
+  --engrid__page_background-color: #ffffff;
+  --engrid__content-header_background-color: #ffffff;
   --engrid__content-footer_background-color: #ffffff;
   --engrid__body_box-shadow: none;
-  --engrid__body_padding: 0 123px;
-  --engrid__content-footer_padding: 70px 123px;
+  --engrid__body_padding: 0 60px;
+  --engrid__content-footer_padding: 70px 60px;
 
   //Typography: default
   --root_font-size: 18px;
@@ -31,6 +31,7 @@
 
   //Typography: headers
   --h1_font-family: var(--default_font-family);
+  --h1_color: var(--color_blue);
   --h1_font-size: 3rem;
   --h1_font-weight: 700;
   --h1_line-height: 1;
@@ -559,4 +560,6 @@
       width: 100%;
     }
   }
+
+  @import "layouts/nthp2-leftleft1col";
 }
