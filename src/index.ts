@@ -4,6 +4,7 @@ import { Options, App, DonationFrequency } from "@4site/engrid-scripts"; // Uses
 import "./sass/main.scss";
 import { customScript } from "./scripts/main";
 import { MembershipBenefitsModal } from "./scripts/membership-benefits-modal";
+import { MembershipBenefitsWidget } from "./scripts/membership-benefits-widget";
 
 const options: Options = {
   applePay: false,
@@ -59,6 +60,7 @@ const options: Options = {
   },
   onLoad: () => {
     new MembershipBenefitsModal();
+    new MembershipBenefitsWidget();
     customScript(App, DonationFrequency);
   },
   onResize: () => console.log("Starter Theme Window Resized"),

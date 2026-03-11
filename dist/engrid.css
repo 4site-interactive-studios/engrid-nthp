@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, March 10, 2026 @ 11:47:07 ET
+ *  Date: Wednesday, March 11, 2026 @ 11:44:52 ET
  *  By: michael
  *  ENGrid styles: v0.23.4
  *  ENGrid scripts: v0.23.11
@@ -8336,16 +8336,6 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=nthp]:not(#en__pagebuilder):not([data-engrid-debug]) .en__component--dd360search{
   display:block;
 }
-[data-engrid-theme=nthp] .engrid-blocked-country{
-  background-color:var(--color_light-blue);
-  color:var(--color_black);
-  font-size:1.2rem;
-  font-weight:600;
-  padding:20px;
-}
-[data-engrid-theme=nthp]:has(.engrid-blocked-country) #en__digitalWallet,[data-engrid-theme=nthp]:has(.engrid-blocked-country) #payment-info-heading,[data-engrid-theme=nthp]:has(.engrid-blocked-country) .en__captcha,[data-engrid-theme=nthp]:has(.engrid-blocked-country) .en__component--dd360search,[data-engrid-theme=nthp]:has(.engrid-blocked-country) .en__field--address1,[data-engrid-theme=nthp]:has(.engrid-blocked-country) .en__field--address2,[data-engrid-theme=nthp]:has(.engrid-blocked-country) .en__field--city,[data-engrid-theme=nthp]:has(.engrid-blocked-country) .en__field--feeCover,[data-engrid-theme=nthp]:has(.engrid-blocked-country) .en__field--postcode,[data-engrid-theme=nthp]:has(.engrid-blocked-country) .en__field--region,[data-engrid-theme=nthp]:has(.engrid-blocked-country) .en__submit,[data-engrid-theme=nthp]:has(.engrid-blocked-country) .give-by-select,[data-engrid-theme=nthp]:has(.engrid-blocked-country) [class*=giveBySelect-]{
-  display:none !important;
-}
 [data-engrid-theme=nthp][data-engrid-layout=centercenter2col]{
   --engrid__content_padding:0 20px;
 }
@@ -9268,6 +9258,79 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme]:has(.engrid-blocked-country) #en__digitalWallet,[data-engrid-theme]:has(.engrid-blocked-country) #payment-info-heading,[data-engrid-theme]:has(.engrid-blocked-country) .en__captcha,[data-engrid-theme]:has(.engrid-blocked-country) .en__component--dd360search,[data-engrid-theme]:has(.engrid-blocked-country) .en__field--address1,[data-engrid-theme]:has(.engrid-blocked-country) .en__field--address2,[data-engrid-theme]:has(.engrid-blocked-country) .en__field--city,[data-engrid-theme]:has(.engrid-blocked-country) .en__field--feeCover,[data-engrid-theme]:has(.engrid-blocked-country) .en__field--postcode,[data-engrid-theme]:has(.engrid-blocked-country) .en__field--region,[data-engrid-theme]:has(.engrid-blocked-country) .en__submit,[data-engrid-theme]:has(.engrid-blocked-country) .give-by-select,[data-engrid-theme]:has(.engrid-blocked-country) [class*=giveBySelect-]{
   display:none !important;
+}
+[data-engrid-theme]:not([data-engrid-transaction-recurring=n]) .membership-benefits-widget{
+  display:none;
+}
+[data-engrid-theme] .membership-benefits-widget{
+  background:#eaf8fd;
+  border-radius:16px;
+  margin:15px auto;
+  padding:25px;
+}
+[data-engrid-theme] .membership-benefits-widget__level{
+  color:#00679d;
+  font-size:20px;
+  font-weight:700;
+  margin-bottom:15px;
+  text-align:center;
+}
+[data-engrid-theme] .membership-benefits-widget__emoji{
+  font-size:36px;
+}
+[data-engrid-theme] .membership-benefits-widget__list{
+  color:#00679d;
+  list-style-image:url("data:image/svg+xml;charset=utf-8,%3Csvg width='10' height='7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m.917 2.75 2.75 2.75L8.25.917' stroke='%2300679D' stroke-width='1.833' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  margin:0;
+  overflow:hidden;
+  padding-left:20px;
+}
+[data-engrid-theme] .membership-benefits-widget__list--next{
+  list-style-image:url("data:image/svg+xml;charset=utf-8,%3Csvg width='11' height='11' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg clip-path='url(%23a)' stroke='%2300679D' stroke-width='1.375'%3E%3Cpath d='M8.25 4.583h-5.5a.917.917 0 0 0-.917.917v3.667c0 .506.41.916.917.916h5.5c.506 0 .916-.41.916-.916V5.5a.917.917 0 0 0-.916-.917Z'/%3E%3Cpath d='M3.667 4.583V3.208a1.833 1.833 0 0 1 3.667 0v1.375' stroke-linecap='round'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='a'%3E%3Cpath fill='%23fff' d='M0 0h11v11H0z'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E");
+}
+[data-engrid-theme] .membership-benefits-widget__item{
+  animation:benefitEnter .18s ease;
+  color:#00679d;
+  font-size:15px;
+  margin:8px 0;
+}
+[data-engrid-theme] .membership-benefits-widget__item--next>span{
+  opacity:.6;
+}
+[data-engrid-theme] .membership-benefits-widget--hidden{
+  display:none;
+}
+[data-engrid-theme] .membership-benefits-widget__button{
+  background-color:#7ed3f6;
+  border-color:#7ed3f6;
+  color:#00679d;
+  font-size:20px;
+  font-weight:600;
+  margin:25px auto 0;
+  transition:transform .3s ease-in-out;
+  width:100%;
+}
+[data-engrid-theme] .membership-benefits-widget__button:hover{
+  background-color:#00679d;
+  border-color:#00679d;
+  color:#fff;
+  transform:translateY(-2px);
+}
+[data-engrid-theme] .membership-benefits-widget__divider{
+  border-bottom:1px solid #00679d;
+  margin:25px auto 20px;
+  max-width:320px;
+  width:80%;
+}
+@keyframes benefitEnter{
+  0%{
+    opacity:0;
+    transform:translateY(6px);
+  }
+  to{
+    opacity:1;
+    transform:none;
+  }
 }
 body{
   opacity:1;
