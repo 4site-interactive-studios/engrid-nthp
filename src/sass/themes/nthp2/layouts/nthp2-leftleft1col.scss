@@ -22,8 +22,6 @@
 
   // Replace banner with background image on mobile
   @media screen and (max-width: $one_col_body-column_max-width) {
-    @include engrid_replace-banner-with-background("leftleft1col");
-
     &[data-replace-banner-with-background="if-banner-empty"][data-engrid-body-banner="empty"][data-engrid-page-background="image"] {
       [class*="page-backgroundImage"] {
         grid-row: body-banner !important;

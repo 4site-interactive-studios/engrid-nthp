@@ -20,6 +20,7 @@
   --engrid__content-footer_background-color: #ffffff;
   --engrid__body_box-shadow: none;
   --engrid__body_padding: 0 60px;
+  --engrid__body-banner_padding: 20px 0 30px;
   --engrid__content-header_padding: 14px 12px 0;
   --engrid__content-footer_padding: 70px 60px;
 
@@ -555,6 +556,11 @@
       font-size: 16px;
       line-height: 1.6;
     }
+  }
+
+  // Replace banner with background image on mobile
+  @media screen and (max-width: $one_col_body-column_max-width) {
+    @include engrid_replace-banner-with-background("leftleft1col");
   }
 
   @media screen and (max-width: 630px) {
