@@ -196,33 +196,12 @@
     .en__field__element .en__field__item {
       &:first-of-type {
         padding-right: 0;
-
-        label {
-          border-radius: var(--recurring-frequency__button_border-radius) 0 0 var(--recurring-frequency__button_border-radius);
-        }
-
-        input:not(:checked)+label {
-          border-right: none;
-        }
       }
 
-      &:last-of-type {
+      &:not(:first-of-type) {
         padding-left: 0;
 
-        label {
-          overflow: hidden;
-          position: relative;
-          border-radius: 0 var(--recurring-frequency__button_border-radius) var(--recurring-frequency__button_border-radius) 0;
-
-          svg {
-            position: absolute;
-            left: -15px;
-            //width: 273px!important;
-            //height: 87px!important;
-          }
-        }
-
-        input:not(:checked)+label {
+        input + label {
           border-left: none;
         }
       }

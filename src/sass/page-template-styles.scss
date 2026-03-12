@@ -3,6 +3,7 @@
 
 // Styles shared across themes
 [data-engrid-theme] {
+  // Blocked countries feature
   .engrid-blocked-country {
     background-color: var(--color_light-blue);
     color: var(--color_black);
@@ -29,9 +30,23 @@
     }
   }
 
+  // Auto-renew
+  // hide annual donation option when auto-renew on page
+  &:not([data-engrid-auto-renew-present="false"]) {
+    .en__field--recurrfreq .en__field__item:has(input[value="ANNUAL"]) {
+      display: none;
+    }
+  }
+
+  .en__field--auto-renew {
+    border-top: 2px solid #171e2c;
+    border-bottom: 2px solid #171e2c;
+    padding: 10px 0;
+    margin: 20px auto;
+  }
 
   //Membership benefits widget
-  &:not([data-engrid-transaction-recurring="n"]) {
+  &:not([data-engrid-transaction-recurring-frequency="onetime"]):not([data-engrid-transaction-recurring-frequency="annual"]) {
     .membership-benefits-widget {
       display: none;
     }

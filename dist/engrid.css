@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, March 11, 2026 @ 12:58:20 ET
+ *  Date: Thursday, March 12, 2026 @ 12:57:49 ET
  *  By: michael
  *  ENGrid styles: v0.23.4
  *  ENGrid scripts: v0.23.11
@@ -8900,25 +8900,10 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=nthp2] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio .en__field__element .en__field__item:first-of-type{
   padding-right:0;
 }
-[data-engrid-theme=nthp2] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio .en__field__element .en__field__item:first-of-type label{
-  border-radius:var(--recurring-frequency__button_border-radius) 0 0 var(--recurring-frequency__button_border-radius);
-}
-[data-engrid-theme=nthp2] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio .en__field__element .en__field__item:first-of-type input:not(:checked)+label{
-  border-right:none;
-}
-[data-engrid-theme=nthp2] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio .en__field__element .en__field__item:last-of-type{
+[data-engrid-theme=nthp2] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio .en__field__element .en__field__item:not(:first-of-type){
   padding-left:0;
 }
-[data-engrid-theme=nthp2] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio .en__field__element .en__field__item:last-of-type label{
-  border-radius:0 var(--recurring-frequency__button_border-radius) var(--recurring-frequency__button_border-radius) 0;
-  overflow:hidden;
-  position:relative;
-}
-[data-engrid-theme=nthp2] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio .en__field__element .en__field__item:last-of-type label svg{
-  left:-15px;
-  position:absolute;
-}
-[data-engrid-theme=nthp2] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio .en__field__element .en__field__item:last-of-type input:not(:checked)+label{
+[data-engrid-theme=nthp2] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio .en__field__element .en__field__item:not(:first-of-type) input+label{
   border-left:none;
 }
 [data-engrid-theme=nthp2] .en__field--withOther.en__field--radio.en__field--donationAmt .en__field__item--other{
@@ -9260,7 +9245,16 @@ body[data-engrid-debug]:before{
 [data-engrid-theme]:has(.engrid-blocked-country) #en__digitalWallet,[data-engrid-theme]:has(.engrid-blocked-country) #payment-info-heading,[data-engrid-theme]:has(.engrid-blocked-country) .en__captcha,[data-engrid-theme]:has(.engrid-blocked-country) .en__component--dd360search,[data-engrid-theme]:has(.engrid-blocked-country) .en__field--address1,[data-engrid-theme]:has(.engrid-blocked-country) .en__field--address2,[data-engrid-theme]:has(.engrid-blocked-country) .en__field--city,[data-engrid-theme]:has(.engrid-blocked-country) .en__field--feeCover,[data-engrid-theme]:has(.engrid-blocked-country) .en__field--postcode,[data-engrid-theme]:has(.engrid-blocked-country) .en__field--region,[data-engrid-theme]:has(.engrid-blocked-country) .en__submit,[data-engrid-theme]:has(.engrid-blocked-country) .give-by-select,[data-engrid-theme]:has(.engrid-blocked-country) [class*=giveBySelect-]{
   display:none !important;
 }
-[data-engrid-theme]:not([data-engrid-transaction-recurring=n]) .membership-benefits-widget{
+[data-engrid-theme]:not([data-engrid-auto-renew-present=false]) .en__field--recurrfreq .en__field__item:has(input[value=ANNUAL]){
+  display:none;
+}
+[data-engrid-theme] .en__field--auto-renew{
+  border-bottom:2px solid #171e2c;
+  border-top:2px solid #171e2c;
+  margin:20px auto;
+  padding:10px 0;
+}
+[data-engrid-theme]:not([data-engrid-transaction-recurring-frequency=onetime]):not([data-engrid-transaction-recurring-frequency=annual]) .membership-benefits-widget{
   display:none;
 }
 [data-engrid-theme] .membership-benefits-widget{

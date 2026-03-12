@@ -1,3 +1,5 @@
+import { ENGrid } from "@4site/engrid-scripts";
+
 const tippy = require("tippy.js").default;
 
 export const customScript = function (App, DonationFrequency) {
@@ -385,6 +387,9 @@ export const customScript = function (App, DonationFrequency) {
         });
       }
     });
+
+    const autoRenew = document.querySelector(".en__field--auto-renew");
+    ENGrid.setBodyData("auto-renew-present", !!autoRenew);
   }
 
   if (document.body.dataset.engridTheme === "nthp2") {

@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, March 11, 2026 @ 12:58:20 ET
+ *  Date: Thursday, March 12, 2026 @ 12:57:49 ET
  *  By: michael
  *  ENGrid styles: v0.23.4
  *  ENGrid scripts: v0.23.11
@@ -23497,6 +23497,7 @@ const AppVersion = "0.23.11";
 
 
 ;// CONCATENATED MODULE: ./src/scripts/main.js
+
 const main_tippy = (__webpack_require__(9244)/* ["default"] */ .Ay);
 const customScript = function (App, DonationFrequency) {
   console.log("ENGrid client scripts are executing");
@@ -23805,6 +23806,8 @@ const customScript = function (App, DonationFrequency) {
         });
       }
     });
+    const autoRenew = document.querySelector(".en__field--auto-renew");
+    engrid_ENGrid.setBodyData("auto-renew-present", !!autoRenew);
   }
   if (document.body.dataset.engridTheme === "nthp2") {
     nthp2Scripts();
