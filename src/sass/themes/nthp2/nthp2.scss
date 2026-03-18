@@ -537,6 +537,132 @@
     }
   }
 
+  .en__component--premiumgiftblock {
+    --maximize_my_donation_image: url("https://acb0a5d73b67fccd4bbe-c2d8138f0ea10a18dd4c43ec3aa4240a.ssl.cf5.rackcdn.com/10028/maximize-my-donation.png?v=1773155127000");
+    margin: 24px 0 0;
+
+    &[disabled="disabled"],
+    &[data-annual-disabled] {
+      display: none !important;
+    }
+
+    &[disabled="disabled"] {
+      pointer-events: none;
+      opacity: 0.5;
+      filter: grayscale(1);
+      .en__pgHeader {
+        visibility: hidden;
+      }
+      &::before {
+        content: attr(data-disabled-message);
+        background-color: initial;
+        border-color: var(--premium__border-color);
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-width: var(--premium__border-width);
+        color: var(--h2_color);
+        font-family: var(--h2_font-family);
+        font-size: var(--h2_font-size);
+        font-weight: var(--h2_font-weight);
+        line-height: 1;
+        margin-bottom: calc(1rem * var(--scale-down_20pct));
+        margin-top: calc(2rem * var(--scale-down_20pct));
+        padding: 0;
+        text-transform: var(--h2_text-transform);
+        position: absolute;
+        top: -25px;
+      }
+    }
+
+    .en__pgHeader {
+      margin-top: 0;
+      margin-bottom: 1.8rem;
+    }
+
+    .en__pg__body {
+      align-items: start;
+      padding: 0;
+      margin-bottom: 2rem;
+      grid-template-columns: min-content 276px var(--premium__image_max-width);
+      @media (max-width: 600px) {
+        grid-template-columns: min-content auto var(--premium__image_max-width);
+        --premium__image_max-width: 80px;
+      }
+    }
+
+    .en__pg__select {
+      align-self: start;
+      padding-top: 5px;
+    }
+
+    .en__pg__name {
+      font-family: var(--default_font-family);
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+
+    .en__pg__description {
+      align-self: start;
+      font-size: 18px;
+      line-height: 1.6;
+    }
+  }
+
+  .en__pgList {
+    // When the no gift option is present, move it from the last premium option to being the first premium option
+    &[data-nogift] {
+      display: grid;
+
+      .en__pg:last-child {
+        grid-row: 1 / 2;
+
+        .en__pg__detail::before {
+          content: "Maximize my donation";
+          display: block;
+          font-family: var(--default_font-family);
+          text-transform: var(--h2_text-transform);
+          line-height: var(--h2_line-height);
+          font-size: 18px;
+          font-weight: 700;
+          margin-bottom: 3px;
+        }
+
+        .en__pg__display {
+          background-image: var(--maximize_my_donation_image);
+          background-size: contain;
+          background-position: center;
+          background-repeat: no-repeat;
+          height: 100px;
+
+          @media screen and (max-width: 628px) {
+            background-position: left center;
+            width: var(--premium__image_max-width);
+            max-width: 100%;
+          }
+        }
+      }
+    }
+
+    .en__pg__body {
+      grid-template-areas: "en__pg__select en__pg__detail en__pg__display" ". en__pg__detail-mobile .";
+      grid-template-columns: min-content auto var(--premium__image_max-width);
+      gap: 0 max(calc(var(--fields_spacing-inline) * 2), 0.5rem);
+    }
+
+    .en__pg__detail {
+      margin-bottom: 4px;
+    }
+
+    .en__pg__optionType select {
+      --select_padding: 1.2ch 1.6ch;
+      --select_font-size: 16px;
+      --select_line-height: 24px;
+      margin-top: calc(var(--fields_spacing-inline) * 0.5);
+    }
+  }
+
+
   // Replace banner with background image on mobile
   @media screen and (max-width: $one_col_body-column_max-width) {
     @include engrid_replace-banner-with-background("leftleft1col");
