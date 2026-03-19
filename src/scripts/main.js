@@ -151,12 +151,14 @@ export const customScript = function (App, DonationFrequency) {
   // Add your client scripts here
   const freq = DonationFrequency.getInstance();
   freq.onFrequencyChange.subscribe((s) => {
-    const refCode = App.getFieldValue("transaction.othamt1");
-    if (refCode) {
+    const refCodeField = App.getField("transaction.othamt1");
+    if (refCodeField && refCodeField.type === "hidden" && refCodeField.value) {
       const refValue = s === "onetime" ? "S" : "R";
       const newRefCode =
-        refCode.substring(0, 6) + refValue + refCode.substring(7);
-      App.setFieldValue("transaction.othamt1", newRefCode);
+        refCodeField.value.substring(0, 6) +
+        refValue +
+        refCodeField.value.substring(7);
+      refCodeField.value = newRefCode;
     }
   });
 

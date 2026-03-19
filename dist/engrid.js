@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, March 19, 2026 @ 09:35:07 ET
+ *  Date: Thursday, March 19, 2026 @ 09:38:23 ET
  *  By: michael
  *  ENGrid styles: v0.23.4
  *  ENGrid scripts: v0.23.11
@@ -31015,11 +31015,11 @@ const customScript = function (App, DonationFrequency) {
   // Add your client scripts here
   const freq = DonationFrequency.getInstance();
   freq.onFrequencyChange.subscribe(s => {
-    const refCode = App.getFieldValue("transaction.othamt1");
-    if (refCode) {
+    const refCodeField = App.getField("transaction.othamt1");
+    if (refCodeField && refCodeField.type === "hidden" && refCodeField.value) {
       const refValue = s === "onetime" ? "S" : "R";
-      const newRefCode = refCode.substring(0, 6) + refValue + refCode.substring(7);
-      App.setFieldValue("transaction.othamt1", newRefCode);
+      const newRefCode = refCodeField.value.substring(0, 6) + refValue + refCodeField.value.substring(7);
+      refCodeField.value = newRefCode;
     }
   });
   function moveAttributionClass() {
@@ -44477,6 +44477,10 @@ const options = {
   MediaAttribution: true,
   SkipToMainContentLink: true,
   SrcDefer: true,
+  PreferredPaymentMethod: {
+    preferredPaymentMethodField: "supporter.NOT_TAGGED_128",
+    defaultPaymentMethod: ["card"]
+  },
   ProgressBar: true,
   Placeholders: {
     ".en__field--donationAmt.en__field--withOther .en__field__input--other": "Enter an amount"
