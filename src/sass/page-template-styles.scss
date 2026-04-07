@@ -87,12 +87,12 @@
   .membership-benefits-widget__item {
     margin: 8px 0;
     color: #00679D;
-    font-size: 15px;
+    font-size: 16px;
     animation: benefitEnter 180ms ease;
   }
 
   .membership-benefits-widget__item--next > span {
-    opacity: 0.6;
+    color: #34779B;
   }
 
   .membership-benefits-widget--hidden {

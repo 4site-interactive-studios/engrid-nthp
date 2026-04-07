@@ -397,6 +397,20 @@
     max-width: 100%;
   }
 
+  &:not(#en__pagebuilder):not([data-engrid-debug]) .en__component--dd360search {
+    display: block;
+    --button_color: #ffffff;
+    --button_color_hover: #ffffff;
+    --button_background-color: var(--color_blue);
+    --button_background-color_hover: var(--color_blue);
+    --button_border-color: var(--color_blue);
+    --button_border-color_hover: var(--color_blue);
+  }
+
+  .dtd-company-selected .wrongcompany a {
+    text-decoration: none;
+  }
+
   .en__component--dd360search>p {
     font-weight: 500;
     margin-bottom: 0;
