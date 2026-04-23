@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, April 7, 2026 @ 12:33:43 ET
+ *  Date: Thursday, April 23, 2026 @ 09:16:05 ET
  *  By: michael
  *  ENGrid styles: v0.24.0
  *  ENGrid scripts: v0.24.5
@@ -9373,9 +9373,6 @@ body[data-engrid-debug]:before{
   margin:20px auto;
   padding:10px 0;
 }
-[data-engrid-theme]:not([data-engrid-transaction-recurring-frequency=onetime]):not([data-engrid-transaction-recurring-frequency=annual]) .membership-benefits-widget{
-  display:none;
-}
 [data-engrid-theme] .membership-benefits-widget{
   background:#eaf8fd;
   border-radius:16px;
@@ -9435,6 +9432,9 @@ body[data-engrid-debug]:before{
   margin:25px auto 20px;
   max-width:320px;
   width:80%;
+}
+[data-engrid-theme] .mb__frequency-label{
+  font-size:75%;
 }
 @keyframes benefitEnter{
   0%{

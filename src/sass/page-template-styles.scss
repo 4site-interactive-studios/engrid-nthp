@@ -47,12 +47,6 @@
   }
 
   //Membership benefits widget
-  &:not([data-engrid-transaction-recurring-frequency="onetime"]):not([data-engrid-transaction-recurring-frequency="annual"]) {
-    .membership-benefits-widget {
-      display: none;
-    }
-  }
-
   .membership-benefits-widget {
     background: #EAF8FD;
     padding: 25px;
@@ -122,6 +116,10 @@
     width: 80%;
     border-bottom: 1px solid #00679D;
     margin: 25px auto 20px;
+  }
+
+  .mb__frequency-label {
+    font-size: 75%;
   }
 
   @keyframes benefitEnter {
