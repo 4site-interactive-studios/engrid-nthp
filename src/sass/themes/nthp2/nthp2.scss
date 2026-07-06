@@ -160,6 +160,8 @@
   --submit__button_padding-top: 24px;
   --submit__button_padding-bottom: 24px;
 
+  -webkit-font-smoothing: antialiased;
+
   //Hide unused page sections in page builder
   &#en__pagebuilder .en__component--advrow {
     .page-alert,
@@ -286,6 +288,14 @@
       font-size: 17px;
       text-align: center;
       font-style: italic;
+    }
+  }
+
+  // Equalise spacing on donation amount buttons
+  .radio-to-buttons_donationAmt.en__component--formblock .en__field--donationAmt .en__field__element.en__field__element--radio .en__field__item {
+    padding: var(--fields_spacing-block) var(--fields_spacing-inline);
+    @media screen and (max-width: 600px) {
+      padding: 6px;
     }
   }
 
@@ -470,6 +480,7 @@
   .recurring-arrow {
     justify-self: center;
     margin: 0 auto 20px;
+    text-align: center;
 
     img {
       width: 56px;
@@ -477,7 +488,6 @@
 
     span {
       font-family: "Caveat", cursive;
-      text-align: center;
       font-weight: bold;
       margin-top: 10px;
       font-size: 26px;

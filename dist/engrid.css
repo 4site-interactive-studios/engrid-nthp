@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, April 23, 2026 @ 09:16:05 ET
+ *  Date: Monday, July 6, 2026 @ 12:17:22 ET
  *  By: michael
  *  ENGrid styles: v0.24.0
  *  ENGrid scripts: v0.24.5
@@ -8879,6 +8879,7 @@ body[data-engrid-debug]:before{
   --submit__button_font-weight:600;
   --submit__button_padding-top:24px;
   --submit__button_padding-bottom:24px;
+  -webkit-font-smoothing:antialiased;
 }
 [data-engrid-theme=nthp2]#en__pagebuilder .en__component--advrow .body-bannerOverlay,[data-engrid-theme=nthp2]#en__pagebuilder .en__component--advrow .body-bottom,[data-engrid-theme=nthp2]#en__pagebuilder .en__component--advrow .body-footer,[data-engrid-theme=nthp2]#en__pagebuilder .en__component--advrow .body-footerOutside,[data-engrid-theme=nthp2]#en__pagebuilder .en__component--advrow .body-header,[data-engrid-theme=nthp2]#en__pagebuilder .en__component--advrow .body-headerOutside,[data-engrid-theme=nthp2]#en__pagebuilder .en__component--advrow .content-footerSpacer,[data-engrid-theme=nthp2]#en__pagebuilder .en__component--advrow .content-preFooter,[data-engrid-theme=nthp2]#en__pagebuilder .en__component--advrow .page-alert,[data-engrid-theme=nthp2]#en__pagebuilder .en__component--advrow .page-backgroundImageOverlay{
   display:none;
@@ -8962,6 +8963,14 @@ body[data-engrid-debug]:before{
   font-style:italic;
   margin-top:0;
   text-align:center;
+}
+[data-engrid-theme=nthp2] .radio-to-buttons_donationAmt.en__component--formblock .en__field--donationAmt .en__field__element.en__field__element--radio .en__field__item{
+  padding:var(--fields_spacing-block) var(--fields_spacing-inline);
+}
+@media screen and (max-width:600px){
+  [data-engrid-theme=nthp2] .radio-to-buttons_donationAmt.en__component--formblock .en__field--donationAmt .en__field__element.en__field__element--radio .en__field__item{
+    padding:6px;
+  }
 }
 [data-engrid-theme=nthp2] input[type=checkbox]+label:before{
   font-size:18px;
@@ -9105,6 +9114,7 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=nthp2] .recurring-arrow{
   justify-self:center;
   margin:0 auto 20px;
+  text-align:center;
 }
 [data-engrid-theme=nthp2] .recurring-arrow img{
   width:56px;
@@ -9115,7 +9125,6 @@ body[data-engrid-debug]:before{
   font-size:26px;
   font-weight:700;
   margin-top:10px;
-  text-align:center;
 }
 [data-engrid-theme=nthp2] .en__component--dd360confirmation{
   margin:30px 0;
