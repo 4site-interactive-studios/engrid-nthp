@@ -789,7 +789,7 @@
       display: none !important;
     }
   }
-  &[data-engrid-layout="centercenter2col"] {
+  &[data-engrid-layout="centercenter2col"]:not([data-engrid-subtheme="multistep"]) {
     --engrid__content_padding: 0 20px;
 
     h4 {
@@ -910,4 +910,5 @@
     }
   }
   @import "migrated";
+  @import "layouts/multistep-centercenter2col";
 }
