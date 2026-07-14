@@ -1,0 +1,261 @@
+[data-engrid-theme="nthp"][data-engrid-multistep] {
+  --engrid__body-title_padding: 0 20px;
+  --engrid__body-top_padding: 0 20px;
+  --engrid__body-banner_padding: 24px 20px;
+
+  form>.en__component--advrow .content-footer {
+    grid-column: pc-start / pc-end;
+    padding: 0;
+    margin-top: 1rem;
+    text-align: center;
+
+    &>.en__component--copyblock {
+      padding: 10px;
+    }
+  }
+
+  .footer-copy {
+    font-size: 14px;
+    margin: 0 0 1.5rem 0;
+    line-height: 22px;
+    text-align: center;
+  }
+
+  @media (max-width: 991px) {
+    .multistep-stepper {
+      margin: 0;
+    }
+  }
+
+  // [data-multistep-step="1"] .multistep-stepper {
+  //   top: -26px;
+  //   position: relative;
+  // }
+
+  .multistep-stepper {
+    margin-bottom: 20px;
+  }
+
+  .multistep-stepper__step {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    padding: 24px 0;
+    border-bottom: 2px solid transparent;
+  }
+
+  .multistep-stepper__number {
+    border: 1px solid var(--default_color);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 6px;
+  }
+
+  .multistep-stepper__step--active {
+    background-color: #ffffff;
+    border-bottom: 4px solid var(--color_blue);
+    color: var(--color-green);
+    font-weight: bold;
+  }
+
+  @for $i from 1 through 6 {
+    &:not([data-engrid-multistep-active-step="#{$i}"]):not([data-engrid-multistep-expand="true"]) {
+
+      // We have to hide sections like this instead of display: none or the form may fail to submit.
+      [data-multistep-step="#{$i}"] {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+        top: -999px !important;
+        left: -999px !important;
+        pointer-events: none !important;
+        opacity: 0 !important;
+      }
+    }
+  }
+
+  .multistep-button-container {
+    display: flex;
+    flex-basis: 60px;
+    margin-bottom: 30px;
+
+    button:not(.btn-back) {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        top: -1px;
+        transition: left 0.3s;
+        position: relative;
+        left: 16px;
+      }
+
+      &:hover svg {
+        left: 21px;
+      }
+    }
+  }
+
+  .multistep-submit {
+    margin-top: 25px;
+  }
+
+  [data-multistep-change-step] {
+    cursor: pointer;
+  }
+
+  .multistep-stepper {
+    display: flex;
+    align-items: center;
+  }
+
+  @media screen and (max-width: 720px) and (min-width: 601px) {
+    .multistep-stepper {
+      margin: 0 calc(-2rem + 3px);
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .multistep-stepper {
+      margin: 0 -20px;
+    }
+
+    .multistep-stepper__number {
+      height: 20px;
+      width: 20px;
+      font-size: 14px;
+      margin: 0 3px;
+      line-height: 14px;
+    }
+
+    .multistep-stepper__step {
+      padding: 20px 0;
+      font-size: 15px;
+    }
+  }
+
+  .btn-back {
+    flex-basis: 60px;
+    margin-top: 2rem;
+    margin-right: 20px;
+    border-color: var(--submit__button_border-color);
+    color: #ffffffd0;
+    font-size: var(--submit__button_font-size);
+    padding-bottom: var(--submit__button_padding-bottom);
+    padding-top: var(--submit__button_padding-top);
+    text-transform: var(--submit__button_text-transform);
+    transition: background-color border-color color 0.2s;
+    height: 65px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+
+    &:hover {
+      background-color: #1a1a1a;
+      color: #fff;
+    }
+  }
+
+  .multistep-submit {
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 60px 1fr;
+    grid-column-gap: 20px;
+    align-items: flex-end;
+
+    .en__captcha {
+      grid-column: span 2;
+    }
+
+    .btn-back {
+      height: 100%;
+      grid-column: 1;
+      margin-right: 0;
+    }
+
+    .en__submit {
+      height: 100%;
+      grid-column: 2;
+      padding: 0;
+
+      button {
+        height: 100%;
+      }
+    }
+
+    button {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  .en__submit button {
+    width: 100%;
+
+    &:hover .live-variable-frequency:after {
+      left: 21px;
+    }
+  }
+
+
+  //Modifications for "expand" variant
+  &[data-engrid-multistep-expand="true"] {
+
+    // Hide steppers
+    .multistep-stepper {
+      display: none;
+    }
+
+    .btn-back {
+      display: none;
+    }
+
+    .en__submit button .live-variable-frequency:after {
+      content: none;
+    }
+
+    .multistep-submit {
+      grid-template-columns: 0 1fr;
+      grid-column-gap: 0;
+    }
+
+    .multistep-button-container button svg {
+      display: none;
+    }
+
+    // Show current step + all previous steps
+    @for $i from 1 through 6 {
+      &[data-engrid-multistep-active-step="#{$i}"] {
+        @for $j from ($i + 1) through 6 {
+          [data-multistep-step="#{$j}"] {
+            display: none !important;
+          }
+        }
+
+        // Hide buttons for all previous steps
+        @if $i >1 {
+          @for $j from 1 through ($i - 1) {
+            [data-multistep-step="#{$j}"] .multistep-button-container {
+              display: none !important;
+            }
+          }
+        }
+      }
+    }
+
+  }
+}

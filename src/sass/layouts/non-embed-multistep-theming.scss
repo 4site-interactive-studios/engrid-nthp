@@ -1,0 +1,23 @@
+// NTHP2 Theme - LeftLeft1Col layout specific styles
+
+//noinspection SassScssResolvedByNameOnly
+&[data-engrid-layout="centercenter2col"][data-engrid-subtheme="multistep"] {
+
+
+  @media (min-width: 992px) and (max-width: 1320px) {
+    --engrid__body-main_padding: 0 20px;
+  }
+
+  @media (max-width: 991px) {
+    --engrid__body-title_padding: var(--engrid__body-main_padding);
+    --engrid__body-top_padding: var(--engrid__body-main_padding);
+    --engrid__body-banner_padding: 0 0;
+  }
+
+  .multistep-stepper__step:focus,
+  .multistep-stepper__step:focus-visible,
+  .multistep-stepper__step:active {
+    outline: 2px solid var(--focus_outline_color, #086ce7);
+    outline-offset: -2px;
+  }
+}

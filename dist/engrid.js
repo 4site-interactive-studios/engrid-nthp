@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, July 14, 2026 @ 13:39:27 ET
+ *  Date: Tuesday, July 14, 2026 @ 15:48:50 ET
  *  By: nick
  *  ENGrid styles: v0.23.4
  *  ENGrid scripts: v0.23.11
@@ -23813,9 +23813,392 @@ class MembershipBenefitsModal extends Modal {
     return modalContent || "";
   }
 }
+;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/typeof.js
+function _typeof(o) {
+  "@babel/helpers - typeof";
+
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
+    return typeof o;
+  } : function (o) {
+    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
+  }, _typeof(o);
+}
+
+;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/toPrimitive.js
+
+function toPrimitive(t, r) {
+  if ("object" != _typeof(t) || !t) return t;
+  var e = t[Symbol.toPrimitive];
+  if (void 0 !== e) {
+    var i = e.call(t, r || "default");
+    if ("object" != _typeof(i)) return i;
+    throw new TypeError("@@toPrimitive must return a primitive value.");
+  }
+  return ("string" === r ? String : Number)(t);
+}
+
+;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js
+
+
+function toPropertyKey(t) {
+  var i = toPrimitive(t, "string");
+  return "symbol" == _typeof(i) ? i : i + "";
+}
+
+;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/defineProperty.js
+
+function _defineProperty(e, r, t) {
+  return (r = toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
+    value: t,
+    enumerable: !0,
+    configurable: !0,
+    writable: !0
+  }) : e[r] = t, e;
+}
+
+;// CONCATENATED MODULE: ./src/scripts/multistep-form.ts
+
+
+class MultistepForm {
+  constructor() {
+    _defineProperty(this, "logger", new logger_EngridLogger("MultistepForm", "white", "blue"));
+    _defineProperty(this, "validators", []);
+    _defineProperty(this, "contentShouldExpand", false);
+    if (this.shouldRun()) {
+      this.logger.log("MultistepForm running");
+      if (engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enValidation", "validation", "validators")) {
+        this.validators = window.EngagingNetworks.require._defined.enValidation.validation.validators;
+      }
+      this.run();
+      this.handleServerSideError();
+    }
+  }
+  shouldRun() {
+    return engrid_ENGrid.getPageType() === "DONATION" && engrid_ENGrid.getBodyData("multistep") === "" && engrid_ENGrid.getPageNumber() === 1;
+  }
+  run() {
+    if (window.EngridMultistepExpandVariant) {
+      this.contentShouldExpand = true;
+      engrid_ENGrid.setBodyData("multistep-expand", "true");
+    }
+    engrid_ENGrid.setBodyData("multistep-active-step", "1");
+    this.addStepDataAttributes();
+    this.addBackButtonToFinalStep();
+    this.addEventListeners();
+    this.altsAndArias();
+  }
+  addStepDataAttributes() {
+    if (engrid_ENGrid.getBodyData("layout") !== "centercenter2col") {
+      document.querySelector(".body-title")?.setAttribute("data-multistep-step", "1");
+      document.querySelector(".body-top")?.setAttribute("data-multistep-step", "1");
+      document.querySelector(".body-bottom")?.setAttribute("data-multistep-step", "3");
+    }
+    const stepperCodeBlocks = [...document.querySelectorAll(".multistep-stepper")].map(el => el.closest(".en__component--codeblock"));
+    stepperCodeBlocks.forEach((step, index) => {
+      step.setAttribute("data-multistep-step", `${index + 1}`);
+      // if this is the first step, we start from the first element in ".body-main"
+      // (since the first stepper could be outside of ".body-main")
+      const start = index === 0 ? document.querySelector(".body-main")?.firstChild : step;
+      const nextStep = stepperCodeBlocks[index + 1];
+      const elements = this.getElementsBetween(start, nextStep);
+      elements.forEach(element => {
+        element.setAttribute("data-multistep-step", `${index + 1}`);
+      });
+    });
+  }
+  getElementsBetween(step, nextStep) {
+    const elements = [];
+    let currentElement = step.nextElementSibling;
+    while (currentElement && currentElement !== nextStep) {
+      elements.push(currentElement);
+      currentElement = currentElement.nextElementSibling;
+    }
+    return elements;
+  }
+  addEventListeners() {
+    //Elements for changing step
+    const buttons = document.querySelectorAll("[data-multistep-change-step]");
+    buttons.forEach(button => {
+      button.addEventListener("click", e => {
+        this.activateStep(button.dataset.multistepChangeStep ?? "");
+      });
+    });
+  }
+  inIframe() {
+    try {
+      return window.self !== window.top;
+    } catch (e) {
+      return true;
+    }
+  }
+  scrollTo(where = 0) {
+    if (this.inIframe()) {
+      setTimeout(() => {
+        window.parent.postMessage({
+          scrollTo: where
+        }, "*");
+      }, 200);
+      this.logger.log("IS in an iFrame, scrolling to top");
+    } else {
+      window.scrollTo(0, where);
+      this.logger.log("NOT in an iFrame, scrolling to top");
+    }
+  }
+  activateStep(targetStep, bypassValidation = false) {
+    if (!targetStep) return;
+    const activeStep = engrid_ENGrid.getBodyData("multistep-active-step") ?? "1";
+
+    //If no validation or we're going backwards, activate the step
+    if (bypassValidation || targetStep < activeStep) {
+      this.logger.log(`Bypassing validation or going backwards. Activating step ${targetStep}`);
+      engrid_ENGrid.setBodyData("multistep-active-step", targetStep);
+      this.scrollViewport();
+      return;
+    }
+
+    // If we're going forwards, validate the steps between the current and target step
+    // if validation fields, find first error on the page, activate that step and scroll to it
+    if (!this.validateStepsBetweenCurrentAndTargetStep(activeStep, targetStep)) {
+      const field = document.querySelector(".en__field--validationFailed");
+      const invalidStep = field?.closest(".en__component--formblock")?.getAttribute("data-multistep-step") ?? "1";
+      engrid_ENGrid.setBodyData("multistep-active-step", invalidStep);
+      if (field) {
+        const scrollToError = field ? field.getBoundingClientRect().top : 0;
+
+        // Parent pages listens for this message and scrolls to the correct position
+        if (this.inIframe()) {
+          this.scrollTo(scrollToError);
+          this.logger.log(`iFrame Event 'scrollTo' - Position of top of first error ${scrollTo} px`); // check the message is being sent correctly
+        } else {
+          field.scrollIntoView({
+            behavior: "smooth"
+          });
+        }
+      }
+      this.logger.log(`Found error on step ${invalidStep}. Going to that step.`);
+      return;
+    }
+
+    // If validation passes, activate the step
+    this.logger.log(`Validation passed. Activating step ${targetStep}`);
+    engrid_ENGrid.setBodyData("multistep-active-step", targetStep);
+    if (this.inIframe()) {
+      this.scrollTo();
+      return;
+    }
+    this.scrollViewport();
+  }
+  scrollViewport() {
+    // If the multistep form is in a content expand variant, scroll to top of the active step
+    if (this.contentShouldExpand) {
+      const scrollToEl = [...document.querySelectorAll("[data-multistep-step]")].find(el => {
+        return el.getAttribute("data-multistep-step") === engrid_ENGrid.getBodyData("multistep-active-step");
+      });
+      if (!scrollToEl) return;
+      window.scrollTo({
+        top: scrollToEl.getBoundingClientRect().top + window.pageYOffset,
+        behavior: "smooth"
+      });
+      return;
+    }
+
+    /*
+      If a .section-header is present and outside the viewport, we should scroll to the section header
+      If a .section-header is present and in the viewport, then we should not scroll
+      If no .section-header is present we should scroll to the top of the page
+     */
+    const sectionHeaders = document.querySelectorAll(".section-header");
+    const currentSectionHeader = [...sectionHeaders].find(el => {
+      const headerStep = el.closest("[data-multistep-step]")?.getAttribute("data-multistep-step");
+      return headerStep === engrid_ENGrid.getBodyData("multistep-active-step");
+    });
+    const steppers = document.querySelectorAll(".multistep-stepper");
+    const currentStepper = [...steppers].find(el => {
+      const step = el.closest("[data-multistep-step]")?.getAttribute("data-multistep-step");
+      return step === engrid_ENGrid.getBodyData("multistep-active-step");
+    });
+    if (!currentSectionHeader || currentSectionHeader.offsetHeight === 0) {
+      if (currentStepper && currentStepper.offsetHeight > 0) {
+        this.logger.log(`No section header found. Scrolling to stepper.`);
+        //HERE
+        this.scrollTo(currentStepper.getBoundingClientRect().top + window.pageYOffset);
+        return;
+      }
+      this.logger.log(`No section header or stepper found. Scrolling to top of page.`);
+      this.scrollTo();
+      return;
+    }
+    if (engrid_ENGrid.isInViewport(currentSectionHeader)) {
+      if (this.inIframe()) {
+        this.scrollTo();
+        return;
+      }
+      this.logger.log(`Section header is in viewport. Not scrolling.`);
+      return;
+    }
+    const offset = parseInt(getComputedStyle(currentSectionHeader).marginTop);
+    this.logger.log(`Scrolling to section header. ${offset} offset.`);
+    this.scrollTo(currentSectionHeader.getBoundingClientRect().top + window.pageYOffset - offset);
+  }
+  addBackButtonToFinalStep() {
+    const submitButtonContainer = document.querySelector(".multistep-submit .en__submit");
+    if (!submitButtonContainer) return;
+    submitButtonContainer.insertAdjacentHTML("beforebegin", `<button class="btn-back" data-multistep-change-step="2" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 16 16">
+          <path fill="currentColor" d="M7.214.786c.434-.434 1.138-.434 1.572 0 .433.434.433 1.137 0 1.571L4.57 6.572h10.172c.694 0 1.257.563 1.257 1.257s-.563 1.257-1.257 1.257H4.229l4.557 4.557c.433.434.433 1.137 0 1.571-.434.434-1.138.434-1.572 0L0 8 7.214.786z"></path>
+         </svg>
+       </button>`);
+  }
+  validateStepsBetweenCurrentAndTargetStep(currentStep, targetStep) {
+    const stepsBetween = this.getStepsBetween(currentStep, targetStep);
+    return stepsBetween.every(step => this.validateStep(step));
+  }
+  validateStep(step) {
+    ///////////////////////////////////////////////////////
+    // Check validation using Engaging Networks Validators
+    ///////////////////////////////////////////////////////
+    const validators = this.validators.filter(validator => {
+      return document.querySelector(`.en__field--${validator.field}`)?.closest(`[data-multistep-step="${step}"]`) !== null;
+    });
+    const validationResults = validators.map(validator => {
+      validator.hideMessage();
+      return !validator.isVisible() || validator.test();
+    });
+
+    ///////////////////////////////////////////////////////
+    // Check validation based on ENgrid i-required classes for conditionally required fields
+    ///////////////////////////////////////////////////////
+    const requiredIfVisibleElements = document.querySelectorAll(`
+      .en__component--formblock[data-multistep-step="${step}"].i-required .en__field,
+      .en__component--formblock[data-multistep-step="${step}"].i1-required .en__field:nth-of-type(1),
+      .en__component--formblock[data-multistep-step="${step}"].i2-required .en__field:nth-of-type(2),
+      .en__component--formblock[data-multistep-step="${step}"].i3-required .en__field:nth-of-type(3),
+      .en__component--formblock[data-multistep-step="${step}"].i4-required .en__field:nth-of-type(4),
+      .en__component--formblock[data-multistep-step="${step}"].i5-required .en__field:nth-of-type(5),
+      .en__component--formblock[data-multistep-step="${step}"].i6-required .en__field:nth-of-type(6),
+      .en__component--formblock[data-multistep-step="${step}"].i7-required .en__field:nth-of-type(7),
+      .en__component--formblock[data-multistep-step="${step}"].i8-required .en__field:nth-of-type(8),
+      .en__component--formblock[data-multistep-step="${step}"].i9-required .en__field:nth-of-type(9),
+      .en__component--formblock[data-multistep-step="${step}"].i10-required .en__field:nth-of-type(10),
+      .en__component--formblock[data-multistep-step="${step}"].i11-required .en__field:nth-of-type(11)
+      `);
+    Array.from(requiredIfVisibleElements).reverse().forEach(field => {
+      engrid_ENGrid.removeError(field);
+      if (!engrid_ENGrid.isVisible(field)) return;
+      this.logger.log(`${field.getAttribute("class")} is visible`);
+      const fieldElement = field.querySelector("input:not([type=hidden]) , select, textarea");
+      if (fieldElement && fieldElement.closest("[data-unhidden]") === null && !engrid_ENGrid.getFieldValue(fieldElement.getAttribute("name"))) {
+        const fieldLabel = field.querySelector(".en__field__label");
+        if (fieldLabel) {
+          this.logger.log(`${fieldLabel.innerText} is required`);
+          engrid_ENGrid.setError(field, `${fieldLabel.innerText} is required`);
+        } else {
+          this.logger.log(`${fieldElement.getAttribute("name")} is required`);
+          engrid_ENGrid.setError(field, `This field is required`);
+        }
+        fieldElement.focus();
+        validationResults.push(false);
+      } else {
+        validationResults.push(true);
+      }
+    });
+
+    ///////////////////////////////////////////////////////
+    // Check validation based on VGS valid classes
+    ///////////////////////////////////////////////////////
+    // Find if any VGS fields are on the active step
+    const vgsFieldsInStep = [...document.querySelectorAll(".en__field--vgs")].filter(el => el.closest(".en__component--formblock")?.getAttribute("data-multistep-step") === step);
+
+    // Check if VGS fields are valid based on the presence of the class "vgs-collect-container__valid"
+    // Set and remove error label/status of fields
+    vgsFieldsInStep.forEach(vgsField => {
+      engrid_ENGrid.removeError(vgsField);
+      const vgsInput = vgsField.querySelector(".en__field__input--vgs");
+      if (!engrid_ENGrid.isVisible(vgsField) || !vgsInput) return;
+      if (vgsInput.classList.contains("vgs-collect-container__valid")) {
+        validationResults.push(true);
+        return;
+      }
+      validationResults.push(false);
+      engrid_ENGrid.setError(vgsField, "This field is invalid");
+    });
+    return validationResults.every(result => result);
+  }
+  getStepsBetween(currentStep, targetStep) {
+    const start = parseInt(currentStep);
+    const end = parseInt(targetStep);
+    let stepsBetween = [];
+    for (let i = start; i < end; i++) {
+      stepsBetween.push(i.toString());
+    }
+    return stepsBetween;
+  }
+  altsAndArias() {
+    // for every multistep-stepper element, run through the children and add aria-labels to each step
+    const multistepSteppers = document.querySelectorAll('.multistep-stepper');
+    this.logger.log(`Found ${multistepSteppers.length} multistep-stepper elements`);
+    multistepSteppers.forEach((stepper, index) => {
+      stepper.setAttribute('role', 'tablist');
+      stepper.setAttribute('aria-label', 'Form Steps');
+      const steps = stepper.querySelectorAll('.multistep-stepper__step');
+      steps.forEach((step, stepIndex) => {
+        const isActive = step.classList.contains('multistep-stepper__step--active');
+        step.setAttribute('role', 'tab');
+        step.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        // Roving tabindex: only the active tab is in the tab order
+        step.setAttribute('tabindex', isActive ? '0' : '-1');
+        const label = step.querySelector('.multistep-stepper__label');
+        if (label) {
+          label.setAttribute('id', `multistep-step-label-${index}-${stepIndex}`);
+          step.setAttribute('aria-labelledby', label.id);
+        }
+        step.addEventListener('keydown', e => {
+          let nextIndex = null;
+          switch (e.key) {
+            case 'ArrowRight':
+              nextIndex = (stepIndex + 1) % steps.length;
+              break;
+            case 'ArrowLeft':
+              nextIndex = (stepIndex - 1 + steps.length) % steps.length;
+              break;
+            case 'Home':
+              nextIndex = 0;
+              break;
+            case 'End':
+              nextIndex = steps.length - 1;
+              break;
+            case 'Enter':
+            case ' ':
+              e.preventDefault();
+              step.click();
+              return;
+            default:
+              return;
+          }
+          e.preventDefault();
+          steps[nextIndex].focus();
+        });
+      });
+    });
+  }
+
+  /*
+   * When there is a server side error, active the step with VGS fields on it.
+   */
+  handleServerSideError() {
+    if (engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "checkSubmissionFailed") && window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed()) {
+      this.logger.log("Server side error detected");
+      const vgsStep = document.querySelector(".en__field--vgs")?.closest("[data-multistep-step]")?.getAttribute("data-multistep-step");
+      this.activateStep(vgsStep || "3", true);
+      this.scrollTo(0);
+      this.logger.log("Scrolling to top due to server side error");
+    }
+  }
+}
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import { Options, App, DonationFrequency } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -23871,6 +24254,7 @@ const options = {
   },
   onLoad: () => {
     new MembershipBenefitsModal();
+    new MultistepForm();
     customScript(App, DonationFrequency);
   },
   onResize: () => console.log("Starter Theme Window Resized")
