@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, July 6, 2026 @ 12:23:12 ET
+ *  Date: Monday, July 20, 2026 @ 09:30:54 ET
  *  By: michael
  *  ENGrid styles: v0.25.11
  *  ENGrid scripts: v0.25.11
@@ -8934,7 +8934,7 @@ body[data-engrid-debug]:before{
   --input_background-color:#fff;
   --input_border-width:1px;
   --input_border-color:var(--color_black);
-  --input_border-radius:0;
+  --input_border-radius:3px;
   --input_font-size:20px;
   --input_placeholder-color:var(--color_black);
   --input_placeholder-font-weight:400;
@@ -8958,7 +8958,7 @@ body[data-engrid-debug]:before{
   --radio_box-shadow_selected:inset 0 0 0 6px #cbedfb;
   --checkbox_background-color_checked:#cbedfb;
   --checkbox_color_checked:var(--color_blue);
-  --checkbox_border-radius:0px;
+  --checkbox_border-radius:3px;
   --checkbox_content_checked:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='14' fill='none'%3E%3Cpath d='m1.129 5.18 5 5.715 7.428-10' stroke='%2300679D' stroke-width='3'/%3E%3C/svg%3E");
   --checkbox_border-color_checked:var(--color_blue);
   --error__color:var(--color_orange);
@@ -8968,7 +8968,7 @@ body[data-engrid-debug]:before{
   --button_background-color:#fff;
   --button_border-width:2px;
   --button_border-color:var(--color_black);
-  --button_border-radius:0;
+  --button_border-radius:3px;
   --button_padding:1rem;
   --button_font-weight:600;
   --button_color_hover:var(--button_color);
@@ -9026,11 +9026,15 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=nthp2] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio .en__field__element .en__field__item:first-of-type{
   padding-right:0;
 }
+[data-engrid-theme=nthp2] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio .en__field__element .en__field__item:first-of-type>label{
+  border-radius:var(--button_border-radius) 0 0 var(--button_border-radius);
+}
 [data-engrid-theme=nthp2] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio .en__field__element .en__field__item:not(:first-of-type){
   padding-left:0;
 }
 [data-engrid-theme=nthp2] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio .en__field__element .en__field__item:not(:first-of-type) input+label{
   border-left:none;
+  border-radius:0 var(--button_border-radius) var(--button_border-radius) 0;
 }
 [data-engrid-theme=nthp2] .en__field--withOther.en__field--radio.en__field--donationAmt .en__field__item--other{
   flex-basis:100%;
@@ -9240,19 +9244,28 @@ body[data-engrid-debug]:before{
   top:-1px;
 }
 [data-engrid-theme=nthp2] .recurring-arrow{
-  justify-self:center;
-  margin:0 auto 20px;
+  align-items:center;
+  display:flex;
+  justify-content:center;
+  margin:0 auto;
   text-align:center;
 }
 [data-engrid-theme=nthp2] .recurring-arrow img{
-  width:56px;
+  height:25px;
+  margin-right:5px;
+  margin-top:-15px;
+  width:auto;
 }
 [data-engrid-theme=nthp2] .recurring-arrow span{
   color:var(--color_blue);
   font-family:Caveat,cursive;
   font-size:26px;
   font-weight:700;
-  margin-top:10px;
+}
+@media screen and (max-width:768px){
+  [data-engrid-theme=nthp2] .recurring-arrow span{
+    font-size:18px;
+  }
 }
 [data-engrid-theme=nthp2] .en__component--dd360confirmation{
   margin:30px 0;
@@ -9388,7 +9401,7 @@ body[data-engrid-debug]:before{
   background-image:var(--maximize_my_donation_image);
   background-position:50%;
   background-repeat:no-repeat;
-  background-size:contain;
+  background-size:80px;
   height:100px;
 }
 @media screen and (max-width:628px){

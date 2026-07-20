@@ -307,7 +307,7 @@ export class MembershipBenefitsWidget {
 
     const activeItemsSection = `
       <div class="membership-benefits-widget__level">
-        <span class="membership-benefits-widget__emoji">🎉</span><br>
+        <span class="membership-benefits-widget__emoji"></span>
         Membership Benefits with my $${this._amount.amount}<span class="mb__frequency-label">${frequencyLabel}</span> Gift
       </div>
       <ul class="membership-benefits-widget__list membership-benefits-widget__list--active">${activeItems}</ul>
