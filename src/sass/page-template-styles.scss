@@ -89,6 +89,29 @@
     color: #34779B;
   }
 
+  .membership-benefits-widget__more {
+    list-style: none;
+    margin: 12px 0 8px;
+  }
+
+  .membership-benefits-widget__more-button {
+    appearance: none;
+    background: none;
+    border: 0;
+    color: #00679d;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 0;
+    text-decoration: underline;
+
+    &:hover,
+    &:focus-visible {
+      color: #004f79;
+    }
+  }
+
   .membership-benefits-widget--hidden {
     display: none;
   }
@@ -116,6 +139,41 @@
     width: 80%;
     border-bottom: 1px solid #00679D;
     margin: 25px auto 20px;
+  }
+
+  .membership-tier-benefits-modal {
+    .engrid-modal__container {
+      border-top: 8px solid #00a3e2;
+      max-width: 720px;
+    }
+
+    .engrid-modal__close {
+      font-weight: bold;
+    }
+
+    .engrid-modal__body {
+      padding: 40px;
+
+      @media screen and (max-width: 600px) {
+        padding: 30px 20px;
+      }
+    }
+
+    .membership-tier-benefits-modal__content h2 {
+      color: #00679d;
+      font-size: 1.8rem;
+      margin-bottom: 24px;
+    }
+
+    .membership-tier-benefits-modal__list {
+      color: #00679d;
+      margin: 0;
+      padding-left: 24px;
+    }
+
+    .membership-tier-benefits-modal__list li {
+      margin: 10px 0;
+    }
   }
 
   .mb__frequency-label {

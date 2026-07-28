@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, July 20, 2026 @ 09:30:54 ET
+ *  Date: Tuesday, July 28, 2026 @ 08:39:24 ET
  *  By: michael
  *  ENGrid styles: v0.25.11
  *  ENGrid scripts: v0.25.11
@@ -26185,65 +26185,128 @@ function _defineProperty(e, r, t) {
   }) : e[r] = t, e;
 }
 
-;// CONCATENATED MODULE: ./src/scripts/membership-benefits-widget.ts
-
-
+;// CONCATENATED MODULE: ./src/scripts/membership-benefits-tiers.ts
 const TIERS = [{
   amounts: {
     onetime: 30
   },
-  benefits: ["Annual subscription to Preservation magazine", "Discounted admission to National Trust sites & Distinctive Destinations", "30% off best available rate at Historic Hotels of America (online booking)", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "Weekly e-newsletter"]
+  primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours"],
+  extraBenefits: ["Annual subscription to Preservation magazine", "30% off best available rate at Historic Hotels of America (online booking)", "Weekly e-newsletter"]
 }, {
   amounts: {
     onetime: 50,
     monthly: 5.0
   },
-  benefits: ["Annual subscription to Preservation magazine", "Discounted admission to National Trust sites & Distinctive Destinations", "30% off best available rate at Historic Hotels of America (online booking)", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "Weekly e-newsletter", "2 Free Guest Passes to National Trust sites"]
+  primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "2 Free Guest Passes to National Trust sites"],
+  extraBenefits: ["Annual subscription to Preservation magazine", "30% off best available rate at Historic Hotels of America (online booking)", "Weekly e-newsletter"]
 }, {
   amounts: {
     onetime: 100,
     monthly: 8.33
   },
-  benefits: ["Annual subscription to Preservation magazine", "Discounted admission to National Trust sites & Distinctive Destinations", "30% off best available rate at Historic Hotels of America (online booking)", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "Weekly e-newsletter", "2 Free Guest Passes to National Trust sites", "2 Gift Memberships"]
+  primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "2 Free Guest Passes to National Trust sites", "2 Gift Memberships"],
+  extraBenefits: ["Annual subscription to Preservation magazine", "30% off best available rate at Historic Hotels of America (online booking)", "Weekly e-newsletter"]
 }, {
   amounts: {
     onetime: 250,
     monthly: 20.83
   },
-  benefits: ["Annual subscription to Preservation magazine", "Discounted admission to National Trust sites & Distinctive Destinations", "30% off best available rate at Historic Hotels of America (online booking)", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "Weekly e-newsletter", "2 Free Guest Passes to National Trust sites", "2 Gift Memberships", "Personal invitations to special webinars with National Trust leadership"]
+  primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "2 Free Guest Passes to National Trust sites", "2 Gift Memberships"],
+  extraBenefits: ["Annual subscription to Preservation magazine", "30% off best available rate at Historic Hotels of America (online booking)", "Weekly e-newsletter", "Personal invitations to special webinars with National Trust leadership"]
 }, {
   amounts: {
     onetime: 500,
     monthly: 41.66
   },
-  benefits: ["Annual subscription to Preservation magazine", "Discounted admission to National Trust sites & Distinctive Destinations", "30% off best available rate at Historic Hotels of America (online booking)", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "Weekly e-newsletter", "2 Free Guest Passes to National Trust sites", "3 Gift Memberships", "Personal invitations to special webinars with National Trust leadership", "Recognition in the Annual Report", "FREE canvas tote bag"]
+  primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "Personal invitations to special webinars with National Trust leadership", "Recognition in the Annual Report", "FREE canvas tote bag"],
+  extraBenefits: ["Annual subscription to Preservation magazine", "30% off best available rate at Historic Hotels of America (online booking)", "Weekly e-newsletter", "2 Free Guest Passes to National Trust sites", "3 Gift Memberships"]
 }, {
   amounts: {
     onetime: 1000,
     monthly: 83.33
   },
-  benefits: ["Annual subscription to Preservation magazine", "Discounted admission to National Trust sites & Distinctive Destinations", "30% off best available rate at Historic Hotels of America (online booking)", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "Weekly e-newsletter", "4 Free Guest Passes to National Trust sites", "4 Gift Memberships", "Personal invitations to special webinars with National Trust leadership", "Recognition in the Annual Report", "FREE canvas tote bag"]
+  primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "30% off best available rate at Historic Hotels of America (online booking)", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "4 Free Guest Passes to National Trust sites", "Personal invitations to special webinars with National Trust leadership", "Recognition in the Annual Report"],
+  extraBenefits: ["Annual subscription to Preservation magazine", "Weekly e-newsletter", "4 Gift Memberships", "FREE canvas tote bag"]
 }, {
   amounts: {
     onetime: 5000,
     monthly: 416.66
   },
-  benefits: ["Annual subscription to Preservation magazine", "Discounted admission to National Trust sites & Distinctive Destinations", "30% off best available rate at Historic Hotels of America (online booking)", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "Weekly e-newsletter", "4 Free Guest Passes to National Trust sites", "6 Gift Memberships", "Personal invitations to special webinars with National Trust leadership", "Recognition in the Annual Report", "FREE canvas tote bag", "Complimentary copy of Why Old Places Matter by Thompson M. Mayes"]
+  primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "30% off best available rate at Historic Hotels of America (online booking)", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "4 Free Guest Passes to National Trust sites", "6 Gift Memberships", "Personal invitations to special webinars with National Trust leadership", "Recognition in the Annual Report"],
+  extraBenefits: ["Annual subscription to Preservation magazine", "Weekly e-newsletter", "FREE canvas tote bag", "Complimentary copy of Why Old Places Matter by Thompson M. Mayes"]
 }, {
   amounts: {
     onetime: 10000,
     monthly: 833.33
   },
-  benefits: ["Annual subscription to Preservation magazine", "Discounted admission to National Trust sites & Distinctive Destinations", "30% off best available rate at Historic Hotels of America (online booking)", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "Weekly e-newsletter", "4 Free Guest Passes to National Trust sites", "6 Gift Memberships", "Personal invitations to special webinars with National Trust leadership", "Recognition in the Annual Report", "FREE canvas tote bag", "Complimentary copy of Why Old Places Matter by Thompson M. Mayes", "Exclusive access to the National Trust Council Travel Program"]
+  primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "30% off best available rate at Historic Hotels of America (online booking)", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "4 Free Guest Passes to National Trust sites", "6 Gift Memberships", "Personal invitations to special webinars with National Trust leadership", "Recognition in the Annual Report", "Exclusive access to the National Trust Council Travel Program"],
+  extraBenefits: ["Annual subscription to Preservation magazine", "Weekly e-newsletter", "FREE canvas tote bag", "Complimentary copy of Why Old Places Matter by Thompson M. Mayes"]
 }];
+;// CONCATENATED MODULE: ./src/scripts/membership-benefits-widget.ts
+
+
+
+class TierBenefitsModal extends Modal {
+  constructor() {
+    super({
+      onClickOutside: "close",
+      addCloseButton: false,
+      closeButtonLabel: "",
+      customClass: "membership-tier-benefits-modal"
+    });
+    _defineProperty(this, "trigger", null);
+    this.handleKeydown = this.handleKeydown.bind(this);
+    this.modal?.setAttribute("aria-labelledby", TierBenefitsModal.titleId);
+    this.modal?.addEventListener("keydown", this.handleKeydown);
+  }
+  handleKeydown(event) {
+    const closeButton = event.target instanceof Element ? event.target.closest(".engrid-modal__close-x") : null;
+    const isCloseButtonKey = closeButton !== null && (event.key === "Enter" || event.key === " ");
+    if (event.key === "Escape" || isCloseButtonKey) {
+      event.preventDefault();
+      this.close();
+    }
+  }
+  getModalContent() {
+    return `
+      <div class="membership-tier-benefits-modal__content">
+        <h2 id="${TierBenefitsModal.titleId}"></h2>
+        <ul class="membership-tier-benefits-modal__list"></ul>
+      </div>
+    `;
+  }
+  openForTier(title, benefits) {
+    const heading = this.modal?.querySelector(`#${TierBenefitsModal.titleId}`);
+    const list = this.modal?.querySelector(".membership-tier-benefits-modal__list");
+    if (!heading || !list) return;
+    heading.textContent = title;
+    list.innerHTML = "";
+    for (const benefit of benefits) {
+      const item = document.createElement("li");
+      item.textContent = benefit;
+      list.appendChild(item);
+    }
+    this.trigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    this.open();
+  }
+  close() {
+    super.close();
+    this.trigger?.focus();
+    this.trigger = null;
+  }
+}
+_defineProperty(TierBenefitsModal, "titleId", "membership-tier-benefits-modal-title");
 class MembershipBenefitsWidget {
   constructor(selector = ".membership-benefits-widget") {
     _defineProperty(this, "container", void 0);
     _defineProperty(this, "tierMap", void 0);
+    _defineProperty(this, "benefitsModal", void 0);
     _defineProperty(this, "_amount", DonationAmount.getInstance());
     _defineProperty(this, "_frequency", DonationFrequency.getInstance());
     this.container = document.querySelector(selector);
     this.tierMap = this.buildTierMap();
+    this.benefitsModal = this.container ? new TierBenefitsModal() : null;
+    this.handleWidgetClick = this.handleWidgetClick.bind(this);
     if (!this.container) return;
     this.update();
     this.addListeners();
@@ -26263,7 +26326,8 @@ class MembershipBenefitsWidget {
     for (const freq of frequencies) {
       const configs = TIERS.filter(tier => freq in tier.amounts).map(tier => ({
         amount: tier.amounts[freq],
-        benefits: tier.benefits
+        primaryBenefits: tier.primaryBenefits,
+        extraBenefits: tier.extraBenefits
       })).sort((a, b) => a.amount - b.amount);
       map.set(freq, configs);
     }
@@ -26276,14 +26340,23 @@ class MembershipBenefitsWidget {
     this._amount.onAmountChange.subscribe(() => this.update());
     this._frequency.onFrequencyChange.subscribe(() => this.update());
 
-    // Clicks on the "Give $X to unlock these benefits" button should update the donation amount to the next tier
-    this.container?.addEventListener("click", event => {
-      const target = event.target;
-      const nextTierAmount = target.getAttribute("data-engrid-next-tier-amount");
-      if (nextTierAmount) {
-        this._amount.setAmount(Number(nextTierAmount));
-      }
-    });
+    // Delegate clicks because the widget content is replaced on every update.
+    this.container?.addEventListener("click", this.handleWidgetClick);
+  }
+  handleWidgetClick(event) {
+    if (!(event.target instanceof Element)) return;
+    const nextTierButton = event.target.closest("[data-engrid-next-tier-amount]");
+    const nextTierAmount = nextTierButton?.getAttribute("data-engrid-next-tier-amount");
+    if (nextTierAmount) {
+      this._amount.setAmount(Number(nextTierAmount));
+      return;
+    }
+    const moreBenefitsButton = event.target.closest("[data-engrid-benefits-tier-amount]");
+    if (!moreBenefitsButton) return;
+    const benefitsTierAmount = Number(moreBenefitsButton.getAttribute("data-engrid-benefits-tier-amount"));
+    if (Number.isFinite(benefitsTierAmount)) {
+      this.openBenefitsModal(benefitsTierAmount);
+    }
   }
   update() {
     const freq = this._frequency.frequency;
@@ -26306,6 +26379,18 @@ class MembershipBenefitsWidget {
       }
     }
     return resolvedTier;
+  }
+  getAllBenefits(tier) {
+    return [...tier.primaryBenefits, ...tier.extraBenefits];
+  }
+  openBenefitsModal(tierAmount) {
+    const freq = this._frequency.frequency;
+    const tier = this.getTiersForFrequency(freq)?.find(({
+      amount
+    }) => amount === tierAmount);
+    if (!tier || !this.benefitsModal) return;
+    const frequencyLabel = freq.toLowerCase() === "monthly" ? "/mo" : "";
+    this.benefitsModal.openForTier(`All Membership Benefits with my $${this._amount.amount}${frequencyLabel} Gift`, this.getAllBenefits(tier));
   }
   render(activeAmount) {
     if (!this.container) return;
@@ -26354,15 +26439,23 @@ class MembershipBenefitsWidget {
     const activeTierIndex = tiers.findIndex(tier => tier.amount === activeAmount);
     const activeTier = tiers[activeTierIndex] ?? tiers[0];
     const nextTier = tiers[activeTierIndex + 1] ?? null;
-    const activeItems = activeTier.benefits.map(benefit => `<li class="membership-benefits-widget__item membership-benefits-widget__item--active"><span>${benefit}</span></li>`).join("");
-    const nextItems = (nextTier?.benefits ?? []).filter(benefit => !activeTier.benefits.includes(benefit)).map(benefit => `<li class="membership-benefits-widget__item membership-benefits-widget__item--next"><span>${benefit}</span></li>`).join("");
+    const activeItems = activeTier.primaryBenefits.map(benefit => `<li class="membership-benefits-widget__item membership-benefits-widget__item--active"><span>${benefit}</span></li>`).join("");
+    const moreBenefitsItem = activeTier.extraBenefits.length ? `
+        <li class="membership-benefits-widget__more">
+          <button type="button" class="membership-benefits-widget__more-button" data-engrid-benefits-tier-amount="${activeTier.amount}" aria-haspopup="dialog">
+            ... and more!
+          </button>
+        </li>
+      ` : "";
+    const activeBenefits = this.getAllBenefits(activeTier);
+    const nextItems = (nextTier ? this.getAllBenefits(nextTier) : []).filter(benefit => !activeBenefits.includes(benefit)).map(benefit => `<li class="membership-benefits-widget__item membership-benefits-widget__item--next"><span>${benefit}</span></li>`).join("");
     const frequencyLabel = freq.toLowerCase() === "monthly" ? "/mo" : "";
     const activeItemsSection = `
       <div class="membership-benefits-widget__level">
         <span class="membership-benefits-widget__emoji"></span>
         Membership Benefits with my $${this._amount.amount}<span class="mb__frequency-label">${frequencyLabel}</span> Gift
       </div>
-      <ul class="membership-benefits-widget__list membership-benefits-widget__list--active">${activeItems}</ul>
+      <ul class="membership-benefits-widget__list membership-benefits-widget__list--active">${activeItems}${moreBenefitsItem}</ul>
     `;
     const nextItemsSection = nextTier ? `
       <div class="membership-benefits-widget__divider"></div>

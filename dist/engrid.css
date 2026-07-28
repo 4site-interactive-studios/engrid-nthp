@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, July 20, 2026 @ 09:30:54 ET
+ *  Date: Tuesday, July 28, 2026 @ 08:39:24 ET
  *  By: michael
  *  ENGrid styles: v0.25.11
  *  ENGrid scripts: v0.25.11
@@ -9558,6 +9558,26 @@ body[data-engrid-debug]:before{
 [data-engrid-theme] .membership-benefits-widget__item--next>span{
   color:#34779b;
 }
+[data-engrid-theme] .membership-benefits-widget__more{
+  list-style:none;
+  margin:12px 0 8px;
+}
+[data-engrid-theme] .membership-benefits-widget__more-button{
+  appearance:none;
+  background:none;
+  border:0;
+  color:#00679d;
+  cursor:pointer;
+  font-family:inherit;
+  font-size:16px;
+  font-weight:600;
+  padding:0;
+  -webkit-text-decoration:underline;
+  text-decoration:underline;
+}
+[data-engrid-theme] .membership-benefits-widget__more-button:focus-visible,[data-engrid-theme] .membership-benefits-widget__more-button:hover{
+  color:#004f79;
+}
 [data-engrid-theme] .membership-benefits-widget--hidden{
   display:none;
 }
@@ -9582,6 +9602,34 @@ body[data-engrid-debug]:before{
   margin:25px auto 20px;
   max-width:320px;
   width:80%;
+}
+[data-engrid-theme] .membership-tier-benefits-modal .engrid-modal__container{
+  border-top:8px solid #00a3e2;
+  max-width:720px;
+}
+[data-engrid-theme] .membership-tier-benefits-modal .engrid-modal__close{
+  font-weight:700;
+}
+[data-engrid-theme] .membership-tier-benefits-modal .engrid-modal__body{
+  padding:40px;
+}
+@media screen and (max-width:600px){
+  [data-engrid-theme] .membership-tier-benefits-modal .engrid-modal__body{
+    padding:30px 20px;
+  }
+}
+[data-engrid-theme] .membership-tier-benefits-modal .membership-tier-benefits-modal__content h2{
+  color:#00679d;
+  font-size:1.8rem;
+  margin-bottom:24px;
+}
+[data-engrid-theme] .membership-tier-benefits-modal .membership-tier-benefits-modal__list{
+  color:#00679d;
+  margin:0;
+  padding-left:24px;
+}
+[data-engrid-theme] .membership-tier-benefits-modal .membership-tier-benefits-modal__list li{
+  margin:10px 0;
 }
 [data-engrid-theme] .mb__frequency-label{
   font-size:75%;
