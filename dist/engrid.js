@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, September 22, 2026 @ 08:32:43 ET
+ *  Date: Wednesday, September 23, 2026 @ 06:52:43 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -27698,17 +27698,6 @@ const customScript = function (App, DonationFrequency) {
   // FAQ Block End
 
   function nthp2Scripts() {
-    //adjust tippy props
-    const figAttributions = document.querySelectorAll(".media-with-attribution figattribution");
-    figAttributions.forEach(figAttribution => {
-      const tippyInstance = figAttribution._tippy;
-      if (tippyInstance) {
-        tippyInstance.setProps({
-          arrow: false,
-          allowHTML: true
-        });
-      }
-    });
     const autoRenew = document.querySelector(".en__field--auto-renew");
     engrid_ENGrid.setBodyData("auto-renew-present", !!autoRenew);
   }
@@ -27811,7 +27800,7 @@ const TIERS = [{
     onetime: 500,
     monthly: 41.66
   },
-  primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "Personal invitations to special webinars with National Trust leadership", "Recognition in the Annual Report", "FREE canvas tote bag"],
+  primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "Personal invitations to special webinars with National Trust leadership", "Recognition in the Annual Report", "FREE luggage tag"],
   extraBenefits: ["Annual subscription to Preservation magazine", "30% off best available rate at Historic Hotels of America (online booking)", "Weekly e-newsletter", "2 Free Guest Passes to National Trust sites", "3 Gift Memberships"]
 }, {
   amounts: {
@@ -27819,21 +27808,21 @@ const TIERS = [{
     monthly: 83.33
   },
   primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "30% off best available rate at Historic Hotels of America (online booking)", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "4 Free Guest Passes to National Trust sites", "Personal invitations to special webinars with National Trust leadership", "Recognition in the Annual Report"],
-  extraBenefits: ["Annual subscription to Preservation magazine", "Weekly e-newsletter", "4 Gift Memberships", "FREE canvas tote bag"]
+  extraBenefits: ["Annual subscription to Preservation magazine", "Weekly e-newsletter", "4 Gift Memberships", "FREE luggage tag"]
 }, {
   amounts: {
     onetime: 5000,
     monthly: 416.66
   },
   primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "30% off best available rate at Historic Hotels of America (online booking)", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "4 Free Guest Passes to National Trust sites", "6 Gift Memberships", "Personal invitations to special webinars with National Trust leadership", "Recognition in the Annual Report"],
-  extraBenefits: ["Annual subscription to Preservation magazine", "Weekly e-newsletter", "FREE canvas tote bag", "Complimentary copy of Why Old Places Matter by Thompson M. Mayes"]
+  extraBenefits: ["Annual subscription to Preservation magazine", "Weekly e-newsletter", "FREE luggage tag", "Complimentary copy of Why Old Places Matter by Thompson M. Mayes"]
 }, {
   amounts: {
     onetime: 10000,
     monthly: 833.33
   },
   primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "30% off best available rate at Historic Hotels of America (online booking)", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "4 Free Guest Passes to National Trust sites", "6 Gift Memberships", "Personal invitations to special webinars with National Trust leadership", "Recognition in the Annual Report", "Exclusive access to the National Trust Council Travel Program"],
-  extraBenefits: ["Annual subscription to Preservation magazine", "Weekly e-newsletter", "FREE canvas tote bag", "Complimentary copy of Why Old Places Matter by Thompson M. Mayes"]
+  extraBenefits: ["Annual subscription to Preservation magazine", "Weekly e-newsletter", "FREE luggage tag", "Complimentary copy of Why Old Places Matter by Thompson M. Mayes"]
 }];
 ;// CONCATENATED MODULE: ./src/scripts/membership-benefits-widget.ts
 

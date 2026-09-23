@@ -373,21 +373,6 @@ export const customScript = function (App, DonationFrequency) {
   // FAQ Block End
 
   function nthp2Scripts() {
-    //adjust tippy props
-    const figAttributions = document.querySelectorAll(
-      ".media-with-attribution figattribution"
-    );
-
-    figAttributions.forEach((figAttribution) => {
-      const tippyInstance = figAttribution._tippy;
-      if (tippyInstance) {
-        tippyInstance.setProps({
-          arrow: false,
-          allowHTML: true,
-        });
-      }
-    });
-
     const autoRenew = document.querySelector(".en__field--auto-renew");
     ENGrid.setBodyData("auto-renew-present", !!autoRenew);
   }

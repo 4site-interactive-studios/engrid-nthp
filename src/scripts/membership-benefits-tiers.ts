@@ -71,7 +71,7 @@ export const TIERS: TierDefinition[] = [
       "Exclusive access to National Trust Tours",
       "Personal invitations to special webinars with National Trust leadership",
       "Recognition in the Annual Report",
-      "FREE canvas tote bag",
+      "FREE luggage tag",
     ],
     extraBenefits: [
       "Annual subscription to Preservation magazine",
@@ -96,7 +96,7 @@ export const TIERS: TierDefinition[] = [
       "Annual subscription to Preservation magazine",
       "Weekly e-newsletter",
       "4 Gift Memberships",
-      "FREE canvas tote bag",
+      "FREE luggage tag",
     ],
   },
   {
@@ -114,7 +114,7 @@ export const TIERS: TierDefinition[] = [
     extraBenefits: [
       "Annual subscription to Preservation magazine",
       "Weekly e-newsletter",
-      "FREE canvas tote bag",
+      "FREE luggage tag",
       "Complimentary copy of Why Old Places Matter by Thompson M. Mayes",
     ],
   },
@@ -134,7 +134,7 @@ export const TIERS: TierDefinition[] = [
     extraBenefits: [
       "Annual subscription to Preservation magazine",
       "Weekly e-newsletter",
-      "FREE canvas tote bag",
+      "FREE luggage tag",
       "Complimentary copy of Why Old Places Matter by Thompson M. Mayes",
     ],
   },
