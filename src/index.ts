@@ -21,6 +21,10 @@ const options: Options = {
   MediaAttribution: true,
   SkipToMainContentLink: true,
   SrcDefer: true,
+  PreferredPaymentMethod: {
+    preferredPaymentMethodField: "supporter.NOT_TAGGED_128",
+    defaultPaymentMethod: ["card"],
+  },
   ProgressBar: true,
   Placeholders: {
     ".en__field--donationAmt.en__field--withOther .en__field__input--other":
