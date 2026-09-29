@@ -668,6 +668,21 @@
     }
   }
 
+  label {
+    &[for="en__field_transaction_ccnumber"],
+    &[for="en__field_transaction_ccexpire"],
+    &[for="en__field_transaction_ccvv"] {
+      position: relative;
+      &:before {
+        content: "*";
+        position: absolute;
+        top: 0;
+        left: -10px;
+        font-weight: bold;
+      }
+    }
+  }
+
   // Replace banner with background image on mobile
   @media screen and (max-width: $one_col_body-column_max-width) {
     @include engrid_replace-banner-with-background("leftleft1col");

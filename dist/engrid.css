@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, September 29, 2026 @ 12:34:17 ET
+ *  Date: Tuesday, September 29, 2026 @ 12:41:39 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -9428,6 +9428,16 @@ body[data-engrid-debug]:before{
   --select_font-size:16px;
   --select_line-height:24px;
   margin-top:calc(var(--fields_spacing-inline)*.5);
+}
+[data-engrid-theme=nthp2] label[for=en__field_transaction_ccexpire],[data-engrid-theme=nthp2] label[for=en__field_transaction_ccnumber],[data-engrid-theme=nthp2] label[for=en__field_transaction_ccvv]{
+  position:relative;
+}
+[data-engrid-theme=nthp2] label[for=en__field_transaction_ccexpire]:before,[data-engrid-theme=nthp2] label[for=en__field_transaction_ccnumber]:before,[data-engrid-theme=nthp2] label[for=en__field_transaction_ccvv]:before{
+  content:"*";
+  font-weight:700;
+  left:-10px;
+  position:absolute;
+  top:0;
 }
 @media screen and (max-width:630px){
   [data-engrid-layout=leftleft1col][data-replace-banner-with-background=if-background-image][data-engrid-page-background=image] [class*=body-banner],[data-engrid-layout=leftleft1col][data-replace-banner-with-background=if-banner-empty][data-engrid-body-banner=empty][data-engrid-page-background=image] [class*=body-banner],[data-engrid-theme=nthp2] .page-backgroundImage,[data-engrid-theme=nthp2] .page-backgroundImage:before{
