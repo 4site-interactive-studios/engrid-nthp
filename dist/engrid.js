@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, September 23, 2026 @ 06:52:43 ET
+ *  Date: Tuesday, September 29, 2026 @ 12:34:17 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -27772,57 +27772,57 @@ const TIERS = [{
   amounts: {
     onetime: 30
   },
-  primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours"],
-  extraBenefits: ["Annual subscription to Preservation magazine", "30% off best available rate at Historic Hotels of America (online booking)", "Weekly e-newsletter"]
+  primaryBenefits: ["Discounted Admission to National Trust Sites & Distinctive Destinations", "Discounted Admission to 500+ International Historic Sites", "Exclusive Access to National Trust Tours"],
+  extraBenefits: ["Annual Subscription to Preservation Magazine", "30% off Best Available Rate at Historic Hotels of America (Online Booking)", "Weekly e-Newsletter"]
 }, {
   amounts: {
     onetime: 50,
     monthly: 5.0
   },
-  primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "2 Free Guest Passes to National Trust sites"],
-  extraBenefits: ["Annual subscription to Preservation magazine", "30% off best available rate at Historic Hotels of America (online booking)", "Weekly e-newsletter"]
+  primaryBenefits: ["Discounted Admission to National Trust Sites & Distinctive Destinations", "Discounted Admission to 500+ International Historic Sites", "Exclusive Access to National Trust Tours", "2 Free Guest Passes to National Trust Sites"],
+  extraBenefits: ["Annual Subscription to Preservation Magazine", "30% off Best Available Rate at Historic Hotels of America (Online Booking)", "Weekly e-Newsletter"]
 }, {
   amounts: {
     onetime: 100,
     monthly: 8.33
   },
-  primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "2 Free Guest Passes to National Trust sites", "2 Gift Memberships"],
-  extraBenefits: ["Annual subscription to Preservation magazine", "30% off best available rate at Historic Hotels of America (online booking)", "Weekly e-newsletter"]
+  primaryBenefits: ["Discounted Admission to National Trust Sites & Distinctive Destinations", "Discounted Admission to 500+ International Historic Sites", "Exclusive Access to National Trust Tours", "2 Free Guest Passes to National Trust Sites", "2 Gift Memberships"],
+  extraBenefits: ["Annual Subscription to Preservation Magazine", "30% off Best Available Rate at Historic Hotels of America (Online Booking)", "Weekly e-Newsletter"]
 }, {
   amounts: {
     onetime: 250,
     monthly: 20.83
   },
-  primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "2 Free Guest Passes to National Trust sites", "2 Gift Memberships"],
-  extraBenefits: ["Annual subscription to Preservation magazine", "30% off best available rate at Historic Hotels of America (online booking)", "Weekly e-newsletter", "Personal invitations to special webinars with National Trust leadership"]
+  primaryBenefits: ["Discounted Admission to National Trust Sites & Distinctive Destinations", "Discounted Admission to 500+ International Historic Sites", "Exclusive Access to National Trust Tours", "2 Free Guest Passes to National Trust Sites", "2 Gift Memberships"],
+  extraBenefits: ["Annual Subscription to Preservation Magazine", "30% off Best Available Rate at Historic Hotels of America (Online Booking)", "Weekly e-Newsletter", "Personal Invitations to Special Webinars with National Trust Leadership"]
 }, {
   amounts: {
     onetime: 500,
     monthly: 41.66
   },
-  primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "Personal invitations to special webinars with National Trust leadership", "Recognition in the Annual Report", "FREE luggage tag"],
-  extraBenefits: ["Annual subscription to Preservation magazine", "30% off best available rate at Historic Hotels of America (online booking)", "Weekly e-newsletter", "2 Free Guest Passes to National Trust sites", "3 Gift Memberships"]
+  primaryBenefits: ["Discounted Admission to National Trust Sites & Distinctive Destinations", "Discounted Admission to 500+ International Historic Sites", "Exclusive Access to National Trust Tours", "Personal Invitations to Special Webinars with National Trust Leadership", "Recognition in the Annual Report", "FREE Luggage Tag"],
+  extraBenefits: ["Annual Subscription to Preservation Magazine", "30% off Best Available Rate at Historic Hotels of America (Online Booking)", "Weekly e-Newsletter", "2 Free Guest Passes to National Trust Sites", "3 Gift Memberships"]
 }, {
   amounts: {
     onetime: 1000,
     monthly: 83.33
   },
-  primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "30% off best available rate at Historic Hotels of America (online booking)", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "4 Free Guest Passes to National Trust sites", "Personal invitations to special webinars with National Trust leadership", "Recognition in the Annual Report"],
-  extraBenefits: ["Annual subscription to Preservation magazine", "Weekly e-newsletter", "4 Gift Memberships", "FREE luggage tag"]
+  primaryBenefits: ["Discounted Admission to National Trust Sites & Distinctive Destinations", "30% off Best Available Rate at Historic Hotels of America (Online Booking)", "Discounted Admission to 500+ International Historic Sites", "Exclusive Access to National Trust Tours", "4 Free Guest Passes to National Trust Sites", "Personal Invitations to Special Webinars with National Trust Leadership", "Recognition in the Annual Report"],
+  extraBenefits: ["Annual Subscription to Preservation Magazine", "Weekly e-Newsletter", "4 Gift Memberships", "FREE Luggage Tag"]
 }, {
   amounts: {
     onetime: 5000,
     monthly: 416.66
   },
-  primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "30% off best available rate at Historic Hotels of America (online booking)", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "4 Free Guest Passes to National Trust sites", "6 Gift Memberships", "Personal invitations to special webinars with National Trust leadership", "Recognition in the Annual Report"],
-  extraBenefits: ["Annual subscription to Preservation magazine", "Weekly e-newsletter", "FREE luggage tag", "Complimentary copy of Why Old Places Matter by Thompson M. Mayes"]
+  primaryBenefits: ["Discounted Admission to National Trust Sites & Distinctive Destinations", "30% off Best Available Rate at Historic Hotels of America (Online Booking)", "Discounted Admission to 500+ International Historic Sites", "Exclusive Access to National Trust Tours", "4 Free Guest Passes to National Trust Sites", "6 Gift Memberships", "Personal Invitations to Special Webinars with National Trust Leadership", "Recognition in the Annual Report"],
+  extraBenefits: ["Annual Subscription to Preservation Magazine", "Weekly e-Newsletter", "FREE Luggage Tag", "Complimentary Copy of Why Old Places Matter by Thompson M. Mayes"]
 }, {
   amounts: {
     onetime: 10000,
     monthly: 833.33
   },
-  primaryBenefits: ["Discounted admission to National Trust sites & Distinctive Destinations", "30% off best available rate at Historic Hotels of America (online booking)", "Discounted admission to 500+ international historic sites", "Exclusive access to National Trust Tours", "4 Free Guest Passes to National Trust sites", "6 Gift Memberships", "Personal invitations to special webinars with National Trust leadership", "Recognition in the Annual Report", "Exclusive access to the National Trust Council Travel Program"],
-  extraBenefits: ["Annual subscription to Preservation magazine", "Weekly e-newsletter", "FREE luggage tag", "Complimentary copy of Why Old Places Matter by Thompson M. Mayes"]
+  primaryBenefits: ["Discounted Admission to National Trust Sites & Distinctive Destinations", "30% off Best Available Rate at Historic Hotels of America (Online Booking)", "Discounted Admission to 500+ International Historic Sites", "Exclusive Access to National Trust Tours", "4 Free Guest Passes to National Trust Sites", "6 Gift Memberships", "Personal Invitations to Special Webinars with National Trust Leadership", "Recognition in the Annual Report", "Exclusive Access to the National Trust Council Travel Program"],
+  extraBenefits: ["Annual Subscription to Preservation Magazine", "Weekly e-Newsletter", "FREE Luggage Tag", "Complimentary Copy of Why Old Places Matter by Thompson M. Mayes"]
 }];
 ;// CONCATENATED MODULE: ./src/scripts/membership-benefits-widget.ts
 
@@ -27972,7 +27972,7 @@ class MembershipBenefitsWidget {
     }) => amount === tierAmount);
     if (!tier || !this.benefitsModal) return;
     const frequencyLabel = freq.toLowerCase() === "monthly" ? "/mo" : "";
-    this.benefitsModal.openForTier(`All Membership Benefits with my $${this._amount.amount}${frequencyLabel} Gift`, this.getAllBenefits(tier));
+    this.benefitsModal.openForTier(`All Membership Benefits With My $${this._amount.amount}${frequencyLabel} Gift`, this.getAllBenefits(tier));
   }
   render(activeAmount) {
     if (!this.container) return;
@@ -28025,7 +28025,7 @@ class MembershipBenefitsWidget {
     const moreBenefitsItem = activeTier.extraBenefits.length ? `
         <li class="membership-benefits-widget__more">
           <button type="button" class="membership-benefits-widget__more-button" data-engrid-benefits-tier-amount="${activeTier.amount}" aria-haspopup="dialog">
-            ... and more!
+            ... and More!
           </button>
         </li>
       ` : "";
@@ -28035,7 +28035,7 @@ class MembershipBenefitsWidget {
     const activeItemsSection = `
       <div class="membership-benefits-widget__level">
         <span class="membership-benefits-widget__emoji"></span>
-        Membership Benefits with my $${this._amount.amount}<span class="mb__frequency-label">${frequencyLabel}</span> Gift
+        Membership Benefits With My $${this._amount.amount}<span class="mb__frequency-label">${frequencyLabel}</span> Gift
       </div>
       <ul class="membership-benefits-widget__list membership-benefits-widget__list--active">${activeItems}${moreBenefitsItem}</ul>
     `;
@@ -28046,7 +28046,7 @@ class MembershipBenefitsWidget {
       </div>
       <ul class="membership-benefits-widget__list membership-benefits-widget__list--next">${nextItems}</ul>
       <button type="button" class="membership-benefits-widget__button" data-engrid-next-tier-amount="${nextTier.amount}">
-        Give $${nextTier.amount}<span class="mb__frequency-label">${frequencyLabel}</span> to unlock these benefits
+        Give $${nextTier.amount}<span class="mb__frequency-label">${frequencyLabel}</span> to Unlock These Benefits
       </button>
     ` : "";
     return `${activeItemsSection}${nextItemsSection}`;

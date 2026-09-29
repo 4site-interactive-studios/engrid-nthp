@@ -208,7 +208,7 @@ export class MembershipBenefitsWidget {
 
     const frequencyLabel = freq.toLowerCase() === "monthly" ? "/mo" : "";
     this.benefitsModal.openForTier(
-      `All Membership Benefits with my $${this._amount.amount}${frequencyLabel} Gift`,
+      `All Membership Benefits With My $${this._amount.amount}${frequencyLabel} Gift`,
       this.getAllBenefits(tier)
     );
   }
@@ -292,7 +292,7 @@ export class MembershipBenefitsWidget {
       ? `
         <li class="membership-benefits-widget__more">
           <button type="button" class="membership-benefits-widget__more-button" data-engrid-benefits-tier-amount="${activeTier.amount}" aria-haspopup="dialog">
-            ... and more!
+            ... and More!
           </button>
         </li>
       `
@@ -312,7 +312,7 @@ export class MembershipBenefitsWidget {
     const activeItemsSection = `
       <div class="membership-benefits-widget__level">
         <span class="membership-benefits-widget__emoji"></span>
-        Membership Benefits with my $${this._amount.amount}<span class="mb__frequency-label">${frequencyLabel}</span> Gift
+        Membership Benefits With My $${this._amount.amount}<span class="mb__frequency-label">${frequencyLabel}</span> Gift
       </div>
       <ul class="membership-benefits-widget__list membership-benefits-widget__list--active">${activeItems}${moreBenefitsItem}</ul>
     `;
@@ -325,7 +325,7 @@ export class MembershipBenefitsWidget {
       </div>
       <ul class="membership-benefits-widget__list membership-benefits-widget__list--next">${nextItems}</ul>
       <button type="button" class="membership-benefits-widget__button" data-engrid-next-tier-amount="${nextTier.amount}">
-        Give $${nextTier.amount}<span class="mb__frequency-label">${frequencyLabel}</span> to unlock these benefits
+        Give $${nextTier.amount}<span class="mb__frequency-label">${frequencyLabel}</span> to Unlock These Benefits
       </button>
     `
       : "";

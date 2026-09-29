@@ -170,8 +170,6 @@
   --media-attribution__padding: 6px 12px;
   --media-attribution__margin: 20px;
 
-  -webkit-font-smoothing: antialiased;
-
   //Hide unused page sections in page builder
   &#en__pagebuilder .en__component--advrow {
     .page-alert,
@@ -328,6 +326,17 @@
     font-weight: 700;
     font-size: 18px;
     padding-top: 3px;
+  }
+
+  // Customise checkbox look for email and phone opt-ins
+  .en__field--179541,
+  .en__field--41239 {
+    --checkbox_font-size: 15px;
+    --checkbox_line-height: 1.5;
+  }
+
+  .en__field--179541 input[type="checkbox"] + label {
+    align-items: flex-start;
   }
 
   //Give by select styles
