@@ -5,6 +5,7 @@ import "./sass/main.scss";
 import { customScript } from "./scripts/main";
 import { MembershipBenefitsModal } from "./scripts/membership-benefits-modal";
 import { MembershipBenefitsWidget } from "./scripts/membership-benefits-widget";
+import { premiumGiftCheckbox } from "./scripts/premium-gift-checkbox";
 
 const options: Options = {
   applePay: false,
@@ -61,6 +62,7 @@ const options: Options = {
   onLoad: () => {
     new MembershipBenefitsModal();
     new MembershipBenefitsWidget();
+    premiumGiftCheckbox();
     customScript(App, DonationFrequency);
   },
   onResize: () => console.log("Starter Theme Window Resized"),

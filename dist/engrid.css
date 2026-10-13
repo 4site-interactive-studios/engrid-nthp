@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, September 29, 2026 @ 12:41:39 ET
+ *  Date: Tuesday, October 13, 2026 @ 10:55:39 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -9035,7 +9035,7 @@ body[data-engrid-debug]:before{
   --donation-amount__button_color_checked:var(--color_white);
   --donation-amount__button_padding:1rem 0.25rem;
   --donation-amount__button_font-weight:700;
-  --premium__image_max-height:100px;
+  --premium__image_max-height:72px;
   --give-by-select__button_count:1;
   --give-by-select__button_background-color_checked:var(
     --button_background-color_checked
@@ -9361,29 +9361,67 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=nthp2] .en__component--premiumgiftblock .en__pg__body{
   align-items:start;
   grid-template-columns:min-content 276px var(--premium__image_max-width);
-  margin-bottom:2rem;
+  margin-bottom:1rem;
   padding:0;
 }
 @media (max-width:600px){
   [data-engrid-theme=nthp2] .en__component--premiumgiftblock .en__pg__body{
-    --premium__image_max-width:80px;
+    --premium__image_max-width:72px;
     grid-template-columns:min-content auto var(--premium__image_max-width);
   }
 }
 [data-engrid-theme=nthp2] .en__component--premiumgiftblock .en__pg__select{
-  align-self:start;
-  padding-top:5px;
+  align-self:center;
+}
+[data-engrid-theme=nthp2] .en__component--premiumgiftblock .en__pg__select input[type=checkbox]{
+  position:absolute;
+}
+[data-engrid-theme=nthp2] .en__component--premiumgiftblock .en__pg__select input[type=checkbox]:before{
+  display:none;
+}
+[data-engrid-theme=nthp2] .en__component--premiumgiftblock .en__pg__select input[type=checkbox]+label{
+  margin:0;
+}
+[data-engrid-theme=nthp2] .en__component--premiumgiftblock .en__pg__select input[type=checkbox]+label:before{
+  margin-right:0;
+}
+[data-engrid-theme=nthp2] .en__component--premiumgiftblock .en__pg__select:has(input[type=checkbox]:focus){
+  border-radius:var(--checkbox_border-radius);
+}
+[data-engrid-theme=nthp2] .en__component--premiumgiftblock .engrid-premium-gift-skip-note{
+  align-items:center;
+  color:var(--color_blue);
+  display:flex;
+  font-family:var(--default_font-family);
+  font-size:16px;
+  gap:6px;
+  line-height:1.4;
+  margin:0;
+}
+[data-engrid-theme=nthp2] .en__component--premiumgiftblock .engrid-premium-gift-skip-note svg{
+  fill:currentColor;
+  flex:0 0 auto;
+  height:16px;
+  width:16px;
 }
 [data-engrid-theme=nthp2] .en__component--premiumgiftblock .en__pg__name{
   font-family:var(--default_font-family);
-  font-size:18px;
+  font-size:20px;
   font-weight:700;
   margin-bottom:3px;
 }
 [data-engrid-theme=nthp2] .en__component--premiumgiftblock .en__pg__description{
   align-self:start;
-  font-size:18px;
-  line-height:1.6;
+  font-size:16px;
+  line-height:130%;
+}
+[data-engrid-theme=nthp2] .en__component--premiumgiftblock .en__pg__display{
+  align-self:center;
+}
+[data-engrid-theme=nthp2] .en__component--premiumgiftblock .en__pg__image{
+  margin-left:0;
+  min-width:auto;
+  width:auto !important;
 }
 [data-engrid-theme=nthp2] .en__pgList[data-nogift]{
   display:grid;
@@ -9403,9 +9441,9 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=nthp2] .en__pgList[data-nogift] .en__pg:last-child .en__pg__display{
   background-image:var(--maximize_my_donation_image);
-  background-position:50%;
+  background-position:0;
   background-repeat:no-repeat;
-  background-size:80px;
+  background-size:var(--premium__image_max-height);
   height:100px;
 }
 @media screen and (max-width:628px){
@@ -9486,7 +9524,6 @@ body[data-engrid-debug]:before{
   [data-engrid-theme=nthp2] .en__component--premiumgiftblock .en__pg__body{
     grid-template-areas:"en__pg__select en__pg__detail en__pg__display";
     grid-template-columns:min-content auto;
-    margin-bottom:1rem;
     row-gap:20px;
   }
 }
