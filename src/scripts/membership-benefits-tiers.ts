@@ -39,14 +39,14 @@ export const TIERS: TierDefinition[] = [
     ],
     extraBenefits: [
       "Weekly e-Newsletter",
-      "Personal Invitations to Special Webinars with National Trust Leadership",
+      "Invitations to Special Webinars with National Trust Leadership",
     ],
   },
   {
     amounts: { onetime: 500, monthly: 41.66 },
     primaryBenefits: [
       "3 Gift Memberships",
-      "Personal Invitations to Special Webinars with National Trust Leadership",
+      "Invitations to Special Webinars with National Trust Leadership",
       "2 Free Guest Passes to National Trust Sites",
       "Annual Subscription to Preservation Magazine",
       "Discounted Admission to National Trust Sites & Distinctive Destinations",
