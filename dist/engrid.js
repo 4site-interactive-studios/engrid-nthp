@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, October 19, 2026 @ 13:13:07 ET
+ *  Date: Thursday, October 22, 2026 @ 10:46:49 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -28153,7 +28153,7 @@ const options = {
   },
   ProgressBar: true,
   Placeholders: {
-    ".en__field--donationAmt.en__field--withOther .en__field__input--other": "Enter an amount"
+    ".en__field--donationAmt.en__field--withOther .en__field__input--other": `${document.body.dataset.engridTheme === "nthp2" ? "Other" : "Enter an amount"}`
   },
   Debug: App.getUrlParameter("debug") == "true" ? true : false,
   MinAmount: 5,
