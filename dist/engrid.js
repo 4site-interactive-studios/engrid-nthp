@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, September 29, 2026 @ 14:32:45 ET
- *  By: fernando
+ *  Date: Wednesday, October 28, 2026 @ 07:53:22 ET
+ *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
  *
@@ -29343,7 +29343,7 @@ const options = {
   },
   ProgressBar: true,
   Placeholders: {
-    ".en__field--donationAmt.en__field--withOther .en__field__input--other": "Enter an amount"
+    ".en__field--donationAmt.en__field--withOther .en__field__input--other": "Other"
   },
   Debug: App.getUrlParameter("debug") == "true" ? true : false,
   MinAmount: 5,
