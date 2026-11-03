@@ -19,8 +19,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, September 29, 2026 @ 14:32:45 ET
- *  By: fernando
+ *  Date: Tuesday, November 3, 2026 @ 17:22:45 ET
+ *  By: nick
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
  *
@@ -9163,9 +9163,26 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=nthp][data-engrid-subtheme=multistep][data-engrid-payment-type=daf] [data-last-section=true] .section-navigation,[data-engrid-theme=nthp][data-engrid-subtheme=multistep][data-engrid-payment-type=paypaltouch] [data-last-section=true] .section-navigation,[data-engrid-theme=nthp][data-engrid-subtheme=multistep][data-engrid-payment-type=stripedigitalwallet] [data-last-section=true] .section-navigation{
   display:none !important;
 }
+[data-engrid-theme=nthp][data-engrid-subtheme=multistep][data-engrid-payment-type=daf] .digital-wallets-wrapper,[data-engrid-theme=nthp][data-engrid-subtheme=multistep][data-engrid-payment-type=paypaltouch] .digital-wallets-wrapper,[data-engrid-theme=nthp][data-engrid-subtheme=multistep][data-engrid-payment-type=stripedigitalwallet] .digital-wallets-wrapper{
+  align-items:center;
+  display:flex;
+  flex-direction:row;
+}
+[data-engrid-theme=nthp][data-engrid-subtheme=multistep][data-engrid-payment-type=daf] .digital-wallets-wrapper #en__digitalWallet,[data-engrid-theme=nthp][data-engrid-subtheme=multistep][data-engrid-payment-type=paypaltouch] .digital-wallets-wrapper #en__digitalWallet,[data-engrid-theme=nthp][data-engrid-subtheme=multistep][data-engrid-payment-type=stripedigitalwallet] .digital-wallets-wrapper #en__digitalWallet{
+  flex-basis:81%;
+}
 [data-engrid-theme=nthp][data-engrid-subtheme=multistep][data-engrid-payment-type=daf] .back-link,[data-engrid-theme=nthp][data-engrid-subtheme=multistep][data-engrid-payment-type=paypaltouch] .back-link,[data-engrid-theme=nthp][data-engrid-subtheme=multistep][data-engrid-payment-type=stripedigitalwallet] .back-link{
+  background-color:var(--button_background-color_hover);
+  color:#fff;
   display:block;
+  margin-top:16px;
+  padding:11px 22px;
   text-decoration:none;
+}
+@media (max-width:330px){
+  [data-engrid-theme=nthp][data-engrid-subtheme=multistep][data-engrid-payment-type=daf] .digital-wallets-wrapper #en__digitalWallet,[data-engrid-theme=nthp][data-engrid-subtheme=multistep][data-engrid-payment-type=paypaltouch] .digital-wallets-wrapper #en__digitalWallet,[data-engrid-theme=nthp][data-engrid-subtheme=multistep][data-engrid-payment-type=stripedigitalwallet] .digital-wallets-wrapper #en__digitalWallet{
+    flex-basis:70%;
+  }
 }
 [data-engrid-theme=nthp][data-engrid-subtheme=multistep] iframe[title^=recaptcha]{
   left:-1px;

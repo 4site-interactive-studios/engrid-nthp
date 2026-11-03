@@ -25,7 +25,6 @@
     font-weight: 700;
   }
 
-
   form.en__component > .en__component {
     position: relative;
 
@@ -115,9 +114,7 @@
     }
   }
 
-
   &[data-engrid-embedded] {
-
     height: 100vh;
 
     &[data-thank-you] {
@@ -194,9 +191,28 @@
         display: none !important;
       }
     }
+    .digital-wallets-wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      #en__digitalWallet {
+        flex-basis: 81%;
+      }
+    }
     .back-link {
       display: block;
       text-decoration: none;
+      padding: 11px 22px;
+      margin-top: 16px;
+      color: white;
+      background-color: var(--button_background-color_hover);
+    }
+    @media (max-width: 330px) {
+      .digital-wallets-wrapper {
+        #en__digitalWallet {
+          flex-basis: 70%;
+        }
+      }
     }
   }
 
@@ -211,14 +227,12 @@
     transform-origin: left;
   }
 
-
   .en__captcha {
     margin: 0;
     max-width: 270px;
     padding: 0;
     transform-origin: left;
   }
-
 
   [data-upsell-section="true"] {
     .en__component--column {
