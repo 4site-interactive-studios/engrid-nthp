@@ -28,7 +28,7 @@ const options: Options = {
   ProgressBar: true,
   Placeholders: {
     ".en__field--donationAmt.en__field--withOther .en__field__input--other":
-      "Enter an amount",
+      "Other",
   },
   Debug: App.getUrlParameter("debug") == "true" ? true : false,
   MinAmount: 5,
