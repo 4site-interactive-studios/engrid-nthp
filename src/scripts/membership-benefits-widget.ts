@@ -9,6 +9,8 @@ type TierConfig = {
   amount: number;
   primaryBenefits: string[];
   extraBenefits: string[];
+  upsellBenefits: string[];
+  upsellAmount: number | null;
 };
 
 class TierBenefitsModal extends Modal {
@@ -116,6 +118,8 @@ export class MembershipBenefitsWidget {
           amount: tier.amounts[freq],
           primaryBenefits: tier.primaryBenefits,
           extraBenefits: tier.extraBenefits,
+          upsellBenefits: tier.upsellBenefits,
+          upsellAmount: tier.upsellAmount,
         }))
         .sort((a, b) => a.amount - b.amount);
 
@@ -279,7 +283,7 @@ export class MembershipBenefitsWidget {
       (tier) => tier.amount === activeAmount
     );
     const activeTier = tiers[activeTierIndex] ?? tiers[0];
-    const nextTier = tiers[activeTierIndex + 1] ?? null;
+    const upsellAmount = activeTier.upsellAmount;
 
     const activeItems = activeTier.primaryBenefits
       .map(
@@ -298,9 +302,7 @@ export class MembershipBenefitsWidget {
       `
       : "";
 
-    const activeBenefits = this.getAllBenefits(activeTier);
-    const nextItems = (nextTier ? this.getAllBenefits(nextTier) : [])
-      .filter((benefit) => !activeBenefits.includes(benefit))
+    const upsellItems = activeTier.upsellBenefits
       .map(
         (benefit) =>
           `<li class="membership-benefits-widget__item membership-benefits-widget__item--next"><span>${benefit}</span></li>`
@@ -312,25 +314,26 @@ export class MembershipBenefitsWidget {
     const activeItemsSection = `
       <div class="membership-benefits-widget__level">
         <span class="membership-benefits-widget__emoji"></span>
-        Membership Benefits With My $${this._amount.amount}<span class="mb__frequency-label">${frequencyLabel}</span> Gift
+        Membership Benefits With My $${this._amount.amount.toLocaleString("en-US")}<span class="mb__frequency-label">${frequencyLabel}</span> Gift
       </div>
       <ul class="membership-benefits-widget__list membership-benefits-widget__list--active">${activeItems}${moreBenefitsItem}</ul>
     `;
 
-    const nextItemsSection = nextTier
-      ? `
+    const upsellSection =
+      upsellAmount !== null
+        ? `
       <div class="membership-benefits-widget__divider"></div>
       <div class="membership-benefits-widget__level">
-        A $${nextTier.amount}<span class="mb__frequency-label">${frequencyLabel}</span> Gift Would Unlock...
+        A $${upsellAmount.toLocaleString("en-US")}<span class="mb__frequency-label">${frequencyLabel}</span> Gift Would Unlock...
       </div>
-      <ul class="membership-benefits-widget__list membership-benefits-widget__list--next">${nextItems}</ul>
-      <button type="button" class="membership-benefits-widget__button" data-engrid-next-tier-amount="${nextTier.amount}">
-        Give $${nextTier.amount}<span class="mb__frequency-label">${frequencyLabel}</span> to Unlock These Benefits
+      <ul class="membership-benefits-widget__list membership-benefits-widget__list--next">${upsellItems}</ul>
+      <button type="button" class="membership-benefits-widget__button" data-engrid-next-tier-amount="${upsellAmount}">
+        Give $${upsellAmount.toLocaleString("en-US")}<span class="mb__frequency-label">${frequencyLabel}</span> to Unlock These Benefits
       </button>
     `
-      : "";
+        : "";
 
-    return `${activeItemsSection}${nextItemsSection}`;
+    return `${activeItemsSection}${upsellSection}`;
   }
 
   private hide() {

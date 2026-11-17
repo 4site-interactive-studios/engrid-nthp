@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, November 5, 2026 @ 09:51:23 ET
+ *  Date: Tuesday, November 17, 2026 @ 11:58:22 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -27768,54 +27768,130 @@ function _defineProperty(e, r, t) {
 }
 
 ;// CONCATENATED MODULE: ./src/scripts/membership-benefits-tiers.ts
-const TIERS = [{
+const TIERS = [
+// One-time memberships
+{
   amounts: {
     onetime: 30
   },
   primaryBenefits: ["Discounted Admission to National Trust Sites & Distinctive Destinations", "Discounted Admission to 500+ International Historic Sites", "Exclusive Access to National Trust Tours"],
-  extraBenefits: ["Annual Subscription to Preservation Magazine", "30% off Best Available Rate at Historic Hotels of America (Online Booking)", "Weekly e-Newsletter"]
+  extraBenefits: ["Annual Subscription to Preservation Magazine", "30% off Best Available Rate at Historic Hotels of America (Online Booking)", "Weekly e-Newsletter", "FREE Luggage Tag"],
+  upsellBenefits: ["Discounted Admission to Historic Sites for 2 Adults and Children Under 18 in the Household."],
+  upsellAmount: 50
 }, {
   amounts: {
-    onetime: 50,
+    onetime: 50
+  },
+  primaryBenefits: ["Annual Subscription to Preservation Magazine", "Discounted Admission to National Trust Sites & Distinctive Destinations", "30% off Best Available Rate at Historic Hotels of America (Online Booking)", "Discounted Admission to 500+ International Historic Sites"],
+  extraBenefits: ["Weekly e-Newsletter", "FREE Luggage Tag"],
+  upsellBenefits: ["2 Free Guest Passes to National Trust Sites"],
+  upsellAmount: 100
+}, {
+  amounts: {
+    onetime: 100
+  },
+  primaryBenefits: ["2 Free Guest Passes to National Trust Sites", "Annual Subscription to Preservation Magazine", "Discounted Admission to National Trust Sites & Distinctive Destinations", "30% off Best Available Rate at Historic Hotels of America (Online Booking)", "Discounted Admission to 500+ International Historic Sites"],
+  extraBenefits: ["Weekly e-Newsletter", "FREE Luggage Tag"],
+  upsellBenefits: ["2 Gift Memberships"],
+  upsellAmount: 250
+}, {
+  amounts: {
+    onetime: 250
+  },
+  primaryBenefits: ["2 Gift Memberships", "2 Free Guest Passes to National Trust Sites", "Annual Subscription to Preservation Magazine", "Discounted Admission to National Trust Sites & Distinctive Destinations", "30% off Best Available Rate at Historic Hotels of America (Online Booking)"],
+  extraBenefits: ["Weekly e-Newsletter", "FREE Luggage Tag"],
+  upsellBenefits: ["3 Gift Memberships", "Invitations to Special Webinars with National Trust Leadership"],
+  upsellAmount: 500
+}, {
+  amounts: {
+    onetime: 500
+  },
+  primaryBenefits: ["3 Gift Memberships", "Invitations to Special Webinars with National Trust Leadership", "2 Free Guest Passes to National Trust Sites", "Annual Subscription to Preservation Magazine", "Discounted Admission to National Trust Sites & Distinctive Destinations"],
+  extraBenefits: ["30% off Best Available Rate at Historic Hotels of America (Online Booking)", "Weekly e-Newsletter", "FREE Luggage Tag"],
+  upsellBenefits: ["4 Gift Memberships", "4 Free Guest Passes to National Trust Sites", "Recognition in the Annual Report", "Personal Invitations to Special Webinars with National Trust Leadership", "Exclusive National Trust Canvas Tote Bag", "FREE Luggage Tag"],
+  upsellAmount: 1000
+}, {
+  amounts: {
+    onetime: 1000
+  },
+  primaryBenefits: ["4 Gift Memberships", "4 Free Guest Passes to National Trust Sites", "Recognition in the Annual Report", "Personal Invitations to Special Webinars with National Trust Leadership", "Exclusive National Trust Canvas Tote Bag"],
+  extraBenefits: ["Annual Subscription to Preservation Magazine", "Weekly e-Newsletter", "FREE Luggage Tag", "30% off Best Available Rate at Historic Hotels of America (Online Booking)"],
+  upsellBenefits: ["6 Gift Memberships", "Complimentary Copy of Why Old Places Matter by Thompson M. Mayes"],
+  upsellAmount: 5000
+}, {
+  amounts: {
+    onetime: 5000
+  },
+  primaryBenefits: ["6 Gift Memberships", "4 Free Guest Passes to National Trust Sites", "Recognition in the Annual Report", "Personal Invitations to Special Webinars with National Trust Leadership", "Exclusive National Trust Canvas Tote Bag"],
+  extraBenefits: ["Annual Subscription to Preservation Magazine", "Weekly e-Newsletter", "FREE Luggage Tag", "Complimentary Copy of Why Old Places Matter by Thompson M. Mayes", "30% off Best Available Rate at Historic Hotels of America (Online Booking)"],
+  upsellBenefits: ["Exclusive Access to the National Trust Council Travel Program", "Opportunities to Attend Special Events such as Behind-the-Scenes Tours and Other Invitation-Only Gatherings", "Access to Webinars, Presentations, and Virtual Gatherings with Executives, Experts, and Senior Leaders from the National Trust", "Insider Updates from National Trust Leadership on the Latest Programs and Strategic Priorities"],
+  upsellAmount: 10000
+}, {
+  amounts: {
+    onetime: 10000
+  },
+  primaryBenefits: ["Exclusive Access to the National Trust Council Travel Program", "6 Gift Memberships", "4 Free Guest Passes to National Trust Sites", "Recognition in the Annual Report", "Personal Invitations to Special Webinars with National Trust Leadership"],
+  extraBenefits: ["Annual Subscription to Preservation Magazine", "Weekly e-Newsletter", "FREE Luggage Tag", "Complimentary Copy of Why Old Places Matter by Thompson M. Mayes", "30% off Best Available Rate at Historic Hotels of America (Online Booking)"],
+  upsellBenefits: [],
+  upsellAmount: null
+},
+// Monthly memberships
+{
+  amounts: {
     monthly: 5.0
   },
   primaryBenefits: ["Annual Subscription to Preservation Magazine", "Discounted Admission to National Trust Sites & Distinctive Destinations", "30% off Best Available Rate at Historic Hotels of America (Online Booking)", "Discounted Admission to 500+ International Historic Sites"],
-  extraBenefits: ["Weekly e-Newsletter"]
+  extraBenefits: ["Weekly e-Newsletter", "Invitations to Special Webinars with National Trust Leadership", "FREE Luggage Tag"],
+  upsellBenefits: ["2 Free Guest Passes to National Trust Sites", "Invitations to Special Webinars with National Trust Leadership"],
+  upsellAmount: 18
 }, {
   amounts: {
-    onetime: 250,
-    monthly: 18.0
+    monthly: 8.33
+  },
+  primaryBenefits: ["2 Free Guest Passes to National Trust Sites", "Annual Subscription to Preservation Magazine", "Discounted Admission to National Trust Sites & Distinctive Destinations", "30% off Best Available Rate at Historic Hotels of America (Online Booking)", "Discounted Admission to 500+ International Historic Sites"],
+  extraBenefits: ["Weekly e-Newsletter", "Invitations to Special Webinars with National Trust Leadership", "FREE Luggage Tag"],
+  upsellBenefits: ["2 Gift Memberships"],
+  upsellAmount: 25
+}, {
+  amounts: {
+    monthly: 20.83
   },
   primaryBenefits: ["2 Gift Memberships", "2 Free Guest Passes to National Trust Sites", "Annual Subscription to Preservation Magazine", "Discounted Admission to National Trust Sites & Distinctive Destinations", "30% off Best Available Rate at Historic Hotels of America (Online Booking)"],
-  extraBenefits: ["Weekly e-Newsletter", "Invitations to Special Webinars with National Trust Leadership"]
+  extraBenefits: ["Weekly e-Newsletter", "Invitations to Special Webinars with National Trust Leadership", "FREE Luggage Tag"],
+  upsellBenefits: ["3 Gift Memberships"],
+  upsellAmount: 41.66
 }, {
   amounts: {
-    onetime: 500,
     monthly: 41.66
   },
   primaryBenefits: ["3 Gift Memberships", "Invitations to Special Webinars with National Trust Leadership", "2 Free Guest Passes to National Trust Sites", "Annual Subscription to Preservation Magazine", "Discounted Admission to National Trust Sites & Distinctive Destinations"],
-  extraBenefits: ["30% off Best Available Rate at Historic Hotels of America (Online Booking)", "Weekly e-Newsletter"]
+  extraBenefits: ["30% off Best Available Rate at Historic Hotels of America (Online Booking)", "Weekly e-Newsletter", "FREE Luggage Tag"],
+  upsellBenefits: ["4 Gift Memberships", "4 Free Guest Passes to National Trust Sites", "Recognition in the Annual Report", "Personal Invitations to Special Webinars with National Trust Leadership", "Exclusive National Trust Canvas Tote Bag", "FREE Luggage Tag"],
+  upsellAmount: 83.33
 }, {
   amounts: {
-    onetime: 1000,
     monthly: 83.33
   },
   primaryBenefits: ["4 Gift Memberships", "4 Free Guest Passes to National Trust Sites", "Recognition in the Annual Report", "Personal Invitations to Special Webinars with National Trust Leadership", "Exclusive National Trust Canvas Tote Bag"],
-  extraBenefits: ["Annual Subscription to Preservation Magazine", "Weekly e-Newsletter", "FREE Luggage Tag"]
+  extraBenefits: ["Annual Subscription to Preservation Magazine", "Weekly e-Newsletter", "FREE Luggage Tag", "30% off Best Available Rate at Historic Hotels of America (Online Booking)"],
+  upsellBenefits: ["6 Gift Memberships", "Complimentary Copy of Why Old Places Matter by Thompson M. Mayes"],
+  upsellAmount: 416.66
 }, {
   amounts: {
-    onetime: 5000,
     monthly: 416.66
   },
   primaryBenefits: ["6 Gift Memberships", "4 Free Guest Passes to National Trust Sites", "Recognition in the Annual Report", "Personal Invitations to Special Webinars with National Trust Leadership", "Exclusive National Trust Canvas Tote Bag"],
-  extraBenefits: ["Annual Subscription to Preservation Magazine", "Weekly e-Newsletter", "FREE Luggage Tag", "Complimentary Copy of Why Old Places Matter by Thompson M. Mayes"]
+  extraBenefits: ["Annual Subscription to Preservation Magazine", "Weekly e-Newsletter", "FREE Luggage Tag", "Complimentary Copy of Why Old Places Matter by Thompson M. Mayes", "30% off Best Available Rate at Historic Hotels of America (Online Booking)"],
+  upsellBenefits: ["Exclusive Access to the National Trust Council Travel Program", "Opportunities to Attend Special Events Such as Behind-the-Scenes Tours and Other Invitation-Only Gatherings", "Access to Webinars, Presentations, and Virtual Gatherings with Executives, Experts, and Senior Leaders from the National Trust", "Insider Updates from National Trust Leadership on the Latest Programs and Strategic Priorities"],
+  upsellAmount: 833.33
 }, {
   amounts: {
-    onetime: 10000,
     monthly: 833.33
   },
   primaryBenefits: ["Exclusive Access to the National Trust Council Travel Program", "6 Gift Memberships", "4 Free Guest Passes to National Trust Sites", "Recognition in the Annual Report", "Personal Invitations to Special Webinars with National Trust Leadership"],
-  extraBenefits: ["Annual Subscription to Preservation Magazine", "Weekly e-Newsletter", "FREE Luggage Tag", "Complimentary Copy of Why Old Places Matter by Thompson M. Mayes"]
+  extraBenefits: ["Annual Subscription to Preservation Magazine", "Weekly e-Newsletter", "FREE Luggage Tag", "Complimentary Copy of Why Old Places Matter by Thompson M. Mayes", "30% off Best Available Rate at Historic Hotels of America (Online Booking)", "Opportunities to Attend Special Events Such as Behind-the-Scenes Tours and Other Invitation-Only Gatherings", "Insider Updates from National Trust Leadership on the Latest Programs and Strategic Priorities"],
+  upsellBenefits: [],
+  upsellAmount: null
 }];
 ;// CONCATENATED MODULE: ./src/scripts/membership-benefits-widget.ts
 
@@ -27902,7 +27978,9 @@ class MembershipBenefitsWidget {
       const configs = TIERS.filter(tier => freq in tier.amounts).map(tier => ({
         amount: tier.amounts[freq],
         primaryBenefits: tier.primaryBenefits,
-        extraBenefits: tier.extraBenefits
+        extraBenefits: tier.extraBenefits,
+        upsellBenefits: tier.upsellBenefits,
+        upsellAmount: tier.upsellAmount
       })).sort((a, b) => a.amount - b.amount);
       map.set(freq, configs);
     }
@@ -28013,7 +28091,7 @@ class MembershipBenefitsWidget {
     if (!tiers) return "";
     const activeTierIndex = tiers.findIndex(tier => tier.amount === activeAmount);
     const activeTier = tiers[activeTierIndex] ?? tiers[0];
-    const nextTier = tiers[activeTierIndex + 1] ?? null;
+    const upsellAmount = activeTier.upsellAmount;
     const activeItems = activeTier.primaryBenefits.map(benefit => `<li class="membership-benefits-widget__item membership-benefits-widget__item--active"><span>${benefit}</span></li>`).join("");
     const moreBenefitsItem = activeTier.extraBenefits.length ? `
         <li class="membership-benefits-widget__more">
@@ -28022,27 +28100,26 @@ class MembershipBenefitsWidget {
           </button>
         </li>
       ` : "";
-    const activeBenefits = this.getAllBenefits(activeTier);
-    const nextItems = (nextTier ? this.getAllBenefits(nextTier) : []).filter(benefit => !activeBenefits.includes(benefit)).map(benefit => `<li class="membership-benefits-widget__item membership-benefits-widget__item--next"><span>${benefit}</span></li>`).join("");
+    const upsellItems = activeTier.upsellBenefits.map(benefit => `<li class="membership-benefits-widget__item membership-benefits-widget__item--next"><span>${benefit}</span></li>`).join("");
     const frequencyLabel = freq.toLowerCase() === "monthly" ? "/mo" : "";
     const activeItemsSection = `
       <div class="membership-benefits-widget__level">
         <span class="membership-benefits-widget__emoji"></span>
-        Membership Benefits With My $${this._amount.amount}<span class="mb__frequency-label">${frequencyLabel}</span> Gift
+        Membership Benefits With My $${this._amount.amount.toLocaleString("en-US")}<span class="mb__frequency-label">${frequencyLabel}</span> Gift
       </div>
       <ul class="membership-benefits-widget__list membership-benefits-widget__list--active">${activeItems}${moreBenefitsItem}</ul>
     `;
-    const nextItemsSection = nextTier ? `
+    const upsellSection = upsellAmount !== null ? `
       <div class="membership-benefits-widget__divider"></div>
       <div class="membership-benefits-widget__level">
-        A $${nextTier.amount}<span class="mb__frequency-label">${frequencyLabel}</span> Gift Would Unlock...
+        A $${upsellAmount.toLocaleString("en-US")}<span class="mb__frequency-label">${frequencyLabel}</span> Gift Would Unlock...
       </div>
-      <ul class="membership-benefits-widget__list membership-benefits-widget__list--next">${nextItems}</ul>
-      <button type="button" class="membership-benefits-widget__button" data-engrid-next-tier-amount="${nextTier.amount}">
-        Give $${nextTier.amount}<span class="mb__frequency-label">${frequencyLabel}</span> to Unlock These Benefits
+      <ul class="membership-benefits-widget__list membership-benefits-widget__list--next">${upsellItems}</ul>
+      <button type="button" class="membership-benefits-widget__button" data-engrid-next-tier-amount="${upsellAmount}">
+        Give $${upsellAmount.toLocaleString("en-US")}<span class="mb__frequency-label">${frequencyLabel}</span> to Unlock These Benefits
       </button>
     ` : "";
-    return `${activeItemsSection}${nextItemsSection}`;
+    return `${activeItemsSection}${upsellSection}`;
   }
   hide() {
     if (!this.container) return;
