@@ -64,7 +64,7 @@ class TierBenefitsModal extends Modal {
     list.innerHTML = "";
     for (const benefit of benefits) {
       const item = document.createElement("li");
-      item.textContent = benefit;
+      item.innerHTML = benefit;
       list.appendChild(item);
     }
 
@@ -311,24 +311,32 @@ export class MembershipBenefitsWidget {
 
     const frequencyLabel = freq.toLowerCase() === "monthly" ? "/mo" : "";
 
-    const activeItemsSection = `
+    const activeItemsSection = activeTier.primaryBenefits.length
+      ? `
       <div class="membership-benefits-widget__level">
         <span class="membership-benefits-widget__emoji"></span>
-        Membership Benefits With My $${this._amount.amount.toLocaleString("en-US")}<span class="mb__frequency-label">${frequencyLabel}</span> Gift
+        Membership Benefits With My $${this._amount.amount.toLocaleString(
+          "en-US"
+        )}<span class="mb__frequency-label">${frequencyLabel}</span> Gift
       </div>
       <ul class="membership-benefits-widget__list membership-benefits-widget__list--active">${activeItems}${moreBenefitsItem}</ul>
-    `;
+    `
+      : "";
 
     const upsellSection =
       upsellAmount !== null
         ? `
-      <div class="membership-benefits-widget__divider"></div>
+      ${activeItemsSection ? '<div class="membership-benefits-widget__divider"></div>' : ""}
       <div class="membership-benefits-widget__level">
-        A $${upsellAmount.toLocaleString("en-US")}<span class="mb__frequency-label">${frequencyLabel}</span> Gift Would Unlock...
+        A $${upsellAmount.toLocaleString(
+          "en-US"
+        )}<span class="mb__frequency-label">${frequencyLabel}</span> Gift Would Unlock...
       </div>
       <ul class="membership-benefits-widget__list membership-benefits-widget__list--next">${upsellItems}</ul>
       <button type="button" class="membership-benefits-widget__button" data-engrid-next-tier-amount="${upsellAmount}">
-        Give $${upsellAmount.toLocaleString("en-US")}<span class="mb__frequency-label">${frequencyLabel}</span> to Unlock These Benefits
+        Give $${upsellAmount.toLocaleString(
+          "en-US"
+        )}<span class="mb__frequency-label">${frequencyLabel}</span> to Unlock These Benefits
       </button>
     `
         : "";

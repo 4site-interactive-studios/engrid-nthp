@@ -8,6 +8,18 @@ type TierDefinition = {
 
 export const TIERS: TierDefinition[] = [
   // One-time memberships
+  // Below the first membership tier, show only the upsell.
+  {
+    amounts: { onetime: 5 },
+    primaryBenefits: [],
+    extraBenefits: [],
+    upsellBenefits: [
+      "Discounted Admission to National Trust Sites & Distinctive Destinations",
+      "Discounted Admission to 500+ International Historic Sites",
+      "Exclusive Access to National Trust Tours",
+    ],
+    upsellAmount: 30,
+  },
   {
     amounts: { onetime: 30 },
     primaryBenefits: [
@@ -16,7 +28,7 @@ export const TIERS: TierDefinition[] = [
       "Exclusive Access to National Trust Tours",
     ],
     extraBenefits: [
-      "Annual Subscription to Preservation Magazine",
+      "Annual Subscription to <em>Preservation</em> Magazine",
       "30% off Best Available Rate at Historic Hotels of America (Online Booking)",
       "Weekly e-Newsletter",
       "FREE Luggage Tag",
@@ -29,7 +41,7 @@ export const TIERS: TierDefinition[] = [
   {
     amounts: { onetime: 50 },
     primaryBenefits: [
-      "Annual Subscription to Preservation Magazine",
+      "Annual Subscription to <em>Preservation</em> Magazine",
       "Discounted Admission to National Trust Sites & Distinctive Destinations",
       "30% off Best Available Rate at Historic Hotels of America (Online Booking)",
       "Discounted Admission to 500+ International Historic Sites",
@@ -42,7 +54,7 @@ export const TIERS: TierDefinition[] = [
     amounts: { onetime: 100 },
     primaryBenefits: [
       "2 Free Guest Passes to National Trust Sites",
-      "Annual Subscription to Preservation Magazine",
+      "Annual Subscription to <em>Preservation</em> Magazine",
       "Discounted Admission to National Trust Sites & Distinctive Destinations",
       "30% off Best Available Rate at Historic Hotels of America (Online Booking)",
       "Discounted Admission to 500+ International Historic Sites",
@@ -56,7 +68,7 @@ export const TIERS: TierDefinition[] = [
     primaryBenefits: [
       "2 Gift Memberships",
       "2 Free Guest Passes to National Trust Sites",
-      "Annual Subscription to Preservation Magazine",
+      "Annual Subscription to <em>Preservation</em> Magazine",
       "Discounted Admission to National Trust Sites & Distinctive Destinations",
       "30% off Best Available Rate at Historic Hotels of America (Online Booking)",
     ],
@@ -73,7 +85,7 @@ export const TIERS: TierDefinition[] = [
       "3 Gift Memberships",
       "Invitations to Special Webinars with National Trust Leadership",
       "2 Free Guest Passes to National Trust Sites",
-      "Annual Subscription to Preservation Magazine",
+      "Annual Subscription to <em>Preservation</em> Magazine",
       "Discounted Admission to National Trust Sites & Distinctive Destinations",
     ],
     extraBenefits: [
@@ -101,7 +113,7 @@ export const TIERS: TierDefinition[] = [
       "Exclusive National Trust Canvas Tote Bag",
     ],
     extraBenefits: [
-      "Annual Subscription to Preservation Magazine",
+      "Annual Subscription to <em>Preservation</em> Magazine",
       "Weekly e-Newsletter",
       "FREE Luggage Tag",
       "30% off Best Available Rate at Historic Hotels of America (Online Booking)",
@@ -122,7 +134,7 @@ export const TIERS: TierDefinition[] = [
       "Exclusive National Trust Canvas Tote Bag",
     ],
     extraBenefits: [
-      "Annual Subscription to Preservation Magazine",
+      "Annual Subscription to <em>Preservation</em> Magazine",
       "Weekly e-Newsletter",
       "FREE Luggage Tag",
       "Complimentary Copy of Why Old Places Matter by Thompson M. Mayes",
@@ -146,7 +158,7 @@ export const TIERS: TierDefinition[] = [
       "Personal Invitations to Special Webinars with National Trust Leadership",
     ],
     extraBenefits: [
-      "Annual Subscription to Preservation Magazine",
+      "Annual Subscription to <em>Preservation</em> Magazine",
       "Weekly e-Newsletter",
       "FREE Luggage Tag",
       "Complimentary Copy of Why Old Places Matter by Thompson M. Mayes",
@@ -160,7 +172,7 @@ export const TIERS: TierDefinition[] = [
   {
     amounts: { monthly: 5.0 },
     primaryBenefits: [
-      "Annual Subscription to Preservation Magazine",
+      "Annual Subscription to <em>Preservation</em> Magazine",
       "Discounted Admission to National Trust Sites & Distinctive Destinations",
       "30% off Best Available Rate at Historic Hotels of America (Online Booking)",
       "Discounted Admission to 500+ International Historic Sites",
@@ -180,7 +192,7 @@ export const TIERS: TierDefinition[] = [
     amounts: { monthly: 8.33 },
     primaryBenefits: [
       "2 Free Guest Passes to National Trust Sites",
-      "Annual Subscription to Preservation Magazine",
+      "Annual Subscription to <em>Preservation</em> Magazine",
       "Discounted Admission to National Trust Sites & Distinctive Destinations",
       "30% off Best Available Rate at Historic Hotels of America (Online Booking)",
       "Discounted Admission to 500+ International Historic Sites",
@@ -198,7 +210,7 @@ export const TIERS: TierDefinition[] = [
     primaryBenefits: [
       "2 Gift Memberships",
       "2 Free Guest Passes to National Trust Sites",
-      "Annual Subscription to Preservation Magazine",
+      "Annual Subscription to <em>Preservation</em> Magazine",
       "Discounted Admission to National Trust Sites & Distinctive Destinations",
       "30% off Best Available Rate at Historic Hotels of America (Online Booking)",
     ],
@@ -216,7 +228,7 @@ export const TIERS: TierDefinition[] = [
       "3 Gift Memberships",
       "Invitations to Special Webinars with National Trust Leadership",
       "2 Free Guest Passes to National Trust Sites",
-      "Annual Subscription to Preservation Magazine",
+      "Annual Subscription to <em>Preservation</em> Magazine",
       "Discounted Admission to National Trust Sites & Distinctive Destinations",
     ],
     extraBenefits: [
@@ -244,7 +256,7 @@ export const TIERS: TierDefinition[] = [
       "Exclusive National Trust Canvas Tote Bag",
     ],
     extraBenefits: [
-      "Annual Subscription to Preservation Magazine",
+      "Annual Subscription to <em>Preservation</em> Magazine",
       "Weekly e-Newsletter",
       "FREE Luggage Tag",
       "30% off Best Available Rate at Historic Hotels of America (Online Booking)",
@@ -265,7 +277,7 @@ export const TIERS: TierDefinition[] = [
       "Exclusive National Trust Canvas Tote Bag",
     ],
     extraBenefits: [
-      "Annual Subscription to Preservation Magazine",
+      "Annual Subscription to <em>Preservation</em> Magazine",
       "Weekly e-Newsletter",
       "FREE Luggage Tag",
       "Complimentary Copy of Why Old Places Matter by Thompson M. Mayes",
@@ -289,7 +301,7 @@ export const TIERS: TierDefinition[] = [
       "Personal Invitations to Special Webinars with National Trust Leadership",
     ],
     extraBenefits: [
-      "Annual Subscription to Preservation Magazine",
+      "Annual Subscription to <em>Preservation</em> Magazine",
       "Weekly e-Newsletter",
       "FREE Luggage Tag",
       "Complimentary Copy of Why Old Places Matter by Thompson M. Mayes",
