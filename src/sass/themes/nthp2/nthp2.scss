@@ -147,7 +147,9 @@
   --give-by-select__button_background-color_checked: var(
     --button_background-color_checked
   );
+  --give-by-select__button_color_checked: var(--button_color_checked);
   --give-by-select__button_border-color_checked: var(--button_border-color);
+  --give-by-select__button_font-size: 26px;
 
   //Submit button
   --submit__button_color: #ffffff;
@@ -343,6 +345,25 @@
   .give-by-select {
     margin-bottom: 20px;
 
+    .en__field__item.venmo label {
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+
+      img {
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      img[src*="venmo"] {
+        height: 22px;
+      }
+    }
+
+    .en__field__item.check label {
+      height: 76px;
+    }
+
     img {
       box-sizing: content-box;
       height: 30px;
@@ -363,7 +384,8 @@
     input:checked + label > img.google-pay-type,
     input:checked + label > img.apple-pay-logo,
     input:checked + label > img.google-pay-logo,
-    input:checked + label > img.paypal-venmo {
+    input:checked + label > img.paypal-venmo,
+    .en__field__item.venmo input:checked + label > img {
       filter: brightness(0) invert(1);
     }
 

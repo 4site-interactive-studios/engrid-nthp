@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, November 23, 2026 @ 13:00:23 ET
+ *  Date: Wednesday, November 25, 2026 @ 09:56:30 ET
  *  By: michael
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.5
@@ -9040,7 +9040,9 @@ body[data-engrid-debug]:before{
   --give-by-select__button_background-color_checked:var(
     --button_background-color_checked
   );
+  --give-by-select__button_color_checked:var(--button_color_checked);
   --give-by-select__button_border-color_checked:var(--button_border-color);
+  --give-by-select__button_font-size:26px;
   --submit__button_color:#fff;
   --submit__button_color_hover:#fff;
   --submit__button_background-color:var(--color_blue);
@@ -9168,6 +9170,21 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=nthp2] .give-by-select{
   margin-bottom:20px;
 }
+[data-engrid-theme=nthp2] .give-by-select .en__field__item.venmo label{
+  align-items:center;
+  gap:16px;
+  justify-content:center;
+}
+[data-engrid-theme=nthp2] .give-by-select .en__field__item.venmo label img{
+  margin-left:0;
+  margin-right:0;
+}
+[data-engrid-theme=nthp2] .give-by-select .en__field__item.venmo label img[src*=venmo]{
+  height:22px;
+}
+[data-engrid-theme=nthp2] .give-by-select .en__field__item.check label{
+  height:76px;
+}
 [data-engrid-theme=nthp2] .give-by-select img{
   box-sizing:initial;
   height:30px;
@@ -9181,7 +9198,7 @@ body[data-engrid-debug]:before{
   padding-bottom:5px;
   padding-top:5px;
 }
-[data-engrid-theme=nthp2] .give-by-select input:checked+label>img.apple-pay-logo,[data-engrid-theme=nthp2] .give-by-select input:checked+label>img.google-pay-logo,[data-engrid-theme=nthp2] .give-by-select input:checked+label>img.google-pay-type,[data-engrid-theme=nthp2] .give-by-select input:checked+label>img.paypal,[data-engrid-theme=nthp2] .give-by-select input:checked+label>img.paypal-venmo{
+[data-engrid-theme=nthp2] .give-by-select .en__field__item.venmo input:checked+label>img,[data-engrid-theme=nthp2] .give-by-select input:checked+label>img.apple-pay-logo,[data-engrid-theme=nthp2] .give-by-select input:checked+label>img.google-pay-logo,[data-engrid-theme=nthp2] .give-by-select input:checked+label>img.google-pay-type,[data-engrid-theme=nthp2] .give-by-select input:checked+label>img.paypal,[data-engrid-theme=nthp2] .give-by-select input:checked+label>img.paypal-venmo{
   filter:brightness(0) invert(1);
 }
 [data-engrid-theme=nthp2] .give-by-select input:checked+label>img.daf-logo,[data-engrid-theme=nthp2] .give-by-select input:hover+label>img.daf-logo{
